@@ -89,21 +89,25 @@ function insertTransaction($userId, $accountId, $descriptor, $amount, $category,
 //Gets all transactions tied to $userId "AND" $accountId.
 //Returns an array of transactions.
 function getTransactions($userId, $accountId) {
+	$ret = array();	//what is to be returned.
+
 	//prepare
 	if( ($stmt = $db->prepare("SELECT id, userId, accountId, descriptor, amount, category, `timestamp` FROM accounts WHERE userId=? AND accountId=?") )) {
 
 		//bind
-		if(! $stmt->bind_param("ss", $) )
+		if(! $stmt->bind_param("ii", $userId, $accountId) )
 			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
 			
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
 		
 		//fetch result set
-		$stmt->bind_result($id);
-		$stmt->fetch();
+		$stmt->bind_result($id, $userId, $accountId, $descriptor, $amount, $category, $timestamp);
+		while($stmt->fetch()) {
+			$ret[] = new Transaction($id, $userId, $accountId, $descriptor, $amount, $category, $timestamp);
+		}
 
-		return $id;
+		return $ret;
 	} else {
 		echo "Prepare failed: (" . $db->errno . ") " . $db->error; //remove after debug
 	}
