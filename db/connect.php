@@ -2,7 +2,7 @@
 
 $servername = "localhost";
 $dbname = "minance";
-$username = "dbworker";
+$username = "root";
 $password = "";	//TODO enter a password here
 
 // Create connection
@@ -13,4 +13,3 @@ if ($mysqli->connect_errno) {
     echo "Database error: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
 }
 
-?>
