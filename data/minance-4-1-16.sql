@@ -57,7 +57,7 @@ CREATE TABLE `transaction` (
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `email` varchar(254) COLLATE utf8_unicode_ci NOT NULL,
-  `password` varchar(64) COLLATE utf8_unicode_ci NOT NULL
+  `password` varchar(256) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
