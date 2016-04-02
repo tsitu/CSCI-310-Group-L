@@ -1,0 +1,112 @@
+/* layout */
+body {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.side-panel {
+    width: 300px;
+}
+
+.title {
+    height: 70px;
+    line-height: 70px;
+    font-weight: 300;
+}
+.app-title {
+    text-align: center;
+}
+
+.main-panel {
+    width: calc(100% - 300px);
+    overflow-y: scroll;
+}
+
+.top-bar {
+    height: 70px;
+    padding-left: 30px;
+    
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+.user-menu {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    
+    vertical-align:bottom;
+}
+.user-label {
+    height: 30px;
+    line-height: 30px;
+    padding-right: 20px;
+}
+.logout {
+    width: 70px;
+    height: 70px;
+    font-size: 20px;
+    line-height: 70px;
+    text-align: center;
+    
+    left: 0px;
+    position: relative;
+    transition: all 0.2s linear;
+    -ms-transition: all 0.2s linear;
+    -moz-transition: all 0.2s linear;
+    -webkit-transition: all 0.2s linear;
+}
+.logout:hover {
+    cursor: pointer;
+    left: 5px;
+}
+
+.module {
+    height: 600px;
+    padding: 20px 20px;
+    background-clip: content-box;
+}
+.module-header, .module-title {
+    height: 70px;
+    line-height: 70px;
+}
+.module-title {
+    padding-left: 20px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+
+
+/* style */
+.title {
+    color: white;
+}
+
+.side-panel {
+    background-color: white;
+}
+
+.app-title {
+    background-color: #ffa75c;
+}
+
+.top-bar {
+    color: #FFF;
+    background-color: #444;
+}
+
+.user-label { border-right: 1px solid white; }
+.logout {
+    color: white;
+    background-color: transparent;
+}
+
+.module {
+    background-color: white;
+}
+.module-header {
+    background-color: rgb(240, 240, 240);
+}
