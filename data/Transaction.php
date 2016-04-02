@@ -12,8 +12,8 @@ class Transaction {
 	function __construct($_id, $_userId, $_accountId, $_descriptor, $_amount, $_category, $_timestamp) {
 		$this->id = $_id;
 		$this->userId = $_userId;
-		$this->accountId = $accountId;
-		$this->descriptor = $descriptor; 
+		$this->accountId = $_accountId;
+		$this->descriptor = $_descriptor;
 		$this->amount = $_amount;
 		$this->category = $_category;
 		$this->timestamp = $_timestamp;

@@ -25,12 +25,11 @@ $all_transactions = getTransactions(1, $accountId2);
 
 
 foreach($all_transactions as $transaction) {
-	echo "---<br>";
-	echo $transaction->timestamp;
-	echo " ";
-	echo $transaction->descriptor;
-	echo " ";
-	echo $transaction->amount;	
-	echo " ";
-	echo $transaction->category;
+	echo "timestamp: " . $transaction->timestamp;
+	echo " | ";
+	echo "descriptor: " . $transaction->descriptor;
+	echo " | ";
+	echo "amount: " . $transaction->amount;	
+	echo " | ";
+	echo "category: " . $transaction->category . "<br />";
 }
