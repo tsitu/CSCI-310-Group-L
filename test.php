@@ -2,7 +2,7 @@
 
 //testing some of the functions
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/db/queries.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/db/queries.php";
 
 
 
@@ -21,6 +21,8 @@ insertTransaction(1, $accountId2, "Food purchase from McDonalds", -32.00, "card"
 insertTransaction(1, $accountId2, "Gas purchase 2", -150.00, "card", 2909);
 
 $all_transactions = getTransactions(1, $accountId2);
+
+
 
 foreach($all_transactions as $transaction) {
 	echo "---<br>";

@@ -1,3 +1,5 @@
+var transactions = [];
+
 function parseCSV() {
 	var file = document.getElementById("csv-file").files[0];
 
@@ -11,7 +13,6 @@ function parseCSV() {
 			dynamicTyping: true,
 			complete: function (results) {
 				var data = results.data;
-				var transactions = [];
 				//console.log(data);
 
 				for (var i=0; i<data.length; i++) {

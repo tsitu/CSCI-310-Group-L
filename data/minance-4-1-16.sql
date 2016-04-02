@@ -35,10 +35,10 @@ CREATE TABLE `accounts` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `transaction`
+-- Table structure for table `transactions`
 --
 
-CREATE TABLE `transaction` (
+CREATE TABLE `transactions` (
   `id` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   `accountId` int(11) NOT NULL,

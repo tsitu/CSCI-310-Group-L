@@ -1,7 +1,7 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/db/connect.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/data/Transaction.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/db/connect.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/data/Transaction.php";
 
 
 //Removes all transactions tied to $userId "AND" $accountId
@@ -13,13 +13,13 @@ function removeAccount($userId, $accountId) {
 	{	
 		//bind
 		if(! $stmt->bind_param("ii", $userId, $accountId) )
-			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />\n";
 			
 		//execute
-		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />\n";
 
 	} else {
-		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error; //remove after debug
+		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />\n"; //remove after debug
 	}
 }
 
@@ -27,30 +27,61 @@ function removeAccount($userId, $accountId) {
 function getAccountId($institution, $type) {
 	global $mysqli;
 	//prepare
-	if( ($stmt = $mysqli->prepare("
+	$stmt1 = $mysqli->prepare("
+		-- One select
+		SELECT @id = id
+		FROM accounts
+		WHERE institution=? AND type=?");
+
+	if(! $stmt1->bind_param("ss", $institution, $type) )
+			echo "Binding parameters failed: (" . $stmt1->errno . ") " . $stmt1->error . "<br />\n";
+
+	if(! $stmt1->execute() ) echo "Execute failed: (" . $stmt1->errno . ") " . $stmt1->error . "<br />\n";
+
+	$stmt1->bind_result($id);
+	$stmt1->fetch();
+
+	$stmt2 = $mysqli->prepare("
+		-- Optionally one insert
+		IF @id IS NULL THEN
+		INSERT INTO accounts (institution, type)
+		VALUES (?,?)
+		SET @id = SCOPE_IDENTITY()
+		END IF");
+
+	if(! $stmt2->bind_param("ss", $institution, $type) )
+			echo "Binding parameters failed: (" . $stmt2->errno . ") " . $stmt2->error . "<br />\n";
+
+	if(! $stmt2->execute() ) echo "Execute failed: (" . $stmt2->errno . ") " . $stmt2->error . "<br />\n";
+
+	$stmt2->bind_result($id);
+	$stmt2->fetch();
+
+	return $id;
+
+	/*if( ($stmt = $mysqli->prepare("
 		-- One select
 		SELECT @id = id
 		FROM accounts
 		WHERE institution=? AND type=?
-
+		
 		-- Optionally one insert
 		IF @id IS NULL THEN
-		    INSERT INTO accounts (institution, type)
-		    VALUES (?,?)
-		    SET @id = SCOPE_IDENTITY()
-		END IF"
-		) )) {
+		INSERT INTO accounts (institution, type)
+		VALUES (?,?)
+		SET @id = SCOPE_IDENTITY()
+		END IF")) ) {
 
 		//escape special characters
-		$institution = htmlentities($institution);
+		/*$institution = htmlentities($institution);
 		$type = htmlentities($type);
 
 		//bind
 		if(! $stmt->bind_param("ssss", $institution, $type, $institution, $type) )
-			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />\n";
 			
 		//execute
-		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />\n";
 		
 		//fetch result set
 		$stmt->bind_result($id);
@@ -58,8 +89,8 @@ function getAccountId($institution, $type) {
 
 		return $id;
 	} else {
-		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error; //remove after debug
-	}
+		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />\n"; //remove after debug
+	}*/
 }
 
 //Get all accountId's tied to $userId.
@@ -81,14 +112,14 @@ function insertTransaction($userId, $accountId, $descriptor, $amount, $category,
 		
 		//bind
 		if(! $stmt->bind_param("iisdsi", $userId, $accountId, $descriptor, $amount, $category, $timestamp) )
-			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />\n";
 			
 		//execute
-		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />\n";
 		
 	}
 	else {
-		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error; //remove after debug
+		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />\n"; //remove after debug
 	}
 }
 
@@ -103,10 +134,10 @@ function getTransactions($userId, $accountId) {
 
 		//bind
 		if(! $stmt->bind_param("ii", $userId, $accountId) )
-			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />\n";
 			
 		//execute
-		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />\n";
 		
 		//fetch result set
 		$stmt->bind_result($id, $userId, $accountId, $descriptor, $amount, $category, $timestamp);
@@ -116,7 +147,7 @@ function getTransactions($userId, $accountId) {
 
 		return $ret;
 	} else {
-		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error; //remove after debug
+		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />\n"; //remove after debug
 	}
 }
 
