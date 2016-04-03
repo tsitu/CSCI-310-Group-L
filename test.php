@@ -24,7 +24,7 @@ $wells_fargo_card = getAccountId("Wells Fargo", "Debit Card");
 $all_transactions = getTransactions(1, $bank_of_america_loan);
 $all_transactions = array_merge($all_transactions, getTransactions(1, $wells_fargo_card));
 
-//sort by time, by timestamp
+//sort by timestamp
 usort($all_transactions, array("Transaction", "cmp_timestamp"));
 
 //print the transaction records (unsorted)
@@ -37,4 +37,17 @@ foreach($all_transactions as $transaction) {
 	echo "amount: " . $transaction->amount;	
 	echo " | ";
 	echo "category: " . $transaction->category . "<br />";
+}
+
+//print total amounts for each record
+echo "<br><br>";
+echo "Total balance accross all accounts: $" . Transaction::tabulateAmount($all_transactions) . "<br>";
+
+$accountsHeld = getAccountIds(1);
+foreach($accountsHeld as $id) {
+	echo "Debug: Now looking at $id <br>";
+	echo "";
+	$account = getAccount($id);
+	echo "Total for '" . $account->institution . ": " . $account->type . "': ";
+	echo Transaction::tabulateAmount(getTransactions(1, $account->id));
 }

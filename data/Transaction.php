@@ -19,6 +19,18 @@ class Transaction {
 		$this->timestamp = $_timestamp;
 	}
 
+	//Given an array of Transaction objects, sums up all amounts.
+	static function tabulateAmount($arrayOfTransactions)
+	{
+		$total = 0.00;
+		foreach($arrayOfTransactions as $record)
+		{
+			$total += $record->amount;
+		}
+		return $total;
+	}
+
+	//Compares two timestamps. For use with usort function.
 	static function cmp_timestamp($a, $b)
 	{
 		if($a->timestamp == $b->timestamp) return 0;

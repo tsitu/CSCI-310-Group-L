@@ -2,6 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/db/connect.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/data/Transaction.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/data/Account.php";
 
 
 //Removes all transactions tied to $userId "AND" $accountId
@@ -62,7 +63,61 @@ function getAccountId($institution, $type) {
 
 //Get all accountId's tied to $userId.
 function getAccountIds($userId) {
+	$ret = array();
+	global $mysqli;
 
+	//prepare
+	if( ($stmt = $mysqli->prepare("SELECT DISTINCT accountId FROM transactions WHERE userId=?") )) {
+
+		//bind
+		if(! $stmt->bind_param("i", $userId) )
+			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+			
+		//execute
+		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+		
+		//fetch result set
+		$stmt->bind_result($id);
+		while($stmt->fetch()) {
+			$ret[] = $id;
+		};
+		$stmt->close();
+
+		return $ret;
+
+	} else {
+		echo "getAccountIds():Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
+	}
+}
+
+//Get an account object from an accountId.
+function getAccount($accountId) {
+	global $mysqli;
+
+	//prepare
+	if( ($stmt = $mysqli->prepare("SELECT id, institution, type FROM accounts WHERE id=?") )) {
+
+		//bind
+		if(! $stmt->bind_param("i", $accountId) )
+			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+			
+		//execute
+		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+		
+		//fetch result set
+		$stmt->bind_result($id, $institution, $type);
+		$stmt->fetch();
+		$stmt->close();
+
+		echo "Got account with $id, $institution, $type <br>";
+
+		$ret = new Account($id, $institution, $type);
+
+		return $ret; 
+
+	} else {
+		echo "getAccount():Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
+	}
 }
 
 //Inserts the transaction into the database.
