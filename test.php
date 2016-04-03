@@ -21,14 +21,14 @@ insertTransaction(1, $accountId2, "Food purchase from McDonalds", -32.00, "card"
 insertTransaction(1, $accountId2, "Gas purchase 2", -150.00, "card", 2909);
 
 $all_transactions = getTransactions(1, $accountId2);
+array_merge($all_transactions, getTransactions(1, $accountId));
 
+echo "<br>---<br>";
 foreach($all_transactions as $transaction) {
-	echo "---<br>";
-	echo $transaction->timestamp;
-	echo " ";
-	echo $transaction->descriptor;
-	echo " ";
-	echo $transaction->amount;	
-	echo " ";
-	echo $transaction->category;
+
+	echo $transaction->timestamp . "(time)\t";
+	echo $transaction->descriptor . "\t$";
+	echo $transaction->amount . "\t";	
+	echo $transaction->category . "(cat)\t";
+	echo "<br>";
 }
