@@ -7,9 +7,9 @@ class Account {
 	public $type;
 
 	function __construct($_id, $_institution, $_type) {
-		$id = $_id;
-		$institution = $_institution;
-		$type = $_type;
+		$this->id = $_id;
+		$this->institution = $_institution;
+		$this->type = $_type;
 	}
 
 

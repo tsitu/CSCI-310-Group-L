@@ -45,9 +45,8 @@ echo "Total balance accross all accounts: $" . Transaction::tabulateAmount($all_
 
 $accountsHeld = getAccountIds(1);
 foreach($accountsHeld as $id) {
-	echo "Debug: Now looking at $id <br>";
-	echo "";
 	$account = getAccount($id);
-	echo "Total for '" . $account->institution . ": " . $account->type . "': ";
+	echo "Total for '" . $account->institution . ": " . $account->type . "': $";
 	echo Transaction::tabulateAmount(getTransactions(1, $account->id));
+	echo "<br>";
 }

@@ -109,11 +109,7 @@ function getAccount($accountId) {
 		$stmt->fetch();
 		$stmt->close();
 
-		echo "Got account with $id, $institution, $type <br>";
-
-		$ret = new Account($id, $institution, $type);
-
-		return $ret; 
+		return new Account($id, $institution, $type); 
 
 	} else {
 		echo "getAccount():Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
