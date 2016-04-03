@@ -118,8 +118,5 @@ function getTransactions($userId, $accountId) {
 	}
 }
 
-//Do we need this functionality?
-function getTransactionId() {}
-
 
 ?>

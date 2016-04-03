@@ -18,4 +18,10 @@ class Transaction {
 		$this->category = $_category;
 		$this->timestamp = $_timestamp;
 	}
+
+	static function cmp_timestamp($a, $b)
+	{
+		if($a->timestamp == $b->timestamp) return 0;
+		return ($a->timestamp > $b->timestamp)? +1 : -1;
+	}
 }
