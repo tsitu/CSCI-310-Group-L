@@ -88,5 +88,24 @@
         </div>
     </div>
     
+    <!-- Popup dialogs -->
+    <div id='dialog-background' class=''></div>
+    
+    <div id='new-account-dialog' class='dialog'>
+        <div class='dialog-header'>
+            <h3 class='dialog-label'>New Account</h3>
+            <button class='dialog-cancel fa fa-close'></button>
+        </div>
+        <form class='new-account-form'>
+            <input type='text' name='new-account-name' class='new-account-name' placeholder='Account Name'>
+            <input type='file' name='new-account-upload' class='new-account-upload'>
+        </form>
+        
+        <button class='new-account-button'>Add</button>
+    </div>
+    
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src='js/dashboard.js'></script>
 </body>
 </html>
