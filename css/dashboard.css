@@ -19,10 +19,11 @@ body {
 
 .main-panel {
     width: calc(100% - 280px);
-    overflow-y: scroll;
+    overflow: scroll;
 }
 
 .top-bar {
+    min-width: 600px;
     height: 70px;
     padding-left: 30px;
     
@@ -112,7 +113,6 @@ body {
 
 
 .module {
-    height: 600px;
     padding: 20px 20px;
     background-clip: content-box;
 }
@@ -124,6 +124,51 @@ body {
     padding-left: 20px;
     font-size: 16px;
     font-weight: bold;
+}
+
+#transaction-module {
+    min-width: 800px;
+}
+#transaction-table {
+    width: 100%;
+    height: 100%;
+    
+    vertical-align: middle;
+    border-collapse: collapse;
+}
+.transaction-fields {
+    height: 50px;
+    font-size: 16px;
+    font-weight: 400;
+}
+.sorter {
+    display: inline-block;
+    margin-left: 5px;
+    
+    font-size: 14px;
+    font-weight: 200;
+}
+#transaction-table td {
+    padding-left: 20px;
+}
+.transaction-data {
+    height: 70px;
+}
+#transaction-table .col-1 {
+    width: 15%;
+    min-width: 140px;
+}
+#transaction-table .col-2 {
+    width: 15%;
+    min-width: 140px;
+}
+#transaction-table .col-3 {
+    width: 25%;
+    min-width: 180px;
+}
+#transaction-table .col-4 {
+    width: 45%;
+    min-width: 240px;
 }
 
 
@@ -185,3 +230,7 @@ body {
 .module-header {
     background-color: rgb(240, 240, 240);
 }
+
+
+#transaction-table tr { border-bottom: 1px solid #cecece; }
+#transaction-table tr:first-child { border-top: 1px solid #cecece; }
