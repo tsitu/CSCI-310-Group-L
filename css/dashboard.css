@@ -5,7 +5,7 @@ body {
 }
 
 .side-panel {
-    width: 300px;
+    width: 280px;
 }
 
 .title {
@@ -18,7 +18,7 @@ body {
 }
 
 .main-panel {
-    width: calc(100% - 300px);
+    width: calc(100% - 280px);
     overflow-y: scroll;
 }
 
@@ -63,6 +63,54 @@ body {
     left: 5px;
 }
 
+
+#account-module {
+    width: inherit;
+    height: calc(100% - 70px);
+    position: relative;
+}
+.account-item {
+    padding: 10px 10px;
+}
+.account-name {
+    height: 35px;
+    line-height: 35px;
+    
+    font-size: 18px;
+    font-weight: 500;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.account-amount {
+    font-size: 20px;
+    font-weight: 400;
+}
+.account-options {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+}
+.account-menu {
+    width: 36px;
+    height: 36px;
+    margin-left: 5px;
+    
+    border-radius: 18px;
+    -ms-border-radius: 18px;
+    -moz-border-radius: 18px;
+    -webkit-border-radius: 18px;
+}
+#add-account {
+    width: inherit;
+    height: 70px;
+    bottom: 0px;
+    position: absolute;
+    
+    font-size: 18px;
+    font-weight: 300px;
+}
+
+
 .module {
     height: 600px;
     padding: 20px 20px;
@@ -88,9 +136,36 @@ body {
 .side-panel {
     background-color: white;
 }
-
 .app-title {
     background-color: #ffa75c;
+}
+
+.account-item {
+/*    color: #6d6d6d;*/
+    border-bottom: 1px solid #cecece;
+}
+.account-item:last-child {
+    border-bottom: none;
+}
+.account-menu { 
+    color: #6f6f6f;
+    background-color: transparent; 
+}
+.account-menu:hover { color: white; }
+.fa-cog:hover { background-color: #6f6f6f; }
+
+.fa-line-chart { color: #1faa6f; }
+.fa-line-chart:hover, .fa-line-chart.active { background-color: #1faa6f; }
+
+.fa-list-ul { color: #f45170; }
+.fa-list-ul:hover, .fa-list-ul.active { background-color: #f45170; }
+
+#add-account {
+    color: #ffa75c;
+    background-color: transparent;
+}
+#add-account:hover {
+    border: 2px solid #ffa75c;
 }
 
 .top-bar {
