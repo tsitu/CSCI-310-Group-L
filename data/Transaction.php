@@ -13,9 +13,27 @@ class Transaction {
 		$this->id = $_id;
 		$this->userId = $_userId;
 		$this->accountId = $_accountId;
-		$this->descriptor = $_descriptor; 
+		$this->descriptor = $_descriptor;
 		$this->amount = $_amount;
 		$this->category = $_category;
 		$this->timestamp = $_timestamp;
+	}
+
+	//Given an array of Transaction objects, sums up all amounts.
+	static function tabulateAmount($arrayOfTransactions)
+	{
+		$total = 0.00;
+		foreach($arrayOfTransactions as $record)
+		{
+			$total += $record->amount;
+		}
+		return $total;
+	}
+
+	//Compares two timestamps. For use with usort function.
+	static function cmp_timestamp($a, $b)
+	{
+		if($a->timestamp == $b->timestamp) return 0;
+		return ($a->timestamp > $b->timestamp)? +1 : -1;
 	}
 }

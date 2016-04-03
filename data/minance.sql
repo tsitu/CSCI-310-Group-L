@@ -35,10 +35,10 @@ CREATE TABLE `accounts` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `transaction`
+-- Table structure for table `transactions`
 --
 
-CREATE TABLE `transaction` (
+CREATE TABLE `transactions` (
   `id` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   `accountId` int(11) NOT NULL,
@@ -71,9 +71,9 @@ ALTER TABLE `accounts`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `transaction`
+-- Indexes for table `transactions`
 --
-ALTER TABLE `transaction`
+ALTER TABLE `transactions`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -93,9 +93,9 @@ ALTER TABLE `users`
 ALTER TABLE `accounts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `transaction`
+-- AUTO_INCREMENT for table `transactions`
 --
-ALTER TABLE `transaction`
+ALTER TABLE `transactions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `users`

@@ -1,3 +1,5 @@
-FirstName,LastName,Title,ReportsTo.Email,Birthdate,Description
-Tom,Jones,Senior Director,buyer@salesforcesample.com,1940-06-07Z,"Self-described as ""the top"" branding guru on the West Coast"
-Ian,Dury,Chief Imagineer,cto@salesforcesample.com,,"World-renowned expert in fuzzy logic design. Influential in technology purchases."
+accountInstitution,accountType,txTime,txMerchant,txAmount,txCategory
+Bank of America,Credit Card,1459542957,Best Buy,30,Electronics
+Bank of America,Credit Card,1459542958,McDonalds,10,Food
+Chase,Credit Card,1459542967,Whole Foods,30,Groceries
+Chase,Credit Card,1459542999,Macy's,100,Clothes
