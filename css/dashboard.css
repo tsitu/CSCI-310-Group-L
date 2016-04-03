@@ -19,7 +19,7 @@ body {
 
 .main-panel {
     width: calc(100% - 280px);
-    overflow: scroll;
+    overflow: auto;
 }
 
 .top-bar {
