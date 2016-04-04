@@ -11,6 +11,9 @@ class Account {
 		$this->institution = $_institution;
 		$this->type = $_type;
 	}
+	function getID() {
+		return $id;
+	}
 
 
 }

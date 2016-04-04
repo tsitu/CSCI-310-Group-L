@@ -25,6 +25,8 @@ function removeAccount($userId, $accountId) {
 }
 
 //Gets an accountId given input. Creates one if none exists.
+//First does insert if not exists.
+//Second returns id.
 function getAccountId($institution, $type) {
 	global $mysqli;
 
@@ -72,12 +74,14 @@ function getAccountIds($userId) {
 		//bind
 		if(! $stmt->bind_param("i", $userId) )
 			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+
 			
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
 		
 		//fetch result set
 		$stmt->bind_result($id);
+
 		while($stmt->fetch()) {
 			$ret[] = $id;
 		};
@@ -88,6 +92,29 @@ function getAccountIds($userId) {
 	} else {
 		echo "getAccountIds():Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
 	}
+
+	//Insert query
+	if( ($stmt = $mysqli->prepare("INSERT INTO accounts (institution, type) VALUES (?,?)"))) 
+	{
+		//escape special characters
+		$institution = htmlentities($institution);
+		$type = htmlentities($type);
+		
+		//bind
+		if(! $stmt->bind_param("ss", $institution, $type) )
+			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+			
+		//execute
+		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+		
+	}
+	else {
+		echo "getAccountId-b: Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error; //remove after debug
+	}
+
+	//Return lastId
+	return $mysqli->insert_id;
+
 }
 
 //Get an account object from an accountId.
@@ -120,6 +147,9 @@ function getAccount($accountId) {
 //Uses prepared statements and converts chars to htmlentities.
 function insertTransaction($userId, $accountId, $descriptor, $amount, $category, $timestamp) {
 	global $mysqli;
+
+	echo "adding $userId, $accountId, $descriptor, $amount, $category, $timestamp :: <br>";
+
 	//prepare
 	if( ($stmt = $mysqli->prepare("INSERT INTO transactions (userId, accountId, descriptor, amount, category, `timestamp`) VALUES (?,?,?,?,?,?)"))) 
 	{
