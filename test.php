@@ -24,6 +24,7 @@ $wells_fargo_card = getAccountId("Wells Fargo", "Debit Card");
 $all_transactions = getTransactions(1, $bank_of_america_loan);
 $all_transactions = array_merge($all_transactions, getTransactions(1, $wells_fargo_card));
 
+
 //sort by timestamp
 usort($all_transactions, array("Transaction", "cmp_timestamp"));
 
