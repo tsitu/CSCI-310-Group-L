@@ -99,6 +99,7 @@ $username = $_SESSION['username'];
 
                 <table id='transaction-table' class=''>
                     <tr class='transaction-fields'>
+                        <td class='col-5 transaction-col'>Name <i class='sorter'></i></td>
                         <td class='col-1 transaction-col'>Date <i class='sorter fa fa-chevron-down'></i></td>
                         <td class='col-2 transaction-col'>Amount <i class='sorter'></i></td>
                         <td class='col-3 transaction-col'>Category <i class='sorter'></i></td>
@@ -122,9 +123,14 @@ $username = $_SESSION['username'];
                         if ( $t->amount < 0 ) $sign = 'neg';
                         
                         $amount = number_format(abs($t->amount), 2);
+
+                        $account = getAccount($t->accountId);
+                        $name = $account->institution . " - " . $account->type;
                     ?>
+
                     <tr class='transaction-data'>
-                        <td class='col-1 transaction-date'><?= date('M j, Y', $t->timestamp) ?></td>
+                        <td class='col-5 transaction-name'><?= $name ?></td>
+                        <td class='col-1 transaction-date'><?= date('M j, Y, g:i a', $t->timestamp) ?></td>
                         <td class='col-2 transaction-amount <?= $sign ?>'>$<?= $amount ?></td>
                         <td class='col-3 transaction-category'><?= $t->category ?></td>
                         <td class='col-4 transaction-merchant'><?= $t->descriptor ?></td>

@@ -37,6 +37,6 @@ $('.dialog-cancel').click(function()
  */
 $('.new-account-button').click(function()
 {
+	$('#new-account-dialog').toggleClass('active');
     parseCSV();
-//    location.reload();
 });
