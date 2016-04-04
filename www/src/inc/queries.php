@@ -220,11 +220,11 @@ function getNumberOfRows($table){
 	}
 }
 
-function logInAuthenticate($email, $password) {
+function login($email, $password) {
 	global $mysqli;
 
 	//prepare
-	if( ($stmt = $mysqli->prepare("SELECT * FROM users	WHERE email = ? AND password = ?") )) {
+	if( ($stmt = $mysqli->prepare("SELECT * FROM users WHERE email = ? AND password = ?") )) {
 
 		//bind
 		if(! $stmt->bindValue(1, $email, PDO::PARAM_STR ) || !$stmt->bindValue(2, $password, PDO::PARAM_STR))

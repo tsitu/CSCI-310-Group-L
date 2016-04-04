@@ -30,10 +30,13 @@ unset($_SESSION['error']);
         <h1 id='appname'>minance</h1>
 
         <form id='login-form' class='auth-form' action='../src/scripts/login.php' method='post'>
-            <input type='text'     placeholder='username' name='login-username' 
+            
+            <input type='text'     placeholder='username' name='username' 
                    id='login-username' class='login-input'>
-            <input type='password' placeholder='password' name='login-password' 
+            
+            <input type='password' placeholder='password' name='password' 
                    id='login-password' class='login-input'>
+            
             <button id='login-button' class='auth-button'>Login</button>
         </form>
         
