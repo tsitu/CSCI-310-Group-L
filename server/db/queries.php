@@ -14,7 +14,7 @@ function removeAccount($userId, $accountId) {
 	{
 		//bind
 		if(! $stmt->bind_param("ii", $userId, $accountId) )
-			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+		echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
 
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
@@ -31,13 +31,13 @@ function getAccountId($institution, $type) {
 	global $mysqli;
 
 	$stmt1 = $mysqli->prepare("
-		-- One select
-		SELECT id
-		FROM accounts
-		WHERE institution=? AND type=?");
+	-- One select
+	SELECT id
+	FROM accounts
+	WHERE institution=? AND type=?");
 
 	if(! $stmt1->bind_param("ss", $institution, $type) )
-			echo "Binding parameters failed: (" . $stmt1->errno . ") " . $stmt1->error . "<br />";
+	echo "Binding parameters failed: (" . $stmt1->errno . ") " . $stmt1->error . "<br />";
 
 	if(! $stmt1->execute() ) echo "Execute failed: (" . $stmt1->errno . ") " . $stmt1->error . "<br />";
 
@@ -47,12 +47,12 @@ function getAccountId($institution, $type) {
 
 	if ($id == 0) {
 		$stmt2 = $mysqli->prepare("
-			-- Optionally one insert
-			INSERT INTO accounts (institution, type)
-			VALUES (?,?)");
+		-- Optionally one insert
+		INSERT INTO accounts (institution, type)
+		VALUES (?,?)");
 
 		if(! $stmt2->bind_param("ss", $institution, $type) )
-				echo "Binding parameters failed: (" . $stmt2->errno . ") " . $stmt2->error . "<br />";
+		echo "Binding parameters failed: (" . $stmt2->errno . ") " . $stmt2->error . "<br />";
 
 		if(! $stmt2->execute() ) echo "Execute failed: (" . $stmt2->errno . ") " . $stmt2->error . "<br />";
 
@@ -73,7 +73,7 @@ function getAccountIds($userId) {
 
 		//bind
 		if(! $stmt->bind_param("i", $userId) )
-			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+		echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
 
 
 		//execute
@@ -102,7 +102,7 @@ function getAccountIds($userId) {
 
 		//bind
 		if(! $stmt->bind_param("ss", $institution, $type) )
-			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+		echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
 
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
@@ -126,7 +126,7 @@ function getAccount($accountId) {
 
 		//bind
 		if(! $stmt->bind_param("i", $accountId) )
-			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+		echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
 
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
@@ -158,7 +158,7 @@ function insertTransaction($userId, $accountId, $descriptor, $amount, $category,
 
 		//bind
 		if(! $stmt->bind_param("iisdsi", $userId, $accountId, $descriptor, $amount, $category, $timestamp) )
-			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+		echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
 
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
@@ -180,7 +180,7 @@ function getTransactions($userId, $accountId) {
 
 		//bind
 		if(! $stmt->bind_param("ii", $userId, $accountId) )
-			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+		echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
 
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
@@ -205,7 +205,7 @@ function getNumberOfRows($table){
 
 		//bind
 		if(! $stmt->bind_param("i", $table) )
-			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+		echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
 
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
@@ -220,7 +220,36 @@ function getNumberOfRows($table){
 	}
 }
 
+public function logInAuthenticate($email, $password) {
+	global $mysqli;
 
+	//prepare
+	if( ($stmt = $mysqli->prepare("SELECT * FROM users	WHERE email = ? AND password = ?") )) {
+
+		//bind
+		if(! $stmt->bindValue(1, $email, PDO::PARAM_STR ) || !$stmt->bindValue(2, $password, PDO::PARAM_STR))
+		echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+
+		//execute
+		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+
+		//fetch result set
+		$user = $statement->fetchAll(PDO::FETCH_OBJ);
+
+
+		
+		if (empty($user))
+		{
+			return null;
+		}
+
+		return $user[0]->id;
+
+	} else {
+		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
+	}
+
+}
 
 
 
