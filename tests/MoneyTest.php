@@ -42,7 +42,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     	$newAccount = getAccount($accountId);
     	$newID = $newAccount->getID();
     	//check if we can get the account as expected.
-    	$this->assertEqual($newID, "id")//we need to fill this out.
+    	$this->assertEqual($newID, "id");//we need to fill this out.
     }
     public function insertTransactionTest() {
 
@@ -61,7 +61,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     	$this->assertEqual($sizeOfArray, 0);
 
     }
-    //
+    /*
     public function getAccountTest() {
 
     }
@@ -71,7 +71,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     public function (){
     	
     }
-
+*/
 }
 
 
