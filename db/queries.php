@@ -10,12 +10,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/data/Account.php";
 function removeAccount($userId, $accountId) {
 	global $mysqli;
 	//prepare
-	if( ($stmt = $mysqli->prepare("DELETE FROM transactions WHERE userId=? AND accountId=?"))) 
-	{	
+	if( ($stmt = $mysqli->prepare("DELETE FROM transactions WHERE userId=? AND accountId=?")))
+	{
 		//bind
 		if(! $stmt->bind_param("ii", $userId, $accountId) )
 			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
-			
+
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
 
@@ -75,10 +75,10 @@ function getAccountIds($userId) {
 		if(! $stmt->bind_param("i", $userId) )
 			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
 
-			
+
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
-		
+
 		//fetch result set
 		$stmt->bind_result($id);
 
@@ -94,19 +94,19 @@ function getAccountIds($userId) {
 	}
 
 	//Insert query
-	if( ($stmt = $mysqli->prepare("INSERT INTO accounts (institution, type) VALUES (?,?)"))) 
+	if( ($stmt = $mysqli->prepare("INSERT INTO accounts (institution, type) VALUES (?,?)")))
 	{
 		//escape special characters
 		$institution = htmlentities($institution);
 		$type = htmlentities($type);
-		
+
 		//bind
 		if(! $stmt->bind_param("ss", $institution, $type) )
 			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
-			
+
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
-		
+
 	}
 	else {
 		echo "getAccountId-b: Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error; //remove after debug
@@ -127,16 +127,16 @@ function getAccount($accountId) {
 		//bind
 		if(! $stmt->bind_param("i", $accountId) )
 			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
-			
+
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
-		
+
 		//fetch result set
 		$stmt->bind_result($id, $institution, $type);
 		$stmt->fetch();
 		$stmt->close();
 
-		return new Account($id, $institution, $type); 
+		return new Account($id, $institution, $type);
 
 	} else {
 		echo "getAccount():Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
@@ -151,20 +151,20 @@ function insertTransaction($userId, $accountId, $descriptor, $amount, $category,
 	echo "adding $userId, $accountId, $descriptor, $amount, $category, $timestamp :: <br>";
 
 	//prepare
-	if( ($stmt = $mysqli->prepare("INSERT INTO transactions (userId, accountId, descriptor, amount, category, `timestamp`) VALUES (?,?,?,?,?,?)"))) 
+	if( ($stmt = $mysqli->prepare("INSERT INTO transactions (userId, accountId, descriptor, amount, category, `timestamp`) VALUES (?,?,?,?,?,?)")))
 	{
-		
+
 		//escape special characters
 		$descriptor = htmlentities($descriptor);
 		$category = htmlentities($category);
-		
+
 		//bind
 		if(! $stmt->bind_param("iisdsi", $userId, $accountId, $descriptor, $amount, $category, $timestamp) )
 			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
-			
+
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
-		
+
 	}
 	else {
 		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
@@ -183,10 +183,10 @@ function getTransactions($userId, $accountId) {
 		//bind
 		if(! $stmt->bind_param("ii", $userId, $accountId) )
 			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
-			
+
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
-		
+
 		//fetch result set
 		$stmt->bind_result($id, $userId, $accountId, $descriptor, $amount, $category, $timestamp);
 		while($stmt->fetch()) {
@@ -198,6 +198,33 @@ function getTransactions($userId, $accountId) {
 		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
 	}
 }
+
+function getNumberOfRows($table){
+	global $mysqli;
+
+	//prepare
+	if( ($stmt = $mysqli->prepare("SELECT COUNT(*) FROM ?") )) {
+
+		//bind
+		if(! $stmt->bind_param("i", $table) )
+			echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+
+		//execute
+		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+
+		//fetch result set
+		$stmt->bind_result($count);
+
+		return $count;
+
+	} else {
+		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
+	}
+}
+
+
+
+
 
 
 ?>
