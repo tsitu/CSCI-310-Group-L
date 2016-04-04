@@ -1,10 +1,23 @@
 var transactions = [];
 
+function removeAccount(institution, type) {
+	var getAccountIdUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccountId&institution=" + institution + "&type=" + type;
+	var accountId = httpGet(getAccountIdUrl);
+	//console.log(accountId);
+
+	var removeAccountUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=removeAccount&userId=1&accountId=" + accountId;
+	var remove = httpGet(removeAccountUrl);
+	//console.log(remove);
+
+	location.reload();
+}
+
 function parseCSV() {
 	var file = document.getElementById("csv-file").files[0];
 
 	if (file == undefined || (!file.name.match(/\.(csv)$/))) {
 		alert("Please select a CSV file!");
+		location.reload();
 		return undefined;
 	}
 	else {
@@ -37,7 +50,7 @@ function parseCSV() {
 	}
 }
 
-function parseCSV2() {
+function oldparseCSV() {
 	var file = document.getElementById("csv-file").files[0];
 
 	if (file == undefined || (!file.name.match(/\.(csv)$/))) {

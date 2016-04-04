@@ -3,6 +3,11 @@
     background-color: #ffa75c;
 }
 
+.remove-account-confirm {
+    color: white;
+    background-color: #ffa75c;
+}
+
 .title {
     color: white;
 }
@@ -30,6 +35,8 @@
 
 .fa-list-ul, .neg { color: #f45170; }
 .fa-list-ul:hover, .fa-list-ul.active { background-color: #f45170; }
+
+.fa-trash:hover { background-color: #B0171F; }
 
 #add-account {
     color: #ffa75c;

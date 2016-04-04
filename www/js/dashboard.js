@@ -1,3 +1,4 @@
+var id='';
 
 /**
  * Called when user presses logout button.
@@ -39,4 +40,23 @@ $('.new-account-button').click(function()
 {
 	$('#new-account-dialog').toggleClass('active');
     parseCSV();
+});
+
+/**
+ * Called when user presses remove account button
+ */
+$('.account-remove').click(function()
+{
+    $('#dialog-background').toggleClass('active');
+    $('#remove-account-dialog').toggleClass('active');
+    id = this.id;
+});
+
+/**
+ * Called when user presses remove account button
+ */
+$('.remove-account-confirm').click(function()
+{
+    $('#remove-account-dialog').toggleClass('active');
+    removeAccount(accountInstitutions[id-1], accountTypes[id-1]);
 });

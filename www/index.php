@@ -49,6 +49,10 @@ $username = $_SESSION['username'];
         
         <div id='account-module' class='panel side-panel'>
             <ol id='account-list'>
+                <script type="text/javascript">
+                var accountInstitutions = [];
+                var accountTypes = [];
+                </script>
                 
                 <?php
                 $accountIDs = getAccountIds($uid);
@@ -59,17 +63,35 @@ $username = $_SESSION['username'];
                     
                     $balance = number_format(Transaction::tabulateAmount($transactions), 2);
                 ?>
+
+                <script type="text/javascript">
+                var accountInstitution = "<?php echo $account->institution ?>";
+                var accountType = "<?php echo $account->type ?>";
+
+                accountInstitutions.push(accountInstitution);
+                accountTypes.push(accountType);
+                </script>
                 
                 <li id='account-<?= $aid ?>' class='account-item'>
                     <p class='account-name'><?= $account->institution . ' - ' . $account->type ?></p>
                     <p class='account-amount'>$<?= $balance ?></p>
                     
                     <div class='account-options'>
-                        <button class='account-menu fa fa-line-chart'></button>
-                        <button class='account-menu fa fa-list-ul'></button>
-                        <button class='account-menu fa fa-cog'></button>
+                        <button class='account-menu account-chart fa fa-line-chart'></button>
+                        <button class='account-menu account-list fa fa-list-ul'></button>
+                        <button class='account-menu account-settings fa fa-cog'></button>
+                        <button class='account-menu account-remove fa fa-trash'></button>
                     </div>
                 </li>
+
+                <script type="text/javascript">
+                var buttons = document.getElementsByClassName('account-remove');
+                var buttonIndex = 1;
+                for (var i=0; i<buttons.length; i++) {
+                    buttons[i].id = buttonIndex;
+                    buttonIndex++;
+                }
+                </script>
                 
                 <?php
                 }
@@ -158,13 +180,22 @@ $username = $_SESSION['username'];
         
         <button class='new-account-button'>Add</button>
     </div>
+
+    <div id='remove-account-dialog' class='dialog'>
+        <div class='dialog-header'>
+            <h3 class='dialog-label'>Remove Account</h3>
+            <button class='dialog-cancel fa fa-close'></button>
+        </div>
+        <p style="text-align: center">Are you sure?</p>
+        <button class='remove-account-confirm'>Confirm</button>
+    </div>
     
     
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-    <script src='js/libraries/papaparse.min.js'></script>
+    <script src='js/lib/papaparse.min.js'></script>
     
     <script src='js/dashboard.js'></script>
-    <script src='js/uploadCSV.js'></script>
+    <script src='js/utils.js'></script>
 </body>
 </html>
