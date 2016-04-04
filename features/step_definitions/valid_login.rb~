@@ -1,11 +1,11 @@
 Given(/^user is on the login page$/) do
-	expect(page).to have_selector('login-username')
-	expect(page).to have_selector('login-password')
+	visit("http://localhost:80")
 end
 
 When(/^user types the right password and username$/) do
-	find('#login-username').set()
-	find('#login-password').set()
+	find('#login-username').set('test@gmail.com')
+	find('#login-password').set('test')
+	page.execute_script('$('button.login-button').click()')
 end
 
 Then(/^user can login$/)do
