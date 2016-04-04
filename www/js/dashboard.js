@@ -1,4 +1,13 @@
 
+/**
+ * Called when user presses logout button.
+ * Call the logout script to log user out.
+ */
+$('button.logout').click(function()
+{
+    window.location.href = "src/scripts/logout.php";
+});
+
 
 
 /**

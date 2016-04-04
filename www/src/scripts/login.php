@@ -28,6 +28,7 @@ if ( is_null($uid) )
 
 //set login session
 $_SESSION['user_id'] = $uid;
+$_SESSION['username'] = $username;
 
 header('Location: /');
 exit();

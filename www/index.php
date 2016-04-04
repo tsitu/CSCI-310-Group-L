@@ -11,6 +11,8 @@ if ( !isset($_SESSION['user_id']) )
 
 
 //data
+$uid = $_SESSION['user_id'];
+$username = $_SESSION['username'];
 
 ?>
 
@@ -35,7 +37,7 @@ if ( !isset($_SESSION['user_id']) )
             <h2 class='title section-title'>Dashboard</h2>
 
             <div class='user-menu'>
-                <span class='label user-label'>username</span>
+                <span class='label user-label'> <?= $username ?> </span>
                 <button class="fa fa-sign-out logout"></button>
             </div>
         </div>
