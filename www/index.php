@@ -56,11 +56,13 @@ $username = $_SESSION['username'];
                 {
                     $account = getAccount($aid);
                     $transactions = getTransactions($uid, $aid);
+                    
+                    $balance = number_format(Transaction::tabulateAmount($transactions), 2);
                 ?>
                 
                 <li class='account-item'>
-                    <p class='account-name'><?= $account->institution . ' ' . $account->type ?></p>
-                    <p class='account-amount'>$<?= Transaction::tabulateAmount($transactions) ?></p>
+                    <p class='account-name'><?= $account->institution . ' - ' . $account->type ?></p>
+                    <p class='account-amount'>$<?= $balance ?></p>
                     
                     <div class='account-options'>
                         <button class='account-menu fa fa-line-chart'></button>
@@ -119,7 +121,7 @@ $username = $_SESSION['username'];
                         if ( $t->amount > 0 ) $sign = 'pos';
                         if ( $t->amount < 0 ) $sign = 'neg';
                         
-                        $amount = abs($t->amount);
+                        $amount = number_format(abs($t->amount), 2);
                     ?>
                     <tr class='transaction-data'>
                         <td class='col-1 transaction-date'><?= date('M j, Y', $t->timestamp) ?></td>
@@ -144,7 +146,7 @@ $username = $_SESSION['username'];
             <button class='dialog-cancel fa fa-close'></button>
         </div>
         <form class='new-account-form'>
-            <input type='text' name='new-account-name' class='new-account-name' placeholder='Account Name'>
+<!--            <input type='text' name='new-account-name' class='new-account-name' placeholder='Account Name'>-->
             <input type='file' name='new-account-upload' class='new-account-upload'>
         </form>
         
