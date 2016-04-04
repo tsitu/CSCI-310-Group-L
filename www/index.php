@@ -147,7 +147,7 @@ $username = $_SESSION['username'];
         </div>
         <form class='new-account-form'>
 <!--            <input type='text' name='new-account-name' class='new-account-name' placeholder='Account Name'>-->
-            <input type='file' name='new-account-upload' class='new-account-upload'>
+            <input type='file' name='new-account-upload' class='new-account-upload' id='csv-file'>
         </form>
         
         <button class='new-account-button'>Add</button>

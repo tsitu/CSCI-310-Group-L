@@ -14,9 +14,7 @@ $('button.logout').click(function()
  * Called when user clicks add acount button
  */
 $('#add-account').click(function()
-{
-    console.log('hi');
-    
+{    
     var file = $('#new-account-upload');
     file.replaceWith( file.clone(true) );
     $('#new-account-name').val('');
@@ -32,4 +30,13 @@ $('.dialog-cancel').click(function()
 {
     $('#dialog-background').toggleClass('active');
     $(this).parents('.dialog').toggleClass('active');
+});
+
+/**
+ * Called when user presses the add button
+ */
+$('.new-account-button').click(function()
+{
+    parseCSV();
+//    location.reload();
 });
