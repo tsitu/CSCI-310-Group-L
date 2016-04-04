@@ -1,3 +1,19 @@
+<?php
+
+session_start();
+
+//redirect if not logged in
+if ( !isset($_POST['user_id']) )
+{
+    header('Location: /login');
+    exit();
+}
+
+
+//data
+
+?>
+
 <!DOCType html>
 <html>
 <head>
@@ -108,7 +124,11 @@
     </div>
     
     
+    <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src='js/libraries/papaparse.min.js'></script>
+    
     <script src='js/dashboard.js'></script>
+    <script src='js/uploadCSV.js'></script>
 </body>
 </html>
