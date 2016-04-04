@@ -66,7 +66,5 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     	$this->assertEqual($sizeOfArray, 0);
 
     }
-}
-
 
 ?>
