@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/src/inc/queries.php';
+
 session_start();
 
 //redirect if not logged in
@@ -47,9 +49,18 @@ $username = $_SESSION['username'];
         
         <div id='account-module' class='panel side-panel'>
             <ol id='account-list'>
+                
+                <?php
+                $accountIDs = getAccountIds($uid);
+                foreach ($accountIDs as $aid)
+                {
+                    $account = getAccount($aid);
+                    $transactions = getTransactions($uid, $aid);
+                ?>
+                
                 <li class='account-item'>
-                    <p class='account-name'>Bank of America</p>
-                    <p class='account-amount'>$310.00</p>
+                    <p class='account-name'><?= $account->institution . ' ' . $account->type ?></p>
+                    <p class='account-amount'>$<?= Transaction::tabulateAmount($transactions) ?></p>
                     
                     <div class='account-options'>
                         <button class='account-menu fa fa-line-chart'></button>
@@ -57,16 +68,10 @@ $username = $_SESSION['username'];
                         <button class='account-menu fa fa-cog'></button>
                     </div>
                 </li>
-                <li class='account-item'>
-                    <p class='account-name'>Chase - Checking</p>
-                    <p class='account-amount'>$450.00</p>
-                    
-                    <div class='account-options'>
-                        <button class='account-menu fa fa-line-chart'></button>
-                        <button class='account-menu fa fa-list-ul'></button>
-                        <button class='account-menu fa fa-cog'></button>
-                    </div>
-                </li>
+                
+                <?php
+                }
+                ?>
             </ol>
             
             <button id='add-account'>Add Account</button>
@@ -98,12 +103,33 @@ $username = $_SESSION['username'];
                         <td class='col-4 transaction-col'>Merchant <i class='sorter'></i></td>
                     </tr>
 
+                    <?php
+                    $accountIDs = getAccountIds($uid);
+                    
+                    $transactions = array();
+                    foreach ($accountIDs as $aid)
+                    {
+                        $account = getAccount($aid);
+                        $transactions = array_merge($transactions, getTransactions($uid, $aid));
+                    }
+                    
+                    foreach ($transactions as $t)
+                    {
+                        $sign = '';
+                        if ( $t->amount > 0 ) $sign = 'pos';
+                        if ( $t->amount < 0 ) $sign = 'neg';
+                        
+                        $amount = abs($t->amount);
+                    ?>
                     <tr class='transaction-data'>
-                        <td class='col-1 transaction-date'>Apr 1, 2016</td>
-                        <td class='col-2 transaction-amount'>$7.30</td>
-                        <td class='col-3 transaction-category'>Food</td>
-                        <td class='col-4 transaction-merchant'>Chipotle</td>
+                        <td class='col-1 transaction-date'><?= date('M j, Y', $t->timestamp) ?></td>
+                        <td class='col-2 transaction-amount <?= $sign ?>'>$<?= $amount ?></td>
+                        <td class='col-3 transaction-category'><?= $t->category ?></td>
+                        <td class='col-4 transaction-merchant'><?= $t->descriptor ?></td>
                     </tr>
+                    <?php
+                    }
+                    ?>
                 </table>
             </div>
         </div>

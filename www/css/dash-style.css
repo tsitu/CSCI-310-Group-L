@@ -25,10 +25,10 @@
 .account-menu:hover { color: white; }
 .fa-cog:hover { background-color: #6f6f6f; }
 
-.fa-line-chart { color: #1faa6f; }
+.fa-line-chart, .pos { color: #1faa6f; }
 .fa-line-chart:hover, .fa-line-chart.active { background-color: #1faa6f; }
 
-.fa-list-ul { color: #f45170; }
+.fa-list-ul, .neg { color: #f45170; }
 .fa-list-ul:hover, .fa-list-ul.active { background-color: #f45170; }
 
 #add-account {

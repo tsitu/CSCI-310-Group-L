@@ -32,10 +32,10 @@ unset($_SESSION['error']);
         <form id='login-form' class='auth-form' action='../src/scripts/login.php' method='post'>
             
             <input type='text'     placeholder='username' name='username' 
-                   id='login-username' class='login-input'>
+                   id='login-username' class='login-input' value='test@gmail.com'>
             
             <input type='password' placeholder='password' name='password' 
-                   id='login-password' class='login-input'>
+                   id='login-password' class='login-input' value='test'>
             
             <button id='login-button' class='auth-button'>Login</button>
         </form>
