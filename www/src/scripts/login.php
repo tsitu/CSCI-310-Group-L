@@ -11,7 +11,7 @@ $password = $_POST['password'];
 if ( empty($username) || empty($password) )
 {
     $_SESSION['error'] = 'Empty username or password';
-    header('Location: /login');
+    header('Location: /CSCI-310-Group-L/www/login');
     exit();
 }
 
@@ -21,7 +21,7 @@ $uid = login($username, $password);
 if ( is_null($uid) )
 {
     $_SESSION['error'] = 'Invalid login parameters';
-    header('Location: /login');
+    header('Location: /CSCI-310-Group-L/www/login');
     exit();
 }
 
@@ -30,5 +30,5 @@ if ( is_null($uid) )
 $_SESSION['user_id'] = $uid;
 $_SESSION['username'] = $username;
 
-header('Location: /');
+header('Location: ../../index.php');
 exit();

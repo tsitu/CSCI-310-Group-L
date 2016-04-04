@@ -21,8 +21,10 @@ unset($_SESSION['error']);
     <meta charset="utf-8">
     <title>minance login</title>
     
-    <link rel='stylesheet' href='/css/global.css'>
-    <link rel='stylesheet' href='/css/login.css'>
+    <link rel='stylesheet' href='../css/global.css'>
+    <link rel='stylesheet' href='../css/login.css'>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 </head>
 <body>
     
@@ -40,7 +42,7 @@ unset($_SESSION['error']);
             <button id='login-button' class='auth-button'>Login</button>
         </form>
         
-        <p class='error'> <?= $error ?> </p>
+        <p id='error' class='error'> <?= $error ?> </p>
     </div>
     
 </body>
