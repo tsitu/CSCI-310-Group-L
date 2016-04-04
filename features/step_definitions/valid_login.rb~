@@ -1,6 +1,6 @@
 Given(/^user is on the login page$/) do
-	expect(page).has_content?('login-username')
-	expect(page).has_content?('login-password')
+	expect(page).to have_selector('login-username')
+	expect(page).to have_selector('login-password')
 end
 
 When(/^user types the right password and username$/) do

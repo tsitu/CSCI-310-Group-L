@@ -1,4 +1,5 @@
 Given(/^I am on the main UI$/) do
+	visit("http://localhost:80")
 end
 
 Then(/^I can see a user menu$/) do

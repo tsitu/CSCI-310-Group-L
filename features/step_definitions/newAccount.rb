@@ -1,5 +1,5 @@
 Given (/^user is on UI$/) do
-	visit('http://localhost')
+	visit("http://localhost:80")
 end
 
 When(/^user clicks the account button$/) do

@@ -1,4 +1,5 @@
 Given(/^user is on the login page$/) do
+	visit("http://localhost:80/login.php")
 	expect(page).to have_selector('login-username')
 	expect(page).to have_selector('login-password')
 end
