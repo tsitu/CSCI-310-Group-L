@@ -148,8 +148,6 @@ function getAccount($accountId) {
 function insertTransaction($userId, $accountId, $descriptor, $amount, $category, $timestamp) {
 	global $mysqli;
 
-	echo "adding $userId, $accountId, $descriptor, $amount, $category, $timestamp :: <br>";
-
 	//prepare
 	if( ($stmt = $mysqli->prepare("INSERT INTO transactions (userId, accountId, descriptor, amount, category, `timestamp`) VALUES (?,?,?,?,?,?)")))
 	{
