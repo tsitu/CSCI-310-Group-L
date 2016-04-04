@@ -3,7 +3,12 @@
 $servername = "sql3.freemysqlhosting.net";
 $dbname = "sql3112429";
 $username = "sql3112429";
-$password = "NqxhS6d8yQ";	//TODO enter a password here
+$password = "NqxhS6d8yQ";
+
+// $servername = "localhost";
+// $dbname = "minance";
+// $username = "root";
+// $password = "";
 
 // Create connection
 $mysqli = new mysqli($servername, $username, $password, $dbname);
