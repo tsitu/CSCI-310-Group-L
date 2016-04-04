@@ -21,6 +21,8 @@ if(isset($_GET['function'])) {
 	if(isset($_GET['amount'])) $amount = $_GET['amount'];
 	if(isset($_GET['category'])) $category = $_GET['category'];
 	if(isset($_GET['timestamp'])) $timestamp = $_GET['timestamp'];
+	if(isset($_GET['institution'])) $institution = $_GET['institution'];
+	if(isset($_GET['type'])) $type = $_GET['type'];
 }
 
 if($function == "insertTransaction") {
