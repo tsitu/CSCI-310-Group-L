@@ -1,5 +1,3 @@
-
-
 <?php
 require_once require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/db/queries.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/data/Transaction.php";
@@ -31,6 +29,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     }
     //what if there is not id that we can delete
     public function testRemoveFromNothing() {
+
     	//check it there is string return is equal
     	$firstAccountID = getAccountId("Bank of America", "Students Loan");
     	//getting Account regarding accountID
