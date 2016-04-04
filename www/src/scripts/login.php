@@ -1,6 +1,6 @@
 <?php
 
-require_once '../src/inc/queries.php';
+require_once __DIR__ . '/../inc/queries.php';
 
 session_start();
 

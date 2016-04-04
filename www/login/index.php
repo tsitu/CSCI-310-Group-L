@@ -29,7 +29,7 @@ unset($_SESSION['error']);
     <div id='' class='module'>
         <h1 id='appname'>minance</h1>
 
-        <form id='login-form' class='auth-form' action='../login/login.php' method='post'>
+        <form id='login-form' class='auth-form' action='../src/scripts/login.php' method='post'>
             <input type='text'     placeholder='username' name='login-username' 
                    id='login-username' class='login-input'>
             <input type='password' placeholder='password' name='login-password' 
