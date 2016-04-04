@@ -1,9 +1,9 @@
 <?php
 
-$servername = "localhost";
-$dbname = "minance";
-$username = "dbworker";
-$password = "password";	//TODO enter a password here
+$servername = "sql3.freemysqlhosting.net";
+$dbname = "sql3112429";
+$username = "sql3112429";
+$password = "NqxhS6d8yQ";	//TODO enter a password here
 
 // Create connection
 $mysqli = new mysqli($servername, $username, $password, $dbname);
