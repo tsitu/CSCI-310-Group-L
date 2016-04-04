@@ -57,7 +57,7 @@ function getAccountId($institution, $type) {
 		if(! $stmt2->execute() ) echo "Execute failed: (" . $stmt2->errno . ") " . $stmt2->error . "<br />";
 
 		$id = $stmt2->insert_id;
-		echo "stmt2 id: " . $id . "<br />";
+		//echo "Inserted new id: " . $id . "<br />";
 	}
 
 	return $id;
@@ -198,9 +198,20 @@ function getTransactions($userId, $accountId) {
 }
 
 
+<<<<<<< HEAD:www/src/inc/queries.php
 //Returns userId if email and password matches.
 //Returns null if no matches are made.
 function login($email, $password) {
+=======
+		return $count;
+
+	} else {
+		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
+	}
+}
+
+function logInAuthenticate($email, $password) {
+>>>>>>> tran:db/queries.php
 	global $mysqli;
 
 	//prepare
