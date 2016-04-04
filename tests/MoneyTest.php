@@ -12,7 +12,6 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     //function __construct($_id, $_userId, $_accountId, $_descriptor, $_amount, $_category, $_timestamp)
 
 
-
   	public insertTransactionTest(){
   		$num_row = getNumberOfRows('transactions');
 		insertTransaction(200, 100, "Student loan", 3000.00, "loan", 0);
@@ -46,6 +45,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     	removeAccount($500,$firstAccountID);
 		$expect_row = getNumberOfRows('transactions');
     	$this->assertEqual($num_row, $expect_num);
+
     }
     //GetAccount Test
     public function GetAccountTest() {
@@ -56,6 +56,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     	//check if we can get the account as expected.
     	$this->assertEqual($newID, "id");//we need to fill this out.
     }
+
     public function insertTransactionTest() {
 
     	$userID = 'testID';
