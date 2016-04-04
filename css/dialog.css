@@ -1,4 +1,4 @@
-.dialog-bg {
+#dialog-background {
     z-index: 50;
     display: none;
     
@@ -12,7 +12,7 @@
     opacity: 0.6;
     background-color: black;
 }
-#dialog-bg.active { display: block; }
+#dialog-background.active { display: block; }
 
 .dialog.active { display: block; }
 .dialog {
