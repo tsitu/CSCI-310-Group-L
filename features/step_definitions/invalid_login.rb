@@ -1,4 +1,5 @@
 Given(/^I am logging in$/) do
+	Capybara.reset_sessions!
 	visit('https://localhost/CSCI-310-Group-L/www/login/')
 
 end
@@ -6,7 +7,7 @@ end
 When(/^I enter wrong password$/) do
 	find('#login-username').set('test@gmail.com')
 	find('#login-password').set('testWrong')
-	page.execute_script("$('button.login-button').click()")
+	page.execute_script("$('#login-button').click()")
 end
 
 Then(/^I see a notification$/) do

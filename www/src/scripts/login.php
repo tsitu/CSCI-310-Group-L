@@ -30,5 +30,5 @@ if ( is_null($uid) )
 $_SESSION['user_id'] = $uid;
 $_SESSION['username'] = $username;
 
-header('Location: ../../index.php');
+header('Location: /CSCI-310-Group-L/www/');
 exit();

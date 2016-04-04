@@ -1,8 +1,9 @@
 Given(/^I am on the main UI$/) do
+	Capybara.reset_sessions!
 	visit("https://localhost/CSCI-310-Group-L/www/login/")
 	find('#login-username').set('test@gmail.com')
 	find('#login-password').set('test')
-	page.execute_script("$('button.login-button').click()")
+	page.execute_script("$('#login-button').click()")
 end
 
 Then(/^I should see a user menu$/) do

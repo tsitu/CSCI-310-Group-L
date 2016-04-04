@@ -7,7 +7,7 @@ session_start();
 //redirect if not logged in
 if ( !isset($_SESSION['user_id']) )
 {
-    header('Location: /login');
+    header('Location: /CSCI-310-Group-L/www/');
     exit();
 }
 
@@ -38,9 +38,9 @@ $username = $_SESSION['username'];
         <div class='bar-content'>
             <h2 class='title section-title'>Dashboard</h2>
 
-            <div class='user-menu'>
+            <div id='user-menu' class='user-menu'>
                 <span class='label user-label'> <?= $username ?> </span>
-                <button class="fa fa-sign-out logout"></button>
+                <button id='logout' class="fa fa-sign-out logout"></button>
             </div>
         </div>
     </div>
