@@ -114,7 +114,6 @@ function getAccountIds($userId) {
 
 	//Return lastId
 	return $mysqli->insert_id;
-
 }
 
 //Get an account object from an accountId.
@@ -223,15 +222,15 @@ function login($email, $password) {
 		if($stmt->num_rows == 1) {
 			$stmt->bind_result($id);
 			$stmt->fetch();
+			return $id;
 		} else {
 			return null;
 		}
 
-		return $id;
+		
 	} else {
 		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
 	}
-
 }
 
 
