@@ -16,6 +16,41 @@ function parseCSV() {
 				//console.log(data);
 
 				for (var i=0; i<data.length; i++) {
+					var accountInstitution = data[i]["accountInstitution"];
+					var accountType = data[i]["accountType"];
+					var txAmount = data[i]["txAmount"];
+					var txCategory = data[i]["txCategory"];
+					var txMerchant = data[i]["txMerchant"];
+					var txTime = data[i]["txTime"];
+
+					var getAccountIdUrl = "https://localhost/CSCI-310-Group-L/admin.php?function=getAccountId&institution=" + accountInstitution + "&type=" + accountType;
+					var accountId = httpGet(getAccountIdUrl);
+
+					var insertTransactionUrl = "https://localhost/CSCI-310-Group-L/admin.php?function=insertTransaction&userId=1&accountId=" + accountId + "&descriptor=" + txMerchant + "&amount=" + txAmount + "&category=" + txCategory + "&timestamp=" + txTime;
+					var insert = httpGet(insertTransactionUrl);
+					//console.log(insert);
+				}
+			}
+		});
+	}
+}
+
+function parseCSV2() {
+	var file = document.getElementById("csv-file").files[0];
+
+	if (file == undefined || (!file.name.match(/\.(csv)$/))) {
+		alert("Please select a CSV file!");
+		return undefined;
+	}
+	else {
+		Papa.parse(file, {
+			header: true,
+			dynamicTyping: true,
+			complete: function (results) {
+				var data = results.data;
+				console.log(data);
+
+				for (var i=0; i<data.length; i++) {
 					var name = data[i]["accountInstitution"] + " " + data[i]["accountType"];
 					var result = $.grep(transactions, function(e) { return e.name == name; });
 
@@ -53,4 +88,21 @@ function parseCSV() {
 			}
 		});
 	}
+}
+
+function httpGetAsync(theUrl, callback) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.send(null);
+}
+
+function httpGet(theUrl) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
 }
