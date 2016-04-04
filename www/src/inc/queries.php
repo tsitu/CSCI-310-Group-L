@@ -1,8 +1,8 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/db/connect.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/data/Transaction.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/data/Account.php";
+require_once "connect.php";
+require_once __DIR__ . "/../model/Account.php";
+require_once __DIR__ . "/../model/Transaction.php";
 
 
 //Removes all transactions tied to $userId "AND" $accountId
@@ -197,54 +197,37 @@ function getTransactions($userId, $accountId) {
 	}
 }
 
-function getNumberOfRows($table){
+
+//Returns userId if email and password matches.
+//Returns null if no matches are made.
+function login($email, $password) {
 	global $mysqli;
 
 	//prepare
-	if( ($stmt = $mysqli->prepare("SELECT COUNT(*) FROM ?") )) {
+	if( ($stmt = $mysqli->prepare("SELECT id FROM users WHERE email=? AND password=?") )) {
+
+		//convert special characters
+		$email = htmlentities($email);
+		$password = htmlentities($password);
 
 		//bind
-		if(! $stmt->bind_param("i", $table) )
+		if(! $stmt->bind_param("ss", $email, $password) )
 		echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
 
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
 
 		//fetch result set
-		$stmt->bind_result($count);
-
-		return $count;
-
-	} else {
-		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
-	}
-}
-
-public function logInAuthenticate($email, $password) {
-	global $mysqli;
-
-	//prepare
-	if( ($stmt = $mysqli->prepare("SELECT * FROM users	WHERE email = ? AND password = ?") )) {
-
-		//bind
-		if(! $stmt->bindValue(1, $email, PDO::PARAM_STR ) || !$stmt->bindValue(2, $password, PDO::PARAM_STR))
-		echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
-
-		//execute
-		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
-
-		//fetch result set
-		$user = $statement->fetchAll(PDO::FETCH_OBJ);
-
-
+		$stmt->store_result();
 		
-		if (empty($user))
-		{
+		if($stmt->num_rows == 1) {
+			$stmt->bind_result($id);
+			$stmt->fetch();
+		} else {
 			return null;
 		}
 
-		return $user[0]->id;
-
+		return $id;
 	} else {
 		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
 	}

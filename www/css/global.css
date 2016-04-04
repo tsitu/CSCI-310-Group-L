@@ -15,7 +15,9 @@ html, body {
     height: 100vh;
 }
 
+ol, ul { list-style: none; }
 
+.wide { width: 100%; }
 
 
 /* style */
@@ -25,4 +27,5 @@ body {
     font-family: 'Helvetica Neue', 'Helvetica', 'Open Sans', Arial, sans-serif;
 }
 
+button { background-color: transparent; }
 button:hover { cursor: pointer; }
