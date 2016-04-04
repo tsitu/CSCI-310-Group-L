@@ -12,8 +12,15 @@ class Account {
 		$this->type = $_type;
 	}
 	function getID() {
-		return $id;
+		return $this->id;
+	}
+	function getInstitution(){
+		return $this->institution;
+	}
+	function getType() {
+		return $this->type;
 	}
 
-
 }
+
+?>
