@@ -60,7 +60,7 @@ $username = $_SESSION['username'];
                     $balance = number_format(Transaction::tabulateAmount($transactions), 2);
                 ?>
                 
-                <li class='account-item'>
+                <li id='account-<?= $aid ?>' class='account-item'>
                     <p class='account-name'><?= $account->institution . ' - ' . $account->type ?></p>
                     <p class='account-amount'>$<?= $balance ?></p>
                     
