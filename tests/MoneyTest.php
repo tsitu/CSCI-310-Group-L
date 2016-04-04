@@ -1,6 +1,9 @@
 
 
 <?php
+require_once require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/db/queries.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/data/Transaction.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/data/Account.php";
 class MoneyTest extends PHPUnit_Framework_TestCase
 {
     //Account
@@ -33,7 +36,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     	$transactionArray = getTransactions($account, $firstAccount);
    
     	//have to check if there is no transaction regarding the id and accountID
-    	$this->expectOutputstring('errorstatement');//todo list
+    	//$this->expectOutputstring('errorstatement');//todo list
     }
     //GetAccount Test
     public function GetAccountTest() {
@@ -61,17 +64,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     	$this->assertEqual($sizeOfArray, 0);
 
     }
-    /*
-    public function getAccountTest() {
 
-    }
-    public function (){
-
-    }
-    public function (){
-    	
-    }
-*/
 }
 
 
