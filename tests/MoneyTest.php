@@ -12,7 +12,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     //function __construct($_id, $_userId, $_accountId, $_descriptor, $_amount, $_category, $_timestamp)
 
 
-    //test if the functino can remove 
+    //test if the functino can remove
   	//test if we delete all transaction, it return array with size of zero
 
     public function testRemove() {
@@ -37,7 +37,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     	$account = getAccount($firstAccountID);
     	removeAccount($account,$firstAccount);
     	$transactionArray = getTransactions($account, $firstAccount);
-   
+
     	//have to check if there is no transaction regarding the id and accountID
     	$this->expectOutputString('errorstatement');//todo list
     }
@@ -50,6 +50,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     	//check if we can get the account as expected.
     	$this->assertEqual($newID, "id");//we need to fill this out.
     }
+
     public function insertTransactionTest() {
 
     	$userID = 'testID';
