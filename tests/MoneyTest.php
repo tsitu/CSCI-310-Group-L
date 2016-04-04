@@ -14,12 +14,15 @@ class MoneyTest extends PHPUnit_Framework_TestCase
 
     //test if the functino can remove 
   	//test if we delete all transaction, it return array with size of zero
+
     public function testRemove() {
     	//getting accountID
-    	$firstAccountID = getAccountId("Bank of America", "Students Loan");
+    	insertTransaction(1, "test1-1", "test1-2", 3000.00, "test1-3", 0);
+    	$firstAccountID = getAccountId("test1-1", "test1-2");
     	//getting Account regarding accountID
     	$account = getAccount($firstAccountID);
-    	removeAccount($account,$firstAccount);
+
+    	removeAccount(1,$firstAccount);
     	$transactionArray = getTransactions($account, $firstAccount);
     	$num_transaction = sizeOf($transactionArray);
     	//have to check if there is no transaction regarding the id and accountID
@@ -36,7 +39,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     	$transactionArray = getTransactions($account, $firstAccount);
    
     	//have to check if there is no transaction regarding the id and accountID
-    	//$this->expectOutputstring('errorstatement');//todo list
+    	$this->expectOutputString('errorstatement');//todo list
     }
     //GetAccount Test
     public function GetAccountTest() {
