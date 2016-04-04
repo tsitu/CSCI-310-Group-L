@@ -1,13 +1,15 @@
 Given (/^user is on the main UI$/) do
 	visit('http://localhost')
+	find('').set('')
+	find('').set('')
+	page.execute_script("$")
 end
 
 When(/^user clicks the account button$/)
-	if(page.has_button?('add-account'))
-		page.click_button('add-account')
+	if(page.has_button?('login'))
+		page.click_button(login)
 	end
 end
 
 Then(/^user can create new account)
-	expect(page).to have_selector('#new-account-diaglog', visible: true)
 end
