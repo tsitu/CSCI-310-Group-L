@@ -19,3 +19,4 @@ if ($mysqli->connect_errno) {
 }
 //else echo "Successful connection" . "<br />\n";
 
+?>

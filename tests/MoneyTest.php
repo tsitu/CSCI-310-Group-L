@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../CSCI-310-Group-L/db/queries.php';
+require_once __DIR__ . '/../db/queries.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/data/Transaction.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/data/Account.php";
 class MoneyTest extends PHPUnit_Framework_TestCase

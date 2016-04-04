@@ -4,7 +4,6 @@ require_once "connect.php";
 require_once __DIR__ . "/../model/Account.php";
 require_once __DIR__ . "/../model/Transaction.php";
 
-
 //Removes all transactions tied to $userId "AND" $accountId
 //"Remove Account" function on UI.
 function removeAccount($userId, $accountId) {
@@ -197,10 +196,10 @@ function getTransactions($userId, $accountId) {
 	}
 }
 
-
 //Returns userId if email and password matches.
 //Returns null if no matches are made.
 function login($email, $password) {
+
 	global $mysqli;
 
 	//prepare
