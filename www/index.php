@@ -21,140 +21,90 @@ $username = $_SESSION['username'];
 <!DOCType html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
     <meta charset="utf-8">
     <title>minance</title>
     
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel='stylesheet' href='css/global.css'>
-    <link rel='stylesheet' href='css/dialog.css'>
-    <link rel='stylesheet' href='css/dash-layout.css'>
+<!--    <link rel='stylesheet' href='css/dialog.css'>-->
+<!--    <link rel='stylesheet' href='css/dash-layout.css'>-->
     <link rel='stylesheet' href='css/dash-style.css'>
+    <link rel='stylesheet' href='css/dash-new.css'>
 </head>
 <body>
     
-    <div class='top-bar wide'>
-        <h1 class='title app-title'>minance</h1>
+    <!-- Top -->
+    <div class='top-bar hor-flex'>
+        <h1 class='title app-title'>mi<span class='shrink'>nance</span></h1>
 
-        <div class='bar-content'>
+        <div class='bar-content hor-flex'>
             <h2 class='title section-title'>Dashboard</h2>
 
-            <div class='user-menu'>
+            <div class='user-menu hor-flex'>
                 <span class='label user-label'> <?= $username ?> </span>
-                <button class="fa fa-sign-out logout"></button>
+                <button class="logout fa fa-sign-out"></button>
             </div>
         </div>
     </div>
     
-    <div class='content wide'>
-        
-        <div id='account-module' class='panel side-panel'>
-            <ol id='account-list'>
-                
-                <?php
-                $accountIDs = getAccountIds($uid);
-                foreach ($accountIDs as $aid)
-                {
-                    $account = getAccount($aid);
-                    $transactions = getTransactions($uid, $aid);
-                    
-                    $balance = number_format(Transaction::tabulateAmount($transactions), 2);
-                ?>
-                
-                <li id='account-<?= $aid ?>' class='account-item'>
-                    <p class='account-name'><?= $account->institution . ' - ' . $account->type ?></p>
-                    <p class='account-amount'>$<?= $balance ?></p>
-                    
-                    <div class='account-options'>
-                        <button class='account-menu fa fa-line-chart'></button>
-                        <button class='account-menu fa fa-list-ul'></button>
-                        <button class='account-menu fa fa-cog'></button>
-                    </div>
-                </li>
-                
-                <?php
-                }
-                ?>
-            </ol>
-            
-            <button id='add-account'>Add Account</button>
+    <!-- Side -->
+    <button class='show-side toggle-side fa fa-bars'></button>
+    <div class='panel side-panel'>
+        <div class='side-header'>
+            <button class='toggle-side side-option'>
+                <span class='fa fa-times'></span>
+                <p class='label'>Close</p>
+            </button>
+            <button class='logout side-option'>
+                <span class='fa fa-sign-out'></span>
+                <p class='label'>Logout</p>
+            </button>
         </div>
-        
-        
-        <div class='panel main-panel'>
-            <!-- Overview -->
-            <div id='overview-module'>
+        <ol id='account-list'>
 
-            </div>
+            <?php
+            $accountIDs = getAccountIds($uid);
+            foreach ($accountIDs as $aid)
+            {
+                $account = getAccount($aid);
+                $transactions = getTransactions($uid, $aid);
 
-            <!-- Graph -->
-            <div id='graph-module'>
+                $balance = number_format(Transaction::tabulateAmount($transactions), 2);
+            ?>
 
-            </div>
+            <li id='account-<?= $aid ?>' class='account-item'>
+                <p class='account-name'><?= $account->institution . ' - ' . $account->type ?></p>
+                <p class='account-amount'>$<?= $balance ?></p>
 
-            <!-- Transaction -->
-            <div id='transaction-module' class='module'>
-                <div class='module-header'>
-                    <h3 class='module-title'>Transactions</h3>
+                <div class='account-menu'>
+                    <button class='account-option fa fa-line-chart'></button>
+                    <button class='account-option fa fa-list-ul'></button>
+                    <button class='account-option fa fa-cog'></button>
                 </div>
+            </li>
 
-                <table id='transaction-table' class=''>
-                    <tr class='transaction-fields'>
-                        <td class='col-1 transaction-col'>Date <i class='sorter fa fa-chevron-down'></i></td>
-                        <td class='col-2 transaction-col'>Amount <i class='sorter'></i></td>
-                        <td class='col-3 transaction-col'>Category <i class='sorter'></i></td>
-                        <td class='col-4 transaction-col'>Merchant <i class='sorter'></i></td>
-                    </tr>
+            <?php
+            }
+            ?>
+        </ol>
 
-                    <?php
-                    $accountIDs = getAccountIds($uid);
-                    
-                    $transactions = array();
-                    foreach ($accountIDs as $aid)
-                    {
-                        $account = getAccount($aid);
-                        $transactions = array_merge($transactions, getTransactions($uid, $aid));
-                    }
-                    
-                    foreach ($transactions as $t)
-                    {
-                        $sign = '';
-                        if ( $t->amount > 0 ) $sign = 'pos';
-                        if ( $t->amount < 0 ) $sign = 'neg';
-                        
-                        $amount = number_format(abs($t->amount), 2);
-                    ?>
-                    <tr class='transaction-data'>
-                        <td class='col-1 transaction-date'><?= date('M j, Y', $t->timestamp) ?></td>
-                        <td class='col-2 transaction-amount <?= $sign ?>'>$<?= $amount ?></td>
-                        <td class='col-3 transaction-category'><?= $t->category ?></td>
-                        <td class='col-4 transaction-merchant'><?= $t->descriptor ?></td>
-                    </tr>
-                    <?php
-                    }
-                    ?>
-                </table>
-            </div>
-        </div>
+        <button id='show-add' class='show-add'>Add Account</button>
     </div>
     
-    <!-- Popup dialogs -->
-    <div id='dialog-background'></div>
-    
-    <div id='new-account-dialog' class='dialog'>
-        <div class='dialog-header'>
-            <h3 class='dialog-label'>New Account</h3>
-            <button class='dialog-cancel fa fa-close'></button>
-        </div>
-        <form class='new-account-form'>
-<!--            <input type='text' name='new-account-name' class='new-account-name' placeholder='Account Name'>-->
-            <input type='file' name='new-account-upload' class='new-account-upload' id='csv-file'>
-        </form>
+    <!-- Main Content -->
+    <div class='content'>
         
-        <button class='new-account-button'>Add</button>
+        <div class=''></div>
     </div>
     
     
-    <!-- JS -->
+    <!-- Popup -->
+    <div id='curtain'></div>
+    
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src='js/libraries/papaparse.min.js'></script>
     

@@ -8,6 +8,11 @@
     
     border: none;
     box-sizing: border-box;
+    
+    /* webkit */
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -webkit-appearance: none;
 }
 
 html, body {
@@ -16,8 +21,6 @@ html, body {
 }
 
 ol, ul { list-style: none; }
-
-.wide { width: 100%; }
 
 
 /* style */

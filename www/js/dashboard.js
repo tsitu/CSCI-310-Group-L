@@ -1,42 +1,65 @@
+/*
+ * dashboard.js
+ *
+ * Main js file for dashboard interactions and manipulation
+ */
+
+/* VARS */
+var shown = null;
+
 
 /**
- * Called when user presses logout button.
- * Call the logout script to log user out.
+ * Init function
  */
-$('button.logout').click(function()
+$(document).ready(function()
 {
-    window.location.href = "src/scripts/logout.php";
-});
-
-
-
-/**
- * Called when user clicks add acount button
- */
-$('#add-account').click(function()
-{    
-    var file = $('#new-account-upload');
-    file.replaceWith( file.clone(true) );
-    $('#new-account-name').val('');
+    /* UI */
+    $('#curtain').click(hideDialog);
+    $('.toggle-side').click(toggleSide);
     
-    $('#dialog-background').toggleClass('active');
-    $('#new-account-dialog').toggleClass('active');
+    /* Events */
+    $('.logout').click(logout);
 });
 
+
+/* --- UI --- */
 /**
- * Called when user clicks cancel button on a dialog.
+ * Show/hide curtain backdrop by toggling class 'show'
  */
-$('.dialog-cancel').click(function()
+function toggleCurtain()
 {
-    $('#dialog-background').toggleClass('active');
-    $(this).parents('.dialog').toggleClass('active');
-});
+    $('#curtain').toggleClass('show');
+}
 
 /**
- * Called when user presses the add button
+ * Hide the currently open dialog and curtain
  */
-$('.new-account-button').click(function()
+function hideDialog()
 {
-    parseCSV();
-//    location.reload();
-});
+    if (shown !== null)
+        shown.removeClass('show');
+    
+    $('#curtain').removeClass('show');
+}
+
+/**
+ * Show/hide side panel by toggling class 'show'
+ * and store it as currently shown
+ */
+function toggleSide()
+{
+    toggleCurtain();
+    var target = $('.side-panel').toggleClass('show');
+    
+    shown = target.hasClass('show') ? target : null;
+}
+
+
+/* --- EVENTS ---*/
+/**
+ * Logout user
+ */
+function logout()
+{
+    window.location = 'src/scripts/logout.php';
+}
