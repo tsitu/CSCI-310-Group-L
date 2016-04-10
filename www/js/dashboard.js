@@ -7,6 +7,8 @@
 /* VARS */
 var shown = null;
 
+var begPicker = null;
+var endPicker = null;
 
 /**
  * Init function
@@ -19,7 +21,38 @@ $(document).ready(function()
     
     /* Events */
     $('.logout').click(logout);
+    
+    initPicker();
 });
+
+/**
+ * Initialize and setup date pickers
+ */
+function initPicker()
+{
+    var beg = document.getElementById('beg-date');
+    var end = document.getElementById('end-date');
+    
+    begPicker = new Pikaday({
+        field: beg,
+        position: 'bottom left',
+        onSelect: function(date)
+        {
+            //store or pass date to graph
+            beg.innerHTML = this.toString('M/D/YYYY');
+        }
+    });
+    
+    endPicker = new Pikaday({
+        field: end,
+        onSelect: function(date)
+        {
+            //store or pass date to graph
+            end.innerHTML = this.toString('M/D/YYYY');
+        }
+    });
+}
+
 
 
 /* --- UI --- */
@@ -63,3 +96,5 @@ function logout()
 {
     window.location = 'src/scripts/logout.php';
 }
+
+

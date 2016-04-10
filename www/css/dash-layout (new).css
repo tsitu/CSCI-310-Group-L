@@ -24,11 +24,10 @@
     top: 10px;
     left: 10px;
     
-    width: 50px;
-    height: 50px;
-    
     font-size: 25px;
     
+    width: 50px;
+    height: 50px;
     border-radius: 25px;
     -ms-border-radius: 25px;
     -moz-border-radius: 25px;
@@ -42,10 +41,10 @@
     width: 280px;
     height: 100%;
     
-    transition: all 0.2s linear;
-    -ms-transition: all 0.2s linear;
-    -moz-transition: all 0.2s linear;
-    -webkit-transition: all 0.2s linear;
+    transition: all 0.3s linear;
+    -ms-transition: all 0.3s linear;
+    -moz-transition: all 0.3s linear;
+    -webkit-transition: all 0.3s linear;
 }
 .side-panel.show { left: 0px; }
 
@@ -93,6 +92,76 @@
     -webkit-border-radius: 18px;
 }
 
+.content { 
+    padding: 70px 10px 10px 10px;
+    
+}
+
+.module {
+    margin-bottom: 20px;
+}
+.module-header {
+    height: 50px;
+    line-height: 50px;
+    
+    padding: 0px 10px;
+    
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+.module-label {
+    font-size: 18px;
+    font-weight: 400;
+}
+.date-select {
+    width: 100px;
+    height: 32px;
+    
+    padding: 0px 10px;
+    border-radius: 4px;
+    
+    font-size: 0.8em;
+}
+
+#graph {
+    height: 100px;
+}
+
+.transaction-item {
+    position: relative;
+    height: 100px;
+    padding: 8px;
+}
+.transaction-item > * { position: absolute; }
+.transaction-account, 
+.transaction-date { color: #7b7b7b; } /* STYLING */
+.transaction-account { font-size: 12px; }
+.transaction-date { 
+    top: 8px;
+    right: 8px;
+    font-size: 15px; 
+}
+.transaction-merchant, 
+.transaction-category { left: 8px; }
+.transaction-merchant {
+    bottom: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 20px;
+}
+.transaction-category {
+    bottom: 8px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 18px;
+}
+.transaction-amount {
+    right: 6px;
+    bottom: 2px;
+    font-size: 32px;
+}
+
 
 /* MEDIA: Mobile Landscape */
 @media screen and (max-width: 720px) and (orientation: landscape)
@@ -108,8 +177,6 @@
         width: 60px;
         height: 100%;
         flex-flow: column nowrap;
-        
-/*        border-right: 1px solid #b5b5b5;*/
     }
     #account-list { width: 280px; }
 }

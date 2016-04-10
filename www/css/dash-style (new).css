@@ -1,0 +1,29 @@
+/* SIDE & ACCOUNT */
+.show-side {
+    color: white;
+    background-color: #ffa75c;
+}
+.side-panel { background-color: white; }
+
+.side-option { color: #b5b5b5; }
+.side-option:hover { color: black; }
+
+.fa-cog { color: #6f6f6f; }
+.fa-cog:hover { background-color: #6f6f6f; }
+.fa-line-chart, .pos { color: #1faa6f; }
+.fa-line-chart:hover, .fa-line-chart.active { background-color: #1faa6f; }
+.fa-list-ul, .neg { color: #f45170; }
+.fa-list-ul:hover, .fa-list-ul.active { background-color: #f45170; }
+.account-option:hover { color: white; }
+
+
+/* MAIN & MODULES */
+.module-header { 
+    background-color: #f5f5f5;
+}
+.module { background-color: white; }
+
+.date-select {
+    color: white;
+    background-color: #ffa75c;
+}

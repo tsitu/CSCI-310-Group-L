@@ -21,18 +21,18 @@ $username = $_SESSION['username'];
 <!DOCType html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
     
     <meta charset="utf-8">
     <title>minance</title>
     
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel='stylesheet' href='css/libraries/pikaday.css'>
+    
     <link rel='stylesheet' href='css/global.css'>
-<!--    <link rel='stylesheet' href='css/dialog.css'>-->
-<!--    <link rel='stylesheet' href='css/dash-layout.css'>-->
-    <link rel='stylesheet' href='css/dash-style.css'>
-    <link rel='stylesheet' href='css/dash-new.css'>
+    <link rel='stylesheet' href='css/dash-layout (new).css'>
+    <link rel='stylesheet' href='css/dash-style (new).css'>
 </head>
 <body>
     
@@ -63,7 +63,7 @@ $username = $_SESSION['username'];
                 <p class='label'>Logout</p>
             </button>
         </div>
-        <ol id='account-list'>
+        <ul id='account-list'>
 
             <?php
             $accountIDs = getAccountIds($uid);
@@ -89,7 +89,7 @@ $username = $_SESSION['username'];
             <?php
             }
             ?>
-        </ol>
+        </ul>
 
         <button id='show-add' class='show-add'>Add Account</button>
     </div>
@@ -97,7 +97,34 @@ $username = $_SESSION['username'];
     <!-- Main Content -->
     <div class='content'>
         
-        <div class=''></div>
+        <div id='graph-module' class='module graph-module'>
+            <div class='module-header'>
+                <h3 class='label module-label'>Graph</h3>
+                <div class='flex-glue'></div>
+                
+                <button id='beg-date' class='date-select'>4/8/2016</button>
+                <pre> ~ </pre>
+                <button id='end-date' class='date-select'>4/8/2016</button>
+            </div>
+            <div id='graph'></div>
+        </div>
+        
+        <div id='transaction-module' class='module transactions-module'>
+            <div class='module-header'>
+                <h3 class='label module-label'>Transactions</h3>
+                
+            </div>
+            
+            <ul id='transaction-list' class='table-list'>
+                <li class='transaction-item'>
+                    <p class='transaction-account'>Bank of America - Checking</p>
+                    <p class='transaction-date'   >2016. 04. 12</p>
+                    <p class='transaction-amount' >-120.30</p>
+                    <p class='transaction-merchant'>Chipotle</p>
+                    <p class='transaction-category'>Food</p>
+                </li>
+            </ul>
+        </div>
     </div>
     
     
@@ -106,7 +133,11 @@ $username = $_SESSION['username'];
     
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src='js/libraries/papaparse.min.js'></script>
+    <script src='js/libraries/moment.min.js'></script>
+    <script src='js/libraries/pikaday.js'></script>
     
     <script src='js/dashboard.js'></script>
     <script src='js/uploadCSV.js'></script>
