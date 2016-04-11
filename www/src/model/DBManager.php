@@ -72,5 +72,17 @@ class DBManager
 		return $user_id;
 	}
 
-	
+	/**
+	 * Return array of Account objects for given user_id
+	 *
+	 * @param user_id - unique id of user to get accounts of
+	 * @return array of Account objects for user
+	 * @throws exception when MySQL statement fails
+	 */
+	function getAccounts($user_id)
+	{
+		$statement = $this->connection->prepare("SELECT id FROM users WHERE (email = ? AND password = ?)");
+
+		
+	}
 }
