@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/src/inc/queries.php';
+require_once __DIR__ . '/src/model/DBManager.php';
 
 session_start();
 
@@ -12,11 +12,14 @@ if ( !isset($_SESSION['user_id']) )
 }
 
 
-//data
-$uid = $_SESSION['user_id'];
+//session vars
+$user_id = $_SESSION['user_id'];
 $username = $_SESSION['username'];
 
 
+//data
+$manager = new DBManager();
+$accounts = $manager->getAccounts($user_id);
 
 
 ?>
@@ -68,16 +71,6 @@ $username = $_SESSION['username'];
         </div>
         <ul id='account-list'>
 
-            <?php
-            $accountIDs = getAccountIds($uid);
-            foreach ($accountIDs as $aid)
-            {
-                $account = getAccount($aid);
-                $transactions = getTransactions($uid, $aid);
-
-                $balance = number_format(Transaction::tabulateAmount($transactions), 2);
-            ?>
-
             <li id='account-<?= $aid ?>' class='account-item'>
                 <p class='account-name'><?= $account->institution . ' - ' . $account->type ?></p>
                 <p class='account-amount'>$<?= $balance ?></p>
@@ -88,10 +81,7 @@ $username = $_SESSION['username'];
                     <button class='account-option fa fa-cog'></button>
                 </div>
             </li>
-
-            <?php
-            }
-            ?>
+            
         </ul>
 
         <button id='show-add' class='show-add'>Add Account</button>
@@ -127,6 +117,7 @@ $username = $_SESSION['username'];
                     <p class='transaction-category'>Food</p>
                 </li>
             </ul>
+            
         </div>
     </div>
     
