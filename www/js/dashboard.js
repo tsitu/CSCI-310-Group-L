@@ -3,6 +3,11 @@
  *
  * Main js file for dashboard interactions and manipulation
  */
+"use strict";
+
+
+/* CONST */
+var DAY_MS = 24 * 60 * 60 * 1000;
 
 /* VARS */
 var shown = null;
@@ -10,18 +15,21 @@ var shown = null;
 var begPicker = null;
 var endPicker = null;
 
+
 /**
  * Init function
  */
 $(document).ready(function()
 {
-    /* UI */
+    //ui
     $('#curtain').click(hideDialog);
     $('.toggle-side').click(toggleSide);
     
-    /* Events */
+    //events
     $('.logout').click(logout);
     
+    
+    //init settings
     initPicker();
 });
 
@@ -30,16 +38,18 @@ $(document).ready(function()
  */
 function initPicker()
 {
+    //get buttons
     var beg = document.getElementById('beg-date');
     var end = document.getElementById('end-date');
     
+    //init pickers
     begPicker = new Pikaday({
         field: beg,
         position: 'bottom left',
         onSelect: function(date)
         {
             //store or pass date to graph
-            beg.innerHTML = this.toString('M/D/YYYY');
+            beg.innerHTML = this.toString('YYYY. M. D.');
         }
     });
     
@@ -48,9 +58,15 @@ function initPicker()
         onSelect: function(date)
         {
             //store or pass date to graph
-            end.innerHTML = this.toString('M/D/YYYY');
+            end.innerHTML = this.toString('YYYY. M. D.');
         }
     });
+    
+    //default to 1 week
+    var today = new Date();
+    var weekAgo = new Date(today.valueOf() - (7 * DAY_MS));
+    begPicker.setDate(weekAgo);
+    endPicker.setDate(today);
 }
 
 
