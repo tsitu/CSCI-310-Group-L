@@ -19,8 +19,10 @@ $username = $_SESSION['username'];
 
 //data
 $manager = new DBManager();
-$accounts = $manager->getAccounts($user_id);
+$accounts = $manager->getAccountsWithBalance($user_id);
+$recent_transactions = $manager->getTransactionsForUser($user_id);
 
+$account_map = [];
 
 ?>
 
@@ -44,8 +46,10 @@ $accounts = $manager->getAccounts($user_id);
     
     <script>
         var accounts = <?= json_encode($accounts) ?>;
+        var recent_transactions = <?= json_encode($recent_transactions) ?>;
         
         console.log(accounts);
+        console.log(recent_transactions);
     </script>
     
     <!-- Top -->
@@ -80,10 +84,12 @@ $accounts = $manager->getAccounts($user_id);
         //account list
         foreach($accounts as $account)
         {
+            $name = $account->institution . ' - ' . $account->type;
+            $account_map[$account->id] = $name;
         ?>
             
             <li id='account-<?= $account->id ?>' class='account-item'>
-                <p class='account-name'><?= $account->institution . ' - ' . $account->type ?></p>
+                <p class='account-name'><?= $name ?></p>
                 <p class='account-amount'>$<?= number_format($account->balance, 2) ?></p>
 
                 <div class='account-menu'>
@@ -122,16 +128,22 @@ $accounts = $manager->getAccounts($user_id);
                 
             </div>
             
+        <?php 
+        foreach ($recent_transactions as $t)
+        {
+        ?>    
             <ul id='transaction-list' class='table-list'>
                 <li class='transaction-item'>
-                    <p class='transaction-account'>Bank of America - Checking</p>
-                    <p class='transaction-date'   >2016. 04. 12</p>
-                    <p class='transaction-amount' >-120.30</p>
-                    <p class='transaction-merchant'>Chipotle</p>
-                    <p class='transaction-category'>Food</p>
+                    <p class='transaction-account'><?= $account_map[$t->account_id] ?></p>
+                    <p class='transaction-date'   ><?= date_format($t->time, "Y. n. j.") ?></p>
+                    <p class='transaction-amount' ><?= number_format($t->amount, 2) ?></p>
+                    <p class='transaction-merchant'><?= $t->descriptor ?></p>
+                    <p class='transaction-category'><?= $t->category ?></p>
                 </li>
             </ul>
-            
+        <?php 
+        }
+        ?>
         </div>
     </div>
     

@@ -132,6 +132,8 @@
     position: relative;
     height: 100px;
     padding: 8px;
+    
+    border-bottom: 1px solid #b4b4b4;
 }
 .transaction-item > * { position: absolute; }
 .transaction-account, 
