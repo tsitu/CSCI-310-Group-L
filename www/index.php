@@ -76,10 +76,15 @@ $accounts = $manager->getAccounts($user_id);
             </button>
         </div>
         <ul id='account-list'>
-
-            <li id='account-<?= $aid ?>' class='account-item'>
+        <?php
+        //account list
+        foreach($accounts as $account)
+        {
+        ?>
+            
+            <li id='account-<?= $account->id ?>' class='account-item'>
                 <p class='account-name'><?= $account->institution . ' - ' . $account->type ?></p>
-                <p class='account-amount'>$<?= $balance ?></p>
+                <p class='account-amount'>$<?= number_format($account->balance, 2) ?></p>
 
                 <div class='account-menu'>
                     <button class='account-option fa fa-line-chart'></button>
@@ -88,6 +93,9 @@ $accounts = $manager->getAccounts($user_id);
                 </div>
             </li>
             
+        <?php
+        }
+        ?>
         </ul>
 
         <button id='show-add' class='show-add'>Add Account</button>

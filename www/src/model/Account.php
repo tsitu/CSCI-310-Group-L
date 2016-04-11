@@ -9,6 +9,7 @@ class Account
 	public $user_id;
 	public $institution;
 	public $type;
+	public $balance;
 
 	/**
 	 * Create a new Account object from given fields.
@@ -18,12 +19,13 @@ class Account
 	 * @param $_institution
 	 * @param $_type
 	 */
-	function __construct($_id, $_user_id, $_institution, $_type)
+	function __construct($_id, $_user_id, $_institution, $_type, $_balance)
 	{
 		$this->id = $_id;
 		$this->user_id = $_user_id;
 		$this->institution = $_institution;
 		$this->type = $_type;
+		$this->balance = $_balance;
 	}
 
 
@@ -34,5 +36,6 @@ class Account
 	{
 		$this->id = (int) $this->id;
 		$this->user_id = (int) $this->user_id;
+		$this->balance = (double) $this->balance;
 	}
 }
