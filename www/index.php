@@ -42,6 +42,12 @@ $accounts = $manager->getAccounts($user_id);
 </head>
 <body>
     
+    <script>
+        var accounts = <?= json_encode($accounts) ?>;
+        
+        console.log(accounts);
+    </script>
+    
     <!-- Top -->
     <div class='top-bar hor-flex'>
         <h1 class='title app-title'>mi<span class='shrink'>nance</span></h1>

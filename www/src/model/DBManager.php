@@ -73,7 +73,7 @@ class DBManager
 	{
 		$statement = $this->connection->prepare("SELECT * FROM Accounts WHERE user_id = ?");
 		$statement->execute( [$user_id] );
-		$accounts = $statement->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, "Account");
+		$accounts = $statement->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, "Account", ["_id", "_user_id", "_institution", "_type"]);
 
 		foreach ($accounts as $a)
 			$a->fixTypes();

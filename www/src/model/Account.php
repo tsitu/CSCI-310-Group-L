@@ -18,9 +18,10 @@ class Account
 	 * @param $_institution
 	 * @param $_type
 	 */
-	function __construct($_id, $_institution, $_type)
+	function __construct($_id, $_user_id, $_institution, $_type)
 	{
 		$this->id = $_id;
+		$this->user_id = $_user_id;
 		$this->institution = $_institution;
 		$this->type = $_type;
 	}
