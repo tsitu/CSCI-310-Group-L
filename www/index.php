@@ -7,7 +7,7 @@ session_start();
 //redirect if not logged in
 if ( !isset($_SESSION['user_id']) )
 {
-    header('Location: /login');
+    header('Location: /');
     exit();
 }
 
@@ -30,7 +30,6 @@ $account_map = [];
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-
     
     <meta charset="utf-8">
     <title>minance</title>
@@ -39,6 +38,7 @@ $account_map = [];
     <link rel='stylesheet' href='css/libraries/pikaday.css'>
     
     <link rel='stylesheet' href='css/global.css'>
+    <link rel='stylesheet' href='css/dialog.css'>
     <link rel='stylesheet' href='css/dash-layout (new).css'>
     <link rel='stylesheet' href='css/dash-style (new).css'>
 </head>
@@ -79,7 +79,7 @@ $account_map = [];
                 <p class='label'>Logout</p>
             </button>
         </div>
-        <ul id='account-list'>
+        <ul id='account-list' class='flex-glue'>
         <?php
         //account list
         foreach($accounts as $account)
@@ -94,7 +94,7 @@ $account_map = [];
 
                 <div class='account-menu'>
                     <button class='account-option fa fa-line-chart'></button>
-                    <button class='account-option fa fa-list-ul'></button>
+                    <button class='account-option fa fa-list-ul active'></button>
                     <button class='account-option fa fa-cog'></button>
                 </div>
             </li>
@@ -105,6 +105,7 @@ $account_map = [];
         </ul>
 
         <button id='show-add' class='show-add'>Add Account</button>
+        <div class=''></div>
     </div>
     
     <!-- Main Content -->
@@ -126,6 +127,7 @@ $account_map = [];
             <div class='module-header'>
                 <h3 class='label module-label'>Transactions</h3>
                 
+                <div class='module-subheader'></div>
             </div>
             
         <?php 
@@ -135,10 +137,10 @@ $account_map = [];
             <ul id='transaction-list' class='table-list'>
                 <li class='transaction-item'>
                     <p class='transaction-account'><?= $account_map[$t->account_id] ?></p>
-                    <p class='transaction-date'   ><?= date_format($t->time, "Y. n. j.") ?></p>
+                    <p class='transaction-date'   ><?= date_format($t->time, "Y. n. j") ?></p>
                     <p class='transaction-amount' ><?= number_format($t->amount, 2) ?></p>
-                    <p class='transaction-merchant'><?= $t->descriptor ?></p>
                     <p class='transaction-category'><?= $t->category ?></p>
+                    <p class='transaction-descriptor'><?= $t->descriptor ?></p>
                 </li>
             </ul>
         <?php 
@@ -158,8 +160,9 @@ $account_map = [];
     <script src='js/libraries/papaparse.min.js'></script>
     <script src='js/libraries/moment.min.js'></script>
     <script src='js/libraries/pikaday.js'></script>
+    <script src='js/lib/papaparse.min.js'></script>
     
     <script src='js/dashboard.js'></script>
-    <script src='js/uploadCSV.js'></script>
+    <script src='js/utils.js'></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-/*  */
+/* --- Popup --- */
 #curtain {
     z-index: 50;
     display: none;
@@ -16,8 +16,8 @@
 #curtain.show { display: block; }
 
 
-/* --- Mobile Portrait --- */
-.top-bar, .show-add { display: none; }
+/* MEDIA: Mobile Portrait */
+.top-bar { display: none; }
 
 .side-panel, .show-side { position: fixed; }
 .show-side {
@@ -40,6 +40,9 @@
     
     width: 280px;
     height: 100%;
+    
+    display: flex;
+    flex-flow: column nowrap;
     
     transition: all 0.3s linear;
     -ms-transition: all 0.3s linear;
@@ -92,6 +95,16 @@
     -webkit-border-radius: 18px;
 }
 
+.show-add {
+    width: 100%;
+    height: 60px;
+    
+    font-size: 18px;
+    font-weight: 300px;
+}
+
+
+/* - CONTENT - */
 .content { 
     padding: 70px 10px 10px 10px;
     
@@ -114,6 +127,8 @@
     font-size: 18px;
     font-weight: 400;
 }
+
+/* --- GRAPH --- */
 .date-select {
     width: 100px;
     height: 32px;
@@ -128,25 +143,23 @@
     height: 100px;
 }
 
+
+/* --- TRANSACTION --- */
 .transaction-item {
     position: relative;
     height: 100px;
     padding: 8px;
-    
-    border-bottom: 1px solid #b4b4b4;
 }
 .transaction-item > * { position: absolute; }
-.transaction-account, 
-.transaction-date { color: #7b7b7b; } /* STYLING */
 .transaction-account { font-size: 12px; }
 .transaction-date { 
     top: 8px;
     right: 8px;
-    font-size: 15px; 
-}
-.transaction-merchant, 
-.transaction-category { left: 8px; }
-.transaction-merchant {
+    font-size: 15px;
+} 
+.transaction-category,
+.transaction-descriptor { left: 8px; }
+.transaction-descriptor {
     bottom: 30px;
     height: 30px;
     line-height: 30px;
@@ -185,7 +198,7 @@
 
 
 /* MEDIA: min-width 37.5em */
-@media screen and (min-width: 37.5em)
+@media screen and (min-width: )
 {
     
 }

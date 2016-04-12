@@ -11,7 +11,7 @@
 
 header('Content-Type: application/json');
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/db/queries.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/CSCI-310-Group-L/www/src/inc/queries.php";
 
 if(isset($_GET['function'])) {
 	$function = $_GET['function'];
