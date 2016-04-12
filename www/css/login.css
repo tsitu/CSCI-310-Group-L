@@ -48,3 +48,11 @@ body {
     
     background-color: #ff9234;
 }
+
+.error {
+    height: 50px;
+    line-height: 50px;
+    
+    color: #ff5353;
+    text-align: center;
+}

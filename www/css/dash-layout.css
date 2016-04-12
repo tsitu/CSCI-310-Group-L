@@ -1,4 +1,6 @@
 /* TOP BAR */
+.wide { width: 100%; }
+
 .top-bar {
     height: 70px;
     display: flex;
@@ -96,7 +98,7 @@
     -moz-border-radius: 18px;
     -webkit-border-radius: 18px;
 }
-#add-account {
+.show-add {
     width: inherit;
     height: 70px;
     bottom: 0px;
@@ -169,17 +171,11 @@
 
 
 /* ADD DIALOG */
-.new-account-form > input {
+.add-input {
     display: block;
     width: 90%;
     height: 30px;
     margin: 20px auto;
-}
-.new-account-name {
-    padding 0px 10px;
-    
-    font-size: 16px;
-    border-bottom: 1px solid #959595;
 }
 .new-account-button {
     width: 100%;

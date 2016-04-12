@@ -1,26 +1,116 @@
+/*
+ * dashboard.js
+ *
+ * Main js file for dashboard interactions and manipulation
+ */
+"use strict";
 
+
+/* CONST */
+var DAY_MS = 24 * 60 * 60 * 1000;
+
+/* VARS */
+var shown = null;
+
+var begPicker = null;
+var endPicker = null;
 
 
 /**
- * Called when user clicks add acount button
+ * Init function
  */
-$('#add-account').click(function()
+$(document).ready(function()
 {
-    console.log('hi');
+    //ui
+    $('#curtain').click(hideDialog);
+    $('.toggle-side').click(toggleSide);
     
-    var file = $('#new-account-upload');
-    file.replaceWith( file.clone(true) );
-    $('#new-account-name').val('');
+    //events
+    $('.logout').click(logout);
     
-    $('#dialog-background').toggleClass('active');
-    $('#new-account-dialog').toggleClass('active');
+    
+    //init settings
+    initPicker();
 });
 
 /**
- * Called when user clicks cancel button on a dialog.
+ * Initialize and setup date pickers
  */
-$('.dialog-cancel').click(function()
+function initPicker()
 {
-    $('#dialog-background').toggleClass('active');
-    $(this).parents('.dialog').toggleClass('active');
-});
+    //get buttons
+    var beg = document.getElementById('beg-date');
+    var end = document.getElementById('end-date');
+    
+    //init pickers
+    begPicker = new Pikaday({
+        field: beg,
+        position: 'bottom left',
+        onSelect: function(date)
+        {
+            //store or pass date to graph
+            beg.innerHTML = this.toString('YYYY. M. D.');
+        }
+    });
+    
+    endPicker = new Pikaday({
+        field: end,
+        onSelect: function(date)
+        {
+            //store or pass date to graph
+            end.innerHTML = this.toString('YYYY. M. D.');
+        }
+    });
+    
+    //default to 1 week
+    var today = new Date();
+    var weekAgo = new Date(today.valueOf() - (7 * DAY_MS));
+    begPicker.setDate(weekAgo);
+    endPicker.setDate(today);
+}
+
+
+
+/* --- UI --- */
+/**
+ * Show/hide curtain backdrop by toggling class 'show'
+ */
+function toggleCurtain()
+{
+    $('#curtain').toggleClass('show');
+}
+
+/**
+ * Hide the currently open dialog and curtain
+ */
+function hideDialog()
+{
+    if (shown !== null)
+        shown.removeClass('show');
+    
+    $('#curtain').removeClass('show');
+}
+
+/**
+ * Show/hide side panel by toggling class 'show'
+ * and store it as currently shown
+ */
+function toggleSide()
+{
+    toggleCurtain();
+    var target = $('.side-panel').toggleClass('show');
+    
+    shown = target.hasClass('show') ? target : null;
+}
+
+
+/* --- EVENTS ---*/
+/**
+ * Logout user
+ */
+function logout()
+{
+    window.location = 'src/scripts/logout.php';
+}
+
+
