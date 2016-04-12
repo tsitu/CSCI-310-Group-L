@@ -73,12 +73,13 @@ class DBManager
 	public function getAccountsWithBalance($user_id)
 	{
 		$str = "
-		SELECT Accounts.*, IFNULL(Transactions.balance, 0) as balance, Transactions.time
-		FROM Accounts 
-		LEFT JOIN Transactions ON Accounts.id = Transactions.account_id 
-		WHERE Accounts.user_id = ?
-		GROUP BY Accounts.id
-		ORDER BY Transactions.time DESC;
+		SELECT Accounts.*, IFNULL(t.balance, 0), t.time
+		FROM 
+			Accounts
+		LEFT JOIN 
+			(SELECT account_id, balance, time FROM Transactions ORDER BY time DESC limit 1) t
+		ON Accounts.id = t.account_id 
+		WHERE Accounts.user_id = 1;
 		";
 
 		$statement = $this->connection->prepare($str);
@@ -101,13 +102,10 @@ class DBManager
 	public function getTransactionsForUser($user_id, $limit = 30)
 	{
 		$str = "
-		SELECT Accounts.*, IFNULL(t.balance, 0), t.time
-		FROM 
-			Accounts
-		LEFT JOIN 
-			(SELECT account_id, balance, time FROM Transactions ORDER BY time DESC limit 1) t
-		ON Accounts.id = t.account_id 
-		WHERE Accounts.user_id = 1;
+		SELECT id, account_id, time, amount, category, descriptor FROM Transactions 
+		WHERE user_id = ?
+		ORDER BY time DESC 
+		LIMIT ?;
 		";
 
 		$statement = $this->connection->prepare($str);

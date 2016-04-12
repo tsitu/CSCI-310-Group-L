@@ -105,6 +105,7 @@ $account_map = [];
         </ul>
 
         <button id='show-add' class='show-add'>Add Account</button>
+        <div class=''></div>
     </div>
     
     <!-- Main Content -->
@@ -151,19 +152,6 @@ $account_map = [];
     
     <!-- Popup -->
     <div id='curtain'></div>
-    
-    <div id='add-dialog' class='dialog'>
-        <div class='dialog-header'>
-            <h3 class='dialog-label'>New Account</h3>
-            <button class='dialog-cancel fa fa-close'></button>
-        </div>
-        
-        <form id='add-form' class='add-form'>
-            <input type='file' name='csv-new' class='add-input' id='csv-new'>
-        </form>
-        
-        <button id='add-confirm' class='confirm-button'>Add</button>
-    </div>
     
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>

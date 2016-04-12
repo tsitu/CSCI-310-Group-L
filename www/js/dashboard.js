@@ -39,10 +39,10 @@ $(document).ready(function()
  */
 function hideUnsupported()
 {
-    var fileInput = document.getElementById('csv-new');
-    
-    if (fileInput.disabled)
-        $('#showAdd').addClass('hidden');
+//    var fileInput = document.getElementById('csv-new');
+//    
+//    if (fileInput.disabled)
+//        $('#showAdd').addClass('hidden');
 }
 
 /**
