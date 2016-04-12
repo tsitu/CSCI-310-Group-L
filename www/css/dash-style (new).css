@@ -17,6 +17,9 @@
 .fa-list-ul:hover, .fa-list-ul.active { background-color: #f45170; }
 .fa-line-chart:hover, .fa-line-chart.active { background-color: #1faa6f; }
 
+.show-add { color: #ffa75c; }
+.show-add:hover { border: 2px solid #ffa75c; }
+
 
 /* MAIN & MODULES */
 .module-header { 

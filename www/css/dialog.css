@@ -1,4 +1,5 @@
-.dialog.active { display: block; }
+.dialog { display: none; }
+.dialog.show { display: block; }
 .dialog {
     z-index: 100;
     display: none;

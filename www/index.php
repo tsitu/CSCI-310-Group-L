@@ -7,7 +7,7 @@ session_start();
 //redirect if not logged in
 if ( !isset($_SESSION['user_id']) )
 {
-    header('Location: /CSCI-310-Group-L/www/');
+    header('Location: /');
     exit();
 }
 
@@ -30,7 +30,6 @@ $account_map = [];
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-
     
     <meta charset="utf-8">
     <title>minance</title>
@@ -39,6 +38,7 @@ $account_map = [];
     <link rel='stylesheet' href='css/libraries/pikaday.css'>
     
     <link rel='stylesheet' href='css/global.css'>
+    <link rel='stylesheet' href='css/dialog.css'>
     <link rel='stylesheet' href='css/dash-layout (new).css'>
     <link rel='stylesheet' href='css/dash-style (new).css'>
 </head>
@@ -66,7 +66,6 @@ $account_map = [];
         </div>
     </div>
     
-<<<<<<< HEAD
     <!-- Side -->
     <button class='show-side toggle-side fa fa-bars'></button>
     <div class='panel side-panel'>
@@ -80,7 +79,7 @@ $account_map = [];
                 <p class='label'>Logout</p>
             </button>
         </div>
-        <ul id='account-list'>
+        <ul id='account-list' class='flex-glue'>
         <?php
         //account list
         foreach($accounts as $account)
@@ -148,19 +147,23 @@ $account_map = [];
         ?>
         </div>
     </div>
-
-    <div id='remove-account-dialog' class='dialog'>
-        <div class='dialog-header'>
-            <h3 class='dialog-label'>Remove Account</h3>
-            <button class='dialog-cancel fa fa-close'></button>
-        </div>
-        <p style="text-align: center">Are you sure?</p>
-        <button class='remove-account-confirm'>Confirm</button>
-    </div>
     
     
     <!-- Popup -->
     <div id='curtain'></div>
+    
+    <div id='add-dialog' class='dialog'>
+        <div class='dialog-header'>
+            <h3 class='dialog-label'>New Account</h3>
+            <button class='dialog-cancel fa fa-close'></button>
+        </div>
+        
+        <form id='add-form' class='add-form'>
+            <input type='file' name='csv-new' class='add-input' id='csv-new'>
+        </form>
+        
+        <button id='add-confirm' class='confirm-button'>Add</button>
+    </div>
     
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>

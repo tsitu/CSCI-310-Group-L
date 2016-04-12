@@ -101,10 +101,13 @@ class DBManager
 	public function getTransactionsForUser($user_id, $limit = 30)
 	{
 		$str = "
-		SELECT id, account_id, time, amount, category, descriptor FROM Transactions 
-		WHERE user_id = ?
-		ORDER BY time DESC 
-		LIMIT ?;
+		SELECT Accounts.*, IFNULL(t.balance, 0), t.time
+		FROM 
+			Accounts
+		LEFT JOIN 
+			(SELECT account_id, balance, time FROM Transactions ORDER BY time DESC limit 1) t
+		ON Accounts.id = t.account_id 
+		WHERE Accounts.user_id = 1;
 		";
 
 		$statement = $this->connection->prepare($str);

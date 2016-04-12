@@ -22,8 +22,12 @@ html, body {
 
 ol, ul { list-style: none; }
 
+.hidden { display: none; }
 .flex-glue { flex-grow: 100; }
 
+.disable-scroll {
+    overflow: hidden;
+}
 
 /* style */
 body { 

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
  * dashboard.js
  *
@@ -11,14 +10,11 @@
 var DAY_MS = 24 * 60 * 60 * 1000;
 
 /* VARS */
-var shown = null;
+var toggle = null;
 
 var begPicker = null;
 var endPicker = null;
 
-=======
-var id='';
->>>>>>> tran
 
 /**
  * Init function
@@ -34,8 +30,20 @@ $(document).ready(function()
     
     
     //init settings
+    hideUnsupported();
     initPicker();
 });
+
+/**
+ * Check if features are supported and hide elements if not
+ */
+function hideUnsupported()
+{
+    var fileInput = document.getElementById('csv-new');
+    
+    if (fileInput.disabled)
+        $('#showAdd').addClass('hidden');
+}
 
 /**
  * Initialize and setup date pickers
@@ -89,23 +97,22 @@ function toggleCurtain()
  */
 function hideDialog()
 {
-    if (shown !== null)
-        shown.removeClass('show');
-    
-    $('#curtain').removeClass('show');
+    toggle();
+    toggle = null;
 }
 
 /**
  * Show/hide side panel by toggling class 'show'
  * and store it as currently shown
  */
-function toggleSide()
+var toggleSide = function toggleSide()
 {
     toggleCurtain();
     var target = $('.side-panel').toggleClass('show');
     
-    shown = target.hasClass('show') ? target : null;
+    toggle = toggleSide;
 }
+
 
 
 /* --- EVENTS ---*/
