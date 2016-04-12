@@ -79,7 +79,7 @@ class DBManager
 		LEFT JOIN 
 			(SELECT account_id, balance, time FROM Transactions ORDER BY time DESC limit 1) t
 		ON Accounts.id = t.account_id 
-		WHERE Accounts.user_id = 1;
+		WHERE Accounts.user_id = ?;
 		";
 
 		$statement = $this->connection->prepare($str);
