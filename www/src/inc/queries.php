@@ -57,7 +57,7 @@ function getAccountId($institution, $type) {
 		if(! $stmt2->execute() ) echo "Execute failed: (" . $stmt2->errno . ") " . $stmt2->error . "<br />";
 
 		$id = $stmt2->insert_id;
-		echo "stmt2 id: " . $id . "<br />";
+		//echo "Inserted new id: " . $id . "<br />";
 	}
 
 	return $id;

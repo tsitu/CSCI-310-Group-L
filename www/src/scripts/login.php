@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../inc/queries.php';
+require_once __DIR__ . '/../model/DBManager.php';
 
 session_start();
 
@@ -17,7 +17,8 @@ if ( empty($username) || empty($password) )
 
 
 //check against db for login
-$uid = login($username, $password);
+$manager = new DBManager();
+$uid = $manager->getUser($username, $password);
 if ( is_null($uid) )
 {
     $_SESSION['error'] = 'Invalid login parameters';
@@ -28,6 +29,7 @@ if ( is_null($uid) )
 
 //set login session
 $_SESSION['user_id'] = $uid;
+$_SESSION['username'] = $username;
 
 header('Location: /');
 exit();
