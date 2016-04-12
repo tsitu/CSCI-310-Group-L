@@ -9,12 +9,13 @@
 .side-option:hover { color: black; }
 
 .fa-cog { color: #6f6f6f; }
-.fa-cog:hover { background-color: #6f6f6f; }
-.fa-line-chart, .pos { color: #1faa6f; }
-.fa-line-chart:hover, .fa-line-chart.active { background-color: #1faa6f; }
 .fa-list-ul, .neg { color: #f45170; }
+.fa-line-chart, .pos { color: #1faa6f; }
+
+.account-option:hover, .account-option.active { color: white; }
+.fa-cog:hover, .fa-cog.active { background-color: #6f6f6f; }
 .fa-list-ul:hover, .fa-list-ul.active { background-color: #f45170; }
-.account-option:hover { color: white; }
+.fa-line-chart:hover, .fa-line-chart.active { background-color: #1faa6f; }
 
 
 /* MAIN & MODULES */
@@ -24,6 +25,16 @@
 .module { background-color: white; }
 
 .date-select {
+/*
     color: white;
     background-color: #ffa75c;
+*/
+    color: #ffa75c;
+    text-decoration: underline;
 }
+
+.transaction-item { 
+    color: #414141;
+    border-bottom: 1px solid #b4b4b4; 
+}
+.transaction-account, .transaction-date { color: #7b7b7b; }

@@ -132,21 +132,17 @@
     position: relative;
     height: 100px;
     padding: 8px;
-    
-    border-bottom: 1px solid #b4b4b4;
 }
 .transaction-item > * { position: absolute; }
-.transaction-account, 
-.transaction-date { color: #7b7b7b; } /* STYLING */
 .transaction-account { font-size: 12px; }
 .transaction-date { 
     top: 8px;
     right: 8px;
-    font-size: 15px; 
-}
-.transaction-merchant, 
-.transaction-category { left: 8px; }
-.transaction-merchant {
+    font-size: 15px;
+} 
+.transaction-category,
+.transaction-descriptor { left: 8px; }
+.transaction-descriptor {
     bottom: 30px;
     height: 30px;
     line-height: 30px;

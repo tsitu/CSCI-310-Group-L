@@ -45,11 +45,11 @@ function initPicker()
     //init pickers
     begPicker = new Pikaday({
         field: beg,
-        position: 'bottom left',
+        position: 'bottom right',
         onSelect: function(date)
         {
             //store or pass date to graph
-            beg.innerHTML = this.toString('YYYY. M. D.');
+            beg.innerHTML = this.toString('YYYY. M. D');
         }
     });
     
@@ -58,7 +58,7 @@ function initPicker()
         onSelect: function(date)
         {
             //store or pass date to graph
-            end.innerHTML = this.toString('YYYY. M. D.');
+            end.innerHTML = this.toString('YYYY. M. D');
         }
     });
     

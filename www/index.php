@@ -94,7 +94,7 @@ $account_map = [];
 
                 <div class='account-menu'>
                     <button class='account-option fa fa-line-chart'></button>
-                    <button class='account-option fa fa-list-ul'></button>
+                    <button class='account-option fa fa-list-ul active'></button>
                     <button class='account-option fa fa-cog'></button>
                 </div>
             </li>
@@ -126,6 +126,7 @@ $account_map = [];
             <div class='module-header'>
                 <h3 class='label module-label'>Transactions</h3>
                 
+                <div class='module-subheader'></div>
             </div>
             
         <?php 
@@ -135,10 +136,10 @@ $account_map = [];
             <ul id='transaction-list' class='table-list'>
                 <li class='transaction-item'>
                     <p class='transaction-account'><?= $account_map[$t->account_id] ?></p>
-                    <p class='transaction-date'   ><?= date_format($t->time, "Y. n. j.") ?></p>
+                    <p class='transaction-date'   ><?= date_format($t->time, "Y. n. j") ?></p>
                     <p class='transaction-amount' ><?= number_format($t->amount, 2) ?></p>
-                    <p class='transaction-merchant'><?= $t->descriptor ?></p>
                     <p class='transaction-category'><?= $t->category ?></p>
+                    <p class='transaction-descriptor'><?= $t->descriptor ?></p>
                 </li>
             </ul>
         <?php 
