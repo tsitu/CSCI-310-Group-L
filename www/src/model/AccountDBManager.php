@@ -1,6 +1,8 @@
 <?php
 
-require_once "Account.php";
+
+require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/Account.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/DBManager.php";
 
 class AccountDBManager extends DBManager {
 
