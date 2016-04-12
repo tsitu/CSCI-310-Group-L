@@ -8,6 +8,10 @@
 * USE minance;
 * source data/minance.sql
 
+* mysql -u sql3112429 -h sql3.freemysqlhosting.net -p
+* password is NqxhS6d8yQ
+* database is sql3112429
+
 <strong>Some rules to follow...</strong>
 
 Transaction types should only be "card", "loan", "savings"

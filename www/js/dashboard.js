@@ -10,7 +10,7 @@
 var DAY_MS = 24 * 60 * 60 * 1000;
 
 /* VARS */
-var shown = null;
+var toggle = null;
 
 var begPicker = null;
 var endPicker = null;
@@ -30,8 +30,20 @@ $(document).ready(function()
     
     
     //init settings
+    hideUnsupported();
     initPicker();
 });
+
+/**
+ * Check if features are supported and hide elements if not
+ */
+function hideUnsupported()
+{
+    var fileInput = document.getElementById('csv-new');
+    
+    if (fileInput.disabled)
+        $('#showAdd').addClass('hidden');
+}
 
 /**
  * Initialize and setup date pickers
@@ -45,11 +57,11 @@ function initPicker()
     //init pickers
     begPicker = new Pikaday({
         field: beg,
-        position: 'bottom left',
+        position: 'bottom right',
         onSelect: function(date)
         {
             //store or pass date to graph
-            beg.innerHTML = this.toString('YYYY. M. D.');
+            beg.innerHTML = this.toString('YYYY. M. D');
         }
     });
     
@@ -58,7 +70,7 @@ function initPicker()
         onSelect: function(date)
         {
             //store or pass date to graph
-            end.innerHTML = this.toString('YYYY. M. D.');
+            end.innerHTML = this.toString('YYYY. M. D');
         }
     });
     
@@ -85,23 +97,22 @@ function toggleCurtain()
  */
 function hideDialog()
 {
-    if (shown !== null)
-        shown.removeClass('show');
-    
-    $('#curtain').removeClass('show');
+    toggle();
+    toggle = null;
 }
 
 /**
  * Show/hide side panel by toggling class 'show'
  * and store it as currently shown
  */
-function toggleSide()
+var toggleSide = function toggleSide()
 {
     toggleCurtain();
     var target = $('.side-panel').toggleClass('show');
     
-    shown = target.hasClass('show') ? target : null;
+    toggle = toggleSide;
 }
+
 
 
 /* --- EVENTS ---*/
@@ -112,5 +123,3 @@ function logout()
 {
     window.location = 'src/scripts/logout.php';
 }
-
-

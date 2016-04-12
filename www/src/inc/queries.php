@@ -1,6 +1,6 @@
 <?php
 
-require_once "connect.php";
+require_once __DIR__ . "/connect.php";
 require_once __DIR__ . "/../model/Account.php";
 require_once __DIR__ . "/../model/Transaction.php";
 
@@ -118,8 +118,8 @@ function getAccountIds($userId) {
 
 //Get an account object from an accountId.
 function getAccount($accountId) {
+	
 	global $mysqli;
-
 	//prepare
 	if( ($stmt = $mysqli->prepare("SELECT id, institution, type FROM accounts WHERE id=?") )) {
 
@@ -196,12 +196,10 @@ function getTransactions($userId, $accountId) {
 	}
 }
 
-
 //Returns userId if email and password matches.
 //Returns null if no matches are made.
 function login($email, $password) {
-	global $mysqli;
-
+global $mysqli;
 	//prepare
 	if( ($stmt = $mysqli->prepare("SELECT id FROM users WHERE email=? AND password=?") )) {
 
@@ -232,7 +230,42 @@ function login($email, $password) {
 		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
 	}
 }
+function getNumberOfRowsTransactions(){
 
+	global $mysqli;
+    //prepare
+	if( ($stmt = $mysqli->prepare("SELECT id FROM transactions") )) {
+
+		//execute
+		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+
+		//fetch result set
+		$stmt->store_result();
+		
+		return $stmt->num_rows;
+
+	} else {
+		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
+	}
+}
+function getNumberOfRowsAccounts(){
+
+	global $mysqli;
+    //prepare
+	if( ($stmt = $mysqli->prepare("SELECT id FROM accounts") )) {
+
+		//execute
+		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+
+		//fetch result set
+		$stmt->store_result();
+		
+		return $stmt->num_rows;
+		
+	} else {
+		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
+	}
+}
 
 
 
