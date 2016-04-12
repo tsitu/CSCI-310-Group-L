@@ -1,10 +1,23 @@
 var transactions = [];
 
+function removeAccount(institution, type) {
+	var getAccountIdUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccountId&institution=" + institution + "&type=" + type;
+	var accountId = httpGet(getAccountIdUrl);
+	//console.log(accountId);
+
+	var removeAccountUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=removeAccount&userId=1&accountId=" + accountId;
+	var remove = httpGet(removeAccountUrl);
+	//console.log(remove);
+
+	location.reload();
+}
+
 function parseCSV() {
 	var file = document.getElementById("csv-file").files[0];
 
 	if (file == undefined || (!file.name.match(/\.(csv)$/))) {
 		alert("Please select a CSV file!");
+		location.reload();
 		return undefined;
 	}
 	else {
@@ -23,19 +36,21 @@ function parseCSV() {
 					var txMerchant = data[i]["txMerchant"];
 					var txTime = data[i]["txTime"];
 
-					var getAccountIdUrl = "https://localhost/CSCI-310-Group-L/admin.php?function=getAccountId&institution=" + accountInstitution + "&type=" + accountType;
+					var getAccountIdUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccountId&institution=" + accountInstitution + "&type=" + accountType;
 					var accountId = httpGet(getAccountIdUrl);
 
-					var insertTransactionUrl = "https://localhost/CSCI-310-Group-L/admin.php?function=insertTransaction&userId=1&accountId=" + accountId + "&descriptor=" + txMerchant + "&amount=" + txAmount + "&category=" + txCategory + "&timestamp=" + txTime;
+					var insertTransactionUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=insertTransaction&userId=1&accountId=" + accountId + "&descriptor=" + txMerchant + "&amount=" + txAmount + "&category=" + txCategory + "&timestamp=" + txTime;
 					var insert = httpGet(insertTransactionUrl);
 					//console.log(insert);
 				}
+
+				location.reload();
 			}
 		});
 	}
 }
 
-function parseCSV2() {
+function oldparseCSV() {
 	var file = document.getElementById("csv-file").files[0];
 
 	if (file == undefined || (!file.name.match(/\.(csv)$/))) {

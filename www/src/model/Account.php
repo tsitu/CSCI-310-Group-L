@@ -28,7 +28,6 @@ class Account
 		$this->balance = $_balance;
 	}
 
-
 	/**
 	 * Ensure numeric fields are the correct type since PDO::fetch() only generates strings
 	 */
@@ -39,3 +38,5 @@ class Account
 		$this->balance = (double) $this->balance;
 	}
 }
+
+?>

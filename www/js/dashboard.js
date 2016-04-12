@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * dashboard.js
  *
@@ -15,6 +16,9 @@ var shown = null;
 var begPicker = null;
 var endPicker = null;
 
+=======
+var id='';
+>>>>>>> tran
 
 /**
  * Init function
@@ -112,5 +116,3 @@ function logout()
 {
     window.location = 'src/scripts/logout.php';
 }
-
-
