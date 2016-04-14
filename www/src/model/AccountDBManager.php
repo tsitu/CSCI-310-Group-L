@@ -17,13 +17,13 @@ class AccountDBManager extends DBManager {
 	public function getAccountsWithBalance($user_id)
 	{
 		$str = "
-		SELECT Accounts.*, IFNULL(t.balance, 0), t.time
+		SELECT Accounts.*, IFNULL(t.balance, 0) AS balance, t.time
 		FROM 
 			Accounts
 		LEFT JOIN 
 			(SELECT account_id, balance, time FROM Transactions ORDER BY time DESC limit 1) t
 		ON Accounts.id = t.account_id 
-		WHERE Accounts.user_id = 1;
+		WHERE Accounts.user_id = ?;
 		";
 
 		$statement = $this->connection->prepare($str);
