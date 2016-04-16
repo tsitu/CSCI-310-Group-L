@@ -22,12 +22,20 @@ html, body {
 
 ol, ul { list-style: none; }
 
+input[type='file'] {
+    width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
 .hidden { display: none; }
+
 .flex-glue { flex-grow: 100; }
 
-.disable-scroll {
-    overflow: hidden;
-}
+.disable-scroll { overflow: hidden; }
 
 /* style */
 body { 
@@ -37,4 +45,8 @@ body {
 }
 
 button { background-color: transparent; }
-button:hover { cursor: pointer; }
+button:hover,
+.file-label
+{ 
+    cursor: pointer;
+}

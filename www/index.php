@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/src/model/DBManager.php';
+//require_once __DIR__ . '/src/model/DBManager.php';
 
 session_start();
 
@@ -18,11 +18,8 @@ $username = $_SESSION['username'];
 
 
 //data
-$manager = new DBManager();
-$accounts = $manager->getAccountsWithBalance($user_id);
-$recent_transactions = $manager->getTransactionsForUser($user_id);
-
-$account_map = [];
+$accounts = [];
+$recent_transactions = [];
 
 ?>
 
@@ -79,36 +76,51 @@ $account_map = [];
                 <p class='label'>Logout</p>
             </button>
         </div>
-        <ul id='account-list' class='flex-glue'>
-            <li id='new-slot' class='account-item'>
-                <button>
-                    + Add
-                </button>
-            </li>
-            
-        <?php
-        //account list
-        foreach($accounts as $account)
-        {
-            $name = $account->institution . ' - ' . $account->type;
-            $account_map[$account->id] = $name;
-        ?>
-            
-            <li id='account-<?= $account->id ?>' class='account-item'>
-                <p class='account-name'><?= $name ?></p>
-                <p class='account-amount'>$<?= number_format($account->balance, 2) ?></p>
+        
+        <div id='account-module' class='flex-glue'>
+            <ul id='account-list' class='flex-glue'>
+            <?php
+            //account list
+            foreach($accounts as $account)
+            {
+                $name = $account->institution . ' - ' . $account->type;
+                $account_map[$account->id] = $name;
+            ?>
 
-                <div class='account-menu'>
-                    <button class='account-option fa fa-line-chart'></button>
-                    <button class='account-option fa fa-list-ul active'></button>
-                    <button class='account-option fa fa-cog'></button>
+                <li id='account-<?= $account->id ?>' class='account-item'>
+                    <p class='account-name'><?= $name ?></p>
+                    <p class='account-amount'>$<?= number_format($account->balance, 2) ?></p>
+
+                    <div class='account-menu'>
+                        <button class='account-option fa fa-line-chart'></button>
+                        <button class='account-option fa fa-list-ul active'></button>
+                        <button class='account-option fa fa-cog'></button>
+                    </div>
+                </li>
+
+            <?php
+            }
+            ?>
+            </ul>
+            <div id='add-module' class='mini-module'>
+                <div id='add-header' class='mini-module-header'>
+                    <button id='add-toggle' class='fa fa-plus'></button>
                 </div>
-            </li>
-            
-        <?php
-        }
-        ?>
-        </ul>
+                <form id='add-form'>
+                    <p id='csv-name'>none selected</p>
+                    
+                    <input type='file' id='csv-file' name='csv-file'>
+                    <label for='csv-file' id='csv-choose' class='add-option file-label'>
+                        <span class='option-icon fa fa-upload'></span>
+                        <span class='option-text'>Choose File</span>
+                    </label>
+                    <button id='csv-upload' class='add-option'>
+                        <span class='option-icon fa fa-check'></span>
+                        <span class='option-text'>Upload</span>
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
     
     <!-- Main Content -->

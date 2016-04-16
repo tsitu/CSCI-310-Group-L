@@ -16,7 +16,6 @@ const PORT 		= "3306";
 /**
  * Database manager class.
  * When initialized, connects to the MySQL server specified by constants.
- * Provides query methods that return data as php objects.
  */
 //Singleton design
 class DBManager
@@ -25,7 +24,7 @@ class DBManager
 
 	protected function __construct()
 	{
-		$dsn = "mysql:host=54.215.148.52;dbname=sql3114710";
+		$dsn = "mysql:host=" . HOST_IP . ";dbname=" . DB;
 		$this->connection = new PDO($dsn, USERNAME, PASSWORD);
 
 		//throw exceptions

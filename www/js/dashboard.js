@@ -24,13 +24,17 @@ $(document).ready(function()
     //ui
     $('#curtain').click(hideDialog);
     $('.toggle-side').click(toggleSide);
+    $('#add-toggle').click(toggleAdd);
     
     //events
     $('.logout').click(logout);
+    $('#csv-file').change(setCSV);
     
     
     //init settings
     initPicker();
+    
+    toggleSide();
 });
 
 /**
@@ -101,6 +105,17 @@ var toggleSide = function toggleSide()
     toggle = toggleSide;
 }
 
+/**
+ * Show/hide add account form module by toggling class 'show' and 'active'
+ */
+function toggleAdd()
+{
+    $('#add-form').toggleClass('show');
+    
+    $('#add-toggle').toggleClass('active');
+    $('#add-header').toggleClass('active');
+}
+
 
 
 /* --- EVENTS ---*/
@@ -111,3 +126,25 @@ function logout()
 {
     window.location = 'src/scripts/logout.php';
 }
+
+/**
+ * When user selects a csv file, change display name.
+ */
+function setCSV()
+{
+    var filename = document.getElementById('csv-file').value;
+    $('#csv-name').html(filename);
+    $('#csv-choose > .option-text').html("Change File");
+}
+
+/**
+ * Upload CSV
+ */
+function upload()
+{
+
+}
+
+
+
+
