@@ -27,5 +27,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/Account.php";
 
 
 $account = new Account(1, "Bank of America", "Savings");
+echo "<br>";
+$account2 = new Account(1, "Chase", "Savings");
 
 echo "<br>done.";
