@@ -1,4 +1,3 @@
-
 <?php
 
 //require_once "Account.php";
@@ -44,23 +43,22 @@ class DBManager
 	}
 
 	public static function unsafe_encrypt($plaintext) {
-		# --- ENCRYPTION ---
 
-	    # the key should be random binary, use scrypt, bcrypt or PBKDF2 to
-	    # convert a string into a key
-	    # key is specified using hexadecimal
-	    $key = pack('H*', "efe04b7e103a0cd8b54763051cef08bc55abe029fdebae5e1d417e2ffb2a1123");
+		return $plaintext;
 	    
+		$key = pack('H*', "efe04b7e103a0cd8b54763051cef08bc55abe029fdebae5e1d417e2ffb2a1123");
+		$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+		$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+
 	    # show key size use either 16, 24 or 32 byte keys for AES-128, 192
 	    # and 256 respectively
-	    $key_size =  strlen($key);
+	    $key_size = strlen($key);
 	    //echo "Key size: " . $key_size . "\n";
 	    
 	    //$plaintext = "This string was AES-256 / CBC / ZeroBytePadding encrypted.";
 
 	    # create a random IV to use with CBC encoding
-	    $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-	    $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+	    
 	    
 	    # creates a cipher text compatible with AES (Rijndael block size = 128)
 	    # to keep the text confidential 
@@ -75,7 +73,7 @@ class DBManager
 	    $ciphertext_base64 = base64_encode($ciphertext);
 
 	    //echo  $ciphertext_base64 . "\n";
-	    return $ciphertext_base64;
+	    //return $ciphertext_base64;
 
 	    # === WARNING ===
 
@@ -85,10 +83,13 @@ class DBManager
 
 
 	public static function unsafe_decrypt($ciphertext_base64) {
-
-		$key = pack('H*', "efe04b7e103a0cd8b54763051cef08bc55abe029fdebae5e1d417e2ffb2a1123")
-		 # --- DECRYPTION ---
     
+		return $ciphertext_base64;
+
+		$key = pack('H*', "efe04b7e103a0cd8b54763051cef08bc55abe029fdebae5e1d417e2ffb2a1123");
+		$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+		$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+
 	    $ciphertext_dec = base64_decode($ciphertext_base64);
 	    
 	    # retrieves the IV, iv_size should be created using mcrypt_get_iv_size()
