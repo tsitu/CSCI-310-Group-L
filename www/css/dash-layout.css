@@ -216,4 +216,4 @@
     -moz-transition: all 0.2s linear;
     -webkit-transition: all 0.2s linear;
 }
-.remove-account-confirm { height: 50px; }
+.remove-account-confirm:hover { height: 50px; }
