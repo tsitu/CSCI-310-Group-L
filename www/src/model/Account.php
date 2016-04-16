@@ -19,7 +19,7 @@ class Account extends DBManager
 	 * Create a new Account object from given fields.
 	 * Used to manually create, PDO::fetch() does not use this constructor.
 	 *
-	 * Omit `id` if unknown. An `id` will be provided automatically.
+	 * If `id` field is not provided, an `id` will be provided automatically.
 	 *
 	 * @param $_id
 	 * @param $_institution
@@ -34,9 +34,9 @@ class Account extends DBManager
 		$this->institution = $_institution;
 		$this->type = $_type;
 
-		if($_id === -1) {
-			$this->id = $this->getAccountId();
-		} else {
+		if($_id === -1) {	//if id was given...
+			$this->id = $this->setId();
+		} else {	//if id was not given...
 			$this->id = $_id;
 		}
 	}
@@ -74,34 +74,40 @@ class Account extends DBManager
 		return $accounts;
 	}
 
-	//Adds Account to database.
-	public function addToDatabase($account) {
+	//Adds this to database.
+	public function addToDatabase() {
 		$stmt = $this->connection->prepare("INSERT INTO Accounts (institution, type, user_id) VALUES (:institution, :type, :user_id)");
-		$stmt->bindParam(':institution', $account->institution);
-		$stmt->bindParam(':value', $account->type);
-		$stmt->bindParam(':user_id', $account->user_id);
+		$stmt->bindParam(':institution', $this->institution);
+		$stmt->bindParam(':type', $this->type);
+		$stmt->bindParam(':user_id', $this->user_id);
 		$stmt->execute(); 	//safe from SQL injection
 	}
 
-	//Removes Account from database.
-	public function removeFromDatabase($account) {
+	//Removes this from database.
+	public function removeFromDatabase() {
 		$stmt = $this->connection->prepare("DELETE FROM Accounts WHERE id = :id");
-		$stmt->bindParam(':id', $account->institution);
+		$stmt->bindParam(':id', $this->id);
 		$stmt->execute();	//safe from SQL injection
 	}
 
-	//Privately used in constructor. Sets id.
-	private function getAccountId() {
+	//Privately used in constructor. Sets id for this.
+	private function setId() {
 		$stmt = $this->connection->prepare("SELECT * FROM Accounts WHERE institution=:institution AND type=:type AND user_id=:user_id");
 		$stmt->bindParam(':institution', $this->institution);
 		$stmt->bindParam(':type', $this->type);
 		$stmt->bindParam(':user_id', $this->user_id);
 		$stmt->execute();
+		$count = $stmt->rowCount();
 
-		$row = $stmt->fetch();
-
-		echo "got it... <br>";
-		print_r($row);
+		if($count === 0) {	//account doesn't exist...
+			//echo " -created new account.";
+			$this->addToDatabase();
+			$this->setId();
+		} else {	//account exists in db already...
+			$row = $stmt->fetch();
+			$this->id = $row['id'];
+			//echo " -used existing account (" . $this->id . ").";
+		}
 	}
 }
 

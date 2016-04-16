@@ -2,6 +2,7 @@
 
 //require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/AccountDBManager.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/Account.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/User.php";
 
 // echo "These are the accounts related to userid 1:<br>";
 
@@ -26,6 +27,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/Account.php";
 // }
 
 
-$account = new Account(1, "Bank of America", "Savings");
+// $account = new Account(1, "Bank of America", "Savings");
+// echo "<br>";
+// $account2 = new Account(1, "Chase", "Savings");
 
-echo "<br>done.";
+// echo "<br>done.";
+
+
+$user = new User("test@gmail.com", "test");
+$user2 = new User("test@gmail.com", "test");
+
+echo $user->email . " logged in.";
+echo "<br>";
+echo $user2->email . " logged in.";

@@ -56,19 +56,7 @@ class DBManager
 	 * @return user_id if valid; null otherwise.
 	 * @throws exception when statement fails
 	 */
-	public function getUser($username, $password)
-	{
-		$statement = $connection->prepare("SELECT * FROM Users WHERE email = ?");
-		$statement->bindParam('s', $username);
-		$statement->execute();
-
-		$retArr = $statement->fetch();
-
-		if(password_verify($password, $retArr['password']))
-			return $statement->fetch()['id'];
-		else
-			return null;
-	}
+	
 
 	
 	
