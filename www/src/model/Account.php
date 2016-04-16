@@ -34,9 +34,9 @@ class Account extends DBManager
 		$this->institution = $_institution;
 		$this->type = $_type;
 
-		if($_id === -1) {
-			$this->id = $this->setAccountId();
-		} else {
+		if($_id === -1) {	//if id was given...
+			$this->id = $this->setId();
+		} else {	//if id was not given...
 			$this->id = $_id;
 		}
 	}
@@ -86,12 +86,12 @@ class Account extends DBManager
 	//Removes this from database.
 	public function removeFromDatabase() {
 		$stmt = $this->connection->prepare("DELETE FROM Accounts WHERE id = :id");
-		$stmt->bindParam(':id', $this->institution);
+		$stmt->bindParam(':id', $this->id);
 		$stmt->execute();	//safe from SQL injection
 	}
 
 	//Privately used in constructor. Sets id for this.
-	private function setAccountId() {
+	private function setId() {
 		$stmt = $this->connection->prepare("SELECT * FROM Accounts WHERE institution=:institution AND type=:type AND user_id=:user_id");
 		$stmt->bindParam(':institution', $this->institution);
 		$stmt->bindParam(':type', $this->type);
@@ -102,7 +102,7 @@ class Account extends DBManager
 		if($count === 0) {	//account doesn't exist...
 			//echo " -created new account.";
 			$this->addToDatabase();
-			$this->setAccountId();
+			$this->setId();
 		} else {	//account exists in db already...
 			$row = $stmt->fetch();
 			$this->id = $row['id'];
