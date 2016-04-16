@@ -9,13 +9,13 @@ class User extends DBManager
 	public $email;
 	public $hashed_password;
 
-	private $db;
-	private $connetion;
+	private $connection;
 
-	//If id isn't given, it finds one for it.
-	function __construct($email, $hashed_password, $id = -1) {
-		$this->db = new DBManager();
-		$this->connection = $this->db->connection;
+	//If id isn't given, it will set one automatically. $this->id to find it.
+	function __construct($email, $raw_password, $id = -1) {
+		$hashed_password = $this->hashPassword($raw_password);
+
+		$this->connection = DBManager::getConnection();
 
 		$this->id = $id;
 		$this->email = $email;
@@ -70,26 +70,26 @@ class User extends DBManager
 		}
 	}
 
-	/**
-	 * Return user id with given username and password.
-	 *
-	 * @param username - email of user to get
-	 * @param password - of user to get
-	 * @return user_id if valid; null otherwise.
-	 * @throws exception when statement fails
-	 */
-	public static function getUser($username, $password)
+	//Is the info valid? Returns true or false.
+	public static function validateUser($email, $raw_password)
 	{
-		$statement = $connection->prepare("SELECT * FROM Users WHERE email = ?");
-		$statement->bindParam('s', $username);
+
+		$connection = DBManager::getConnection();
+
+		$statement = $connection->prepare("SELECT * FROM Users WHERE email = :email");
+		$statement->bindParam(':email', $email);
 		$statement->execute();
 
 		$retArr = $statement->fetch();
 
-		if(password_verify($password, $retArr['password']))
-			//return $statement->fetch()['id'];
-			return new User($username, $hashed_password, $statement->fetch()['id']);
+		if(password_verify($raw_password, $retArr['password']))
+			return true;
 		else
-			return null;
+			return false;
+	}
+
+	//Wrapper for password_hash().
+	public static function hashPassword($raw_password) {
+		return password_hash($raw_password, PASSWORD_DEFAULT);
 	}
 }

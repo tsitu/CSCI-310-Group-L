@@ -12,7 +12,6 @@ class Account extends DBManager
 	public $institution;
 	public $type;
 
-	private $db;
 	private $connetion;
 
 	/**
@@ -27,8 +26,7 @@ class Account extends DBManager
 	 */
 	function __construct($_user_id, $_institution, $_type, $_id = -1)
 	{
-		$this->db = new DBManager();
-		$this->connection = $this->db->connection;
+		$this->connection = DBManager::getConnection();
 
 		$this->user_id = $_user_id;
 		$this->institution = $_institution;

@@ -18,15 +18,12 @@ const PORT 		= "3306";
  * When initialized, connects to the MySQL server specified by constants.
  * Provides query methods that return data as php objects.
  */
+//Singleton design
 class DBManager
 {
-	protected $connection;
+	private static $db;
 
-	/**
-	 * Initialize DBManager object and connect to MySQL specified by constants.
-	 * @throws exception if connection fails
-	 */
-	function __construct()
+	protected function __construct()
 	{
 		$dsn = "mysql:host=54.215.148.52;dbname=sql3114710";
 		$this->connection = new PDO($dsn, USERNAME, PASSWORD);
@@ -37,27 +34,13 @@ class DBManager
 		$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
-	/**
-	 * Close connection when destructing
-	 */
-	function __destruct()
-	{
-		$this->connection = null;
+	public static function getConnection() {
+		if(null === static::$db) {
+			static::$db = new static();
+		} 
+
+		//var_dump(static::$db);
+		return static::$db->connection;
 	}
 
-
-
-	/* --- QUERIES --- */
-	/**
-	 * Return user id with given username and password.
-	 *
-	 * @param username - email of user to get
-	 * @param password - of user to get
-	 * @return user_id if valid; null otherwise.
-	 * @throws exception when statement fails
-	 */
-	
-
-	
-	
 }

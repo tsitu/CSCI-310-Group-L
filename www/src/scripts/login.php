@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../model/DBManager.php';
+require_once __DIR__ . '/../model/User.php';
 
 session_start();
 
@@ -18,10 +18,7 @@ if ( empty($username) || empty($password) )
 
 
 //check against db for login
-$manager = new DBManager();
-$uid = $manager->getUser($username, $password);
-
-if ( is_null($uid) )
+if (!User::validateUser($username, $password) )
 {
     $_SESSION['error'] = 'Invalid login parameters';
     header('Location: /CSCI-310-Group-L/www/login');
