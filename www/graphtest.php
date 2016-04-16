@@ -27,8 +27,8 @@ var transactions = [];
 </script>
 
 <?php
-$account = getAccount(75);
-$transactions = getTransactions(1, 75);
+$account = getAccount(76);
+$transactions = getTransactions(3, $account->getId());
 
 foreach ($transactions as $tx)
 {
@@ -37,8 +37,8 @@ foreach ($transactions as $tx)
 ?>
 
 <script type="text/javascript">
-var accountInstitution = "<?php echo $account->institution ?>";
-var accountType = "<?php echo $account->type ?>";
+var accountInstitution = "<?php echo $account->getInstitution() ?>";
+var accountType = "<?php echo $account->getType() ?>";
 
 //accountInstitutions.push(accountInstitution);
 //accountTypes.push(accountType);
