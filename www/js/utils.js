@@ -1,5 +1,52 @@
 var transactions = [];
 
+function listAccount(accountId) {
+	var getTransactionsUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getTransactions&userId=3&accountId=" + accountId;
+	var getTransactions = httpGet(getTransactionsUrl);
+	var parsedTx = JSON.parse(getTransactions);
+
+	var getAccountUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccount&userId=3&accountId=" + accountId;
+	var getAccount = httpGet(getAccountUrl);
+	var parsedAccount = JSON.parse(getAccount);
+	var accountName = parsedAccount["institution"] + " " + parsedAccount["type"];
+
+	var table = document.getElementById("transaction-table");
+
+	var count = $('#transaction-table tr').length;
+	for (var i=1; i<count; i++) {
+		table.deleteRow(count-i);
+	}
+
+	for (var i=0; i<parsedTx.length; i++) {
+		var row = table.insertRow(table.rows.length);
+		row.className = "transaction-data";
+		var cell0 = row.insertCell(0);
+		cell0.className = "col-5 transaction-name";
+		cell0.innerHTML = accountName;
+		var cell1 = row.insertCell(1);
+		cell1.className = "col-1 transaction-date";
+		var date = new Date(parsedTx[i]["timestamp"] * 1000);
+		dateString = date.toString().substring(0,24);
+		cell1.innerHTML = dateString;
+		var cell2 = row.insertCell(2);
+		cell2.className = "col-2 transaction-amount";
+		if (parseInt(parsedTx[i]["amount"]) >= 0) {
+			cell2.innerHTML = "$" + parseInt(parsedTx[i]["amount"]).toFixed(2);
+			cell2.style.color = "#006400";
+		}
+		else {
+			cell2.innerHTML = "-$" + Math.abs(parseInt(parsedTx[i]["amount"])).toFixed(2);
+			cell2.style.color = "#FF0000";
+		}
+		var cell3 = row.insertCell(3);
+		cell3.className = "col-3 transaction-category";
+		cell3.innerHTML = parsedTx[i]["category"];
+		var cell4 = row.insertCell(4);
+		cell4.className = "col-4 transaction-merchant";
+		cell4.innerHTML = parsedTx[i]["descriptor"];
+	}
+}
+
 function graphAccount(accountId) {
 	var getTransactionsUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getTransactions&userId=3&accountId=" + accountId;
 	var getTransactions = httpGet(getTransactionsUrl);

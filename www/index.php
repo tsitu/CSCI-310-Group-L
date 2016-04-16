@@ -54,6 +54,7 @@ $username = $_SESSION['username'];
                     var accountTypes = [];
                     var removeButtons = document.getElementsByClassName('account-remove');
                     var graphButtons = document.getElementsByClassName('account-chart');
+                    var listButtons = document.getElementsByClassName('account-list');
                     var graphIndex = 0;
                 </script>
                 
@@ -89,6 +90,7 @@ $username = $_SESSION['username'];
 
                 <script type="text/javascript">
                     graphButtons[graphIndex].id = "<?php echo $account->id ?>";
+                    listButtons[graphIndex].id = "<?php echo $account->id ?>";
                     graphIndex++;
                 </script>
 
@@ -126,7 +128,7 @@ $username = $_SESSION['username'];
             <!-- Transaction -->
             <div id='transaction-module' class='module'>
                 <div class='module-header'>
-                    <h3 class='module-title'>All Transactions</h3>
+                    <h3 class='module-title'>Transactions</h3>
                 </div>
 
                 <table id='transaction-table' class=''>
@@ -138,7 +140,7 @@ $username = $_SESSION['username'];
                         <td class='col-4 transaction-col'>Merchant <i class='sorter'></i></td>
                     </tr>
 
-                    <?php
+                    <!--<?php
                     $accountIDs = getAccountIds($uid);
                     
                     $transactions = array();
@@ -169,7 +171,7 @@ $username = $_SESSION['username'];
                     </tr>
                     <?php
                     }
-                    ?>
+                    ?>-->
                 </table>
             </div>
         </div>

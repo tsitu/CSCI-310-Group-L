@@ -1,7 +1,10 @@
 var id='';
+var graphClickedId = 0;
+var listClickedId = 0;
 
 $(document).ready(function() {
     document.getElementById("graph-module").style.display = "none";
+    document.getElementById("transaction-module").style.display = "none";
 });
 
 /**
@@ -69,12 +72,31 @@ $('.remove-account-confirm').click(function()
  */
 $('.account-chart').click(function()
 {
-    /*if (document.getElementById("graph-module").style.display === "inherit") {
+    var x = this.id;
+    if (x == graphClickedId) {
         document.getElementById("graph-module").style.display = "none";
+        graphClickedId = 0;
     }
-    else {*/
+    else {
         document.getElementById("graph-module").style.display = "inherit";
-        var x = this.id;
         graphAccount(x);
-    //}
+        graphClickedId = x;
+    }
+});
+
+/**
+ * Called when user presses button to list account transactions
+ */
+$('.account-list').click(function()
+{
+    var x = this.id;
+    if (x == listClickedId) {
+        document.getElementById("transaction-module").style.display = "none";
+        listClickedId = 0;
+    }
+    else {
+        document.getElementById("transaction-module").style.display = "inherit";
+        listAccount(x);
+        listClickedId = x;
+    }
 });
