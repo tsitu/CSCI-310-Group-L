@@ -279,32 +279,53 @@ function uploadCSV($filePath) {
         $index = 0; //for new stock list
         $isFirstLine = TRUE;
         //getting csv and put that into array
-        if(($csv_reader = fopen($filePath, 'r')) !== FALSE) {
-            //read line by line
-            //data is array that contains all elements in a row.
-            while(($data = fgetcsv($csv_reader, 1000, ',')) !== FALSE)  {
-                $numElementInRow = count($data); //number of element in a row
 
-       
-                $accountInstitution = $data[0];
-                $accountType = $data[1];
-                $txTime = $data[2];
-                $txMerchant = $data[3];
-                $txAmount = $data[4];
-                $txCategory = $data[5];
-                //error checking if ticker is in the API
-                //if not, just don't add it and don't add up to the new balance
-                //syntax for stock -> Stock($name, $symbol, $closingPrice, $quantity)
-                if($isFirstLine == FLASE) { //ignore first line since first row is not actaul data.
+		$info = pathinfo($filePath);
+		if($info[(]"extension"] == "csv") {
+			if(($csv_reader = fopen($filePath, 'r')) !== FALSE) {
+	            //read line by line
+	            //data is array that contains all elements in a row.
 
-                    $account = new account(1 , $accountInstitution, $accountType);
-                    $newAccountList[$index] = $account;
-                    $index++;
-                }
-                $isFirstLine = FALSE;
-            }
-            fclose($csv_reader);
-        }
+	            while(($data = fgetcsv($csv_reader, 1000, ',')) !== FALSE)  {
+	                $numElementInRow = count($data); //number of element in a row
+
+	       
+	                $accountInstitution = $data[0];
+	                $accountType = $data[1];
+	                $txTime = $data[2];
+	                $txMerchant = $data[3];
+	                $txAmount = $data[4];
+	                $txCategory = $data[5];
+	                //error checking if ticker is in the API
+	                //if not, just don't add it and don't add up to the new balance
+	                //syntax for stock -> Stock($name, $symbol, $closingPrice, $quantity)
+	                if($isFirstLine == FLASE) { //ignore first line since first row is not actaul data.
+
+	                    $account = new account(1 , $accountInstitution, $accountType);
+	                    $newAccountList[$index] = $account;
+	                    $index++;
+	                }
+	                $isFirstLine = FALSE;
+	            }
+	            fclose($csv_reader);
+	        }
+		}else{
+			return false; //if file is not 
+		}
+		//if size of the array is equal to zerp, return false
+		$arraySize = sizeof($newAccountList);
+		if($arraySize == 0) {
+			//if the size of array is zero, then returns false
+			return false;
+		}
+		//echo "Hello world!<br>";
+
+		foreach($array as $val) {
+    		print $newAccountList.$id;
+    		print $newAccountList.$user_id;
+    		print $newAccountList.$institution;
+    		print $newAccountList.$type;
+		}
 
         return $newAccountList;
 
