@@ -13,6 +13,8 @@ class User extends DBManager
 
 	//If id isn't given, it will set one automatically. $this->id to find it.
 	function __construct($email, $raw_password, $id = -1) {
+		echo "entering constructor..<br>";
+
 		$hashed_password = $this->hashPassword($raw_password);
 
 		$this->connection = DBManager::getConnection();
@@ -38,6 +40,7 @@ class User extends DBManager
 
 	//Adds this to database.
 	public function addToDatabase() {
+		echo "entering User::addToDatabase...<br>";
 		$stmt = $this->connection->prepare("INSERT INTO Users (email, password) VALUES (:email, :password)");
 		$stmt->bindParam(':email', DBManager::unsafe_encrypt($this->email));
 		$stmt->bindParam(':password', DBManager::unsafe_encrypt($this->hashed_password));
@@ -82,7 +85,7 @@ class User extends DBManager
 
 		$retArr = $statement->fetch();
 
-		if(password_verify($raw_password, DBManager::unsafe_decrypt($retArr['password'])));
+		if(password_verify($raw_password, DBManager::unsafe_decrypt($retArr['password'])))
 			return true;
 		else
 			return false;
@@ -90,6 +93,7 @@ class User extends DBManager
 
 	//Wrapper for password_hash().
 	public static function hashPassword($raw_password) {
+		echo "Entering hashPassword<br>";
 		return password_hash($raw_password, PASSWORD_DEFAULT);
 	}
 }

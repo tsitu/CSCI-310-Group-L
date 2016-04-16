@@ -37,9 +37,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/User.php";
 
 if(User::validateUser("test@gmail.com", "test")) {
 	echo $user->email . " logged in.";
+} else {
+	echo "Login failed.";
 }
 
 $user = new User("test@gmail.com", "test");
-$user2 = new User("test@gmail.com", "test");
+
 
 echo "<br>";
