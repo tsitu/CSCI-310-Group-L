@@ -66,6 +66,7 @@ $recent_transactions = [];
     <!-- Side -->
     <button class='show-side toggle-side fa fa-bars'></button>
     <div class='panel side-panel'>
+        
         <div class='side-header'>
             <button class='toggle-side side-option'>
                 <span class='fa fa-times'></span>
@@ -78,6 +79,7 @@ $recent_transactions = [];
         </div>
         
         <div id='account-module' class='flex-glue'>
+            
             <ul id='account-list' class='flex-glue'>
             <?php
             //account list
@@ -102,6 +104,7 @@ $recent_transactions = [];
             }
             ?>
             </ul>
+            
             <div id='add-module' class='mini-module'>
                 <div id='add-header' class='mini-module-header'>
                     <button id='add-toggle' class='fa fa-plus'></button>
@@ -120,6 +123,7 @@ $recent_transactions = [];
                     </button>
                 </form>
             </div>
+            
         </div>
     </div>
     
@@ -179,5 +183,16 @@ $recent_transactions = [];
     
     <script src='js/dashboard.js'></script>
     <script src='js/utils.js'></script>
+
+    <!-- Highcharts -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+
+    <!-- Additional files for the Highslide popup effect -->
+    <script src="https://www.highcharts.com/samples/static/highslide-full.min.js"></script>
+    <script src="https://www.highcharts.com/samples/static/highslide.config.js" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="https://www.highcharts.com/samples/static/highslide.css" />
 </body>
 </html>

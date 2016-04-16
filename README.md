@@ -1,4 +1,4 @@
- # Minance (CSCI 310 Group L)
+# Minance (CSCI 310 Group L)
 
 ## SQL Instructions
 * mysql -u root -p -h localhost (where password = "password")
@@ -16,4 +16,4 @@
 
 Transaction types should only be "card", "loan", "savings"
 
-Account amounts for types loan and credit are reversed. For example, loans disbursed should start in the negatives (-100.00).
+Account amounts for types loan and credit are reversed. For example, loans disbursed should start in the negatives (-100.00)
