@@ -296,7 +296,8 @@ function uploadCSV($filePath) {
                 //if not, just don't add it and don't add up to the new balance
                 //syntax for stock -> Stock($name, $symbol, $closingPrice, $quantity)
                 if($isFirstLine == FLASE) { //ignore first line since first row is not actaul data.
-                    $account = new account(accountID, $accountInstitution, $accountType);
+
+                    $account = new account(1 , $accountInstitution, $accountType);
                     $newAccountList[$index] = $account;
                     $index++;
                 }
