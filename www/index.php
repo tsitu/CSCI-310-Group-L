@@ -7,7 +7,7 @@ session_start();
 //redirect if not logged in
 if ( !isset($_SESSION['user_id']) )
 {
-    header('Location: /');
+    header('Location: /login');
     exit();
 }
 
@@ -80,6 +80,12 @@ $account_map = [];
             </button>
         </div>
         <ul id='account-list' class='flex-glue'>
+            <li id='new-slot' class='account-item'>
+                <button>
+                    + Add
+                </button>
+            </li>
+            
         <?php
         //account list
         foreach($accounts as $account)
@@ -103,9 +109,6 @@ $account_map = [];
         }
         ?>
         </ul>
-
-        <button id='show-add' class='show-add'>Add Account</button>
-        <div class=''></div>
     </div>
     
     <!-- Main Content -->

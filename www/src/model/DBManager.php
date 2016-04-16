@@ -73,7 +73,7 @@ class DBManager
 	public function getAccountsWithBalance($user_id)
 	{
 		$str = "
-		SELECT Accounts.*, IFNULL(t.balance, 0), t.time
+		SELECT Accounts.*, IFNULL(t.balance, 0) AS balance, t.time
 		FROM 
 			Accounts
 		LEFT JOIN 

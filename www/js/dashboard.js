@@ -30,20 +30,8 @@ $(document).ready(function()
     
     
     //init settings
-    hideUnsupported();
     initPicker();
 });
-
-/**
- * Check if features are supported and hide elements if not
- */
-function hideUnsupported()
-{
-//    var fileInput = document.getElementById('csv-new');
-//    
-//    if (fileInput.disabled)
-//        $('#showAdd').addClass('hidden');
-}
 
 /**
  * Initialize and setup date pickers
