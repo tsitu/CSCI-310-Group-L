@@ -1,7 +1,7 @@
 var transactions = [];
 
-function graphAccount() {
-	var getTransactionsUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getTransactions&userId=3&accountId=76";
+function graphAccount(accountId) {
+	var getTransactionsUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getTransactions&userId=3&accountId=" + accountId;
 	var getTransactions = httpGet(getTransactionsUrl);
 	var parsedTx = JSON.parse(getTransactions);
 
@@ -11,6 +11,11 @@ function graphAccount() {
 		var amount = parsedTx[i]["amount"];
 		modifiedTx.push([+timestamp, +amount]);
 	}
+
+	var getAccountUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccount&userId=3&accountId=" + accountId;
+	var getAccount = httpGet(getAccountUrl);
+	var parsedAccount = JSON.parse(getAccount);
+	var accountName = parsedAccount["institution"] + " " + parsedAccount["type"];
 
     var chart = new Highcharts.Chart({
 
@@ -23,7 +28,7 @@ function graphAccount() {
         },
 
         subtitle: {
-            text: accountInstitution + " " + accountType
+            text: accountName
         },
 
         xAxis: {

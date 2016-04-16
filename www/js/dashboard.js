@@ -1,5 +1,9 @@
 var id='';
 
+$(document).ready(function() {
+    document.getElementById("graph-module").style.display = "none";
+});
+
 /**
  * Called when user presses logout button.
  * Call the logout script to log user out.
@@ -8,7 +12,6 @@ $('button.logout').click(function()
 {
     window.location.href = "src/scripts/logout.php";
 });
-
 
 
 /**
@@ -66,5 +69,12 @@ $('.remove-account-confirm').click(function()
  */
 $('.account-chart').click(function()
 {
-    graphAccount();
+    /*if (document.getElementById("graph-module").style.display === "inherit") {
+        document.getElementById("graph-module").style.display = "none";
+    }
+    else {*/
+        document.getElementById("graph-module").style.display = "inherit";
+        var x = this.id;
+        graphAccount(x);
+    //}
 });

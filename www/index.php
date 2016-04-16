@@ -50,8 +50,11 @@ $username = $_SESSION['username'];
         <div id='account-module' class='panel side-panel'>
             <ol id='account-list'>
                 <script type="text/javascript">
-                var accountInstitutions = [];
-                var accountTypes = [];
+                    var accountInstitutions = [];
+                    var accountTypes = [];
+                    var removeButtons = document.getElementsByClassName('account-remove');
+                    var graphButtons = document.getElementsByClassName('account-chart');
+                    var graphIndex = 0;
                 </script>
                 
                 <?php
@@ -65,11 +68,11 @@ $username = $_SESSION['username'];
                 ?>
 
                 <script type="text/javascript">
-                var accountInstitution = "<?php echo $account->institution ?>";
-                var accountType = "<?php echo $account->type ?>";
+                    var accountInstitution = "<?php echo $account->institution ?>";
+                    var accountType = "<?php echo $account->type ?>";
 
-                accountInstitutions.push(accountInstitution);
-                accountTypes.push(accountType);
+                    accountInstitutions.push(accountInstitution);
+                    accountTypes.push(accountType);
                 </script>
                 
                 <li id='account-<?= $aid ?>' class='account-item'>
@@ -85,17 +88,21 @@ $username = $_SESSION['username'];
                 </li>
 
                 <script type="text/javascript">
-                var buttons = document.getElementsByClassName('account-remove');
-                var buttonIndex = 1;
-                for (var i=0; i<buttons.length; i++) {
-                    buttons[i].id = buttonIndex;
-                    buttonIndex++;
-                }
+                    graphButtons[graphIndex].id = "<?php echo $account->id ?>";
+                    graphIndex++;
                 </script>
-                
+
                 <?php
                 }
                 ?>
+
+                <script type="text/javascript">
+                    var buttonIndex = 1;
+                    for (var i=0; i<removeButtons.length; i++) {
+                        removeButtons[i].id = buttonIndex;
+                        buttonIndex++;
+                    }
+                </script>
             </ol>
             
             <button id='add-account'>Add Account</button>
@@ -119,7 +126,7 @@ $username = $_SESSION['username'];
             <!-- Transaction -->
             <div id='transaction-module' class='module'>
                 <div class='module-header'>
-                    <h3 class='module-title'>Transactions</h3>
+                    <h3 class='module-title'>All Transactions</h3>
                 </div>
 
                 <table id='transaction-table' class=''>
