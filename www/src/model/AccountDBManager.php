@@ -36,4 +36,33 @@ class AccountDBManager extends DBManager {
 		return $accounts;
 	}
 
+	//Adds Account to database.
+	public function addToDatabase($account) {
+		$stmt = $this->connection->prepare("INSERT INTO Accounts (institution, type, user_id) VALUES (:institution, :type, :user_id)");
+		$stmt->bindParam(':institution', $account->institution);
+		$stmt->bindParam(':value', $account->type);
+		$stmt->bindParam(':user_id', $account->user_id);
+		$stmt->execute(); 	//safe from SQL injection
+	}
+
+	//Removes Account from database.
+	public function removeFromDatabase($account) {
+		$stmt = $this->connection->prepare("DELETE FROM Accounts WHERE id = :id");
+		$stmt->bindParam(':id', $account->institution);
+		$stmt->execute();	//safe from SQL injection
+	}
+
+	//Returns an Account matching the id.
+	public function getAccount($type, $institution, $user_id) {
+		$stmt = $this->connection->prepare("SELECT * FROM Accounts WHERE institution=:institution AND type=:type");
+		$stmt->bindParam(':institution', $institution);
+		$stmt->bindParam(':type', $type);
+		$stmt->execute();
+
+		$row = $stmt->fetch();
+
+		echo "got it... <br> ";
+		print_r($row);
+	}
+
 }

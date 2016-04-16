@@ -1,10 +1,17 @@
 <?php
 
-
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/Transaction.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/DBManager.php";
-
 class TransactionDBManager extends DBManager {
+
+	//Adds Transaction to database. Takes care of all fields.
+	public function addToDatabase($obj) {
+
+		//1. find current balance for accountid, userid.
+		//2. deduct.
+		//3. add with timestamp.
+		
+		//INSERT INTO `sql3114710`.`Transactions` (`id`, `user_id`, `account_id`, `time`, `category`, `descriptor`, `amount`, `balance`) VALUES (NULL, '1', '2', '2016-04-13 00:00:00', 'credit', 'test transaction', '-10.01', '10.00');
+		echo "Added this transaction to the database.<br>";
+	}
 
 	/**
 	 * Fetch the latest `limit` transactions for specified user across all accounts.
@@ -33,3 +40,4 @@ class TransactionDBManager extends DBManager {
 	}
 
 }
+

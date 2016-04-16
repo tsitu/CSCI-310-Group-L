@@ -1,10 +1,13 @@
 <?php
 
+require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/TransactionDBManager.php";
+
+
 
 /**
  * Transaction model class.
  */
-class Transaction 
+class Transaction
 {
 	public $id;			//unique id
 	public $user_id;	//user tied to this transaction
@@ -14,6 +17,7 @@ class Transaction
 	public $category;	//"fast food", "loan"
 	public $descriptor;	//"McDonalds", "Loan Payment", etc.
 
+	private $myDBConnector;
 
 	/**
 	 * Create a new Transaction object from given fields.
@@ -27,6 +31,8 @@ class Transaction
 		$this->amount = $_amount;
 		$this->category = $_category;
 		$this->descriptor = $_descriptor;
+
+		$this->myDBConnector = new TransactionDBManager();
 	}
 
 	/**
@@ -41,4 +47,12 @@ class Transaction
 		$this->time = date_create($this->time);
 		$this->amount = (double) $this->amount;
 	}
+
+	//Adds 'this' to database.
+	public function addToDatabase() {
+		$this->myDBConnector->addToDatabase($this);
+	}
+
 }
+
+
