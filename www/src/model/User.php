@@ -39,8 +39,8 @@ class User extends DBManager
 	//Adds this to database.
 	public function addToDatabase() {
 		$stmt = $this->connection->prepare("INSERT INTO Users (email, password) VALUES (:email, :password)");
-		$stmt->bindParam(':email', $this->email);
-		$stmt->bindParam(':password', $this->hashed_password);
+		$stmt->bindParam(':email', DBManager::unsafe_encrypt($this->email));
+		$stmt->bindParam(':password', DBManager::unsafe_encrypt($this->hashed_password));
 		$stmt->execute(); 	//safe from SQL injection
 	}
 
@@ -54,8 +54,8 @@ class User extends DBManager
 	//Privately used in constructor. Sets id for this.
 	private function setId() {
 		$stmt = $this->connection->prepare("SELECT * FROM Users WHERE email=:email AND password=:password");
-		$stmt->bindParam(':email', $this->email);
-		$stmt->bindParam(':password', $this->hashed_password);
+		$stmt->bindParam(':email', DBManager::unsafe_encrypt($this->email));
+		$stmt->bindParam(':password', DBManager::unsafe_encrypt($this->hashed_password));
 		$stmt->execute();
 		$count = $stmt->rowCount();
 
@@ -70,19 +70,19 @@ class User extends DBManager
 		}
 	}
 
-	//Is the info valid? Returns true or false.
+	//Is email+password valid? Returns true or false.
 	public static function validateUser($email, $raw_password)
 	{
 
 		$connection = DBManager::getConnection();
 
 		$statement = $connection->prepare("SELECT * FROM Users WHERE email = :email");
-		$statement->bindParam(':email', $email);
+		$statement->bindParam(':email', DBManager::unsafe_encrypt($email));
 		$statement->execute();
 
 		$retArr = $statement->fetch();
 
-		if(password_verify($raw_password, $retArr['password']))
+		if(password_verify($raw_password, DBManager::unsafe_decrypt($retArr['password'])));
 			return true;
 		else
 			return false;

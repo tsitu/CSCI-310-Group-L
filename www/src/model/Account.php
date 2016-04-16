@@ -75,9 +75,9 @@ class Account extends DBManager
 	//Adds this to database.
 	public function addToDatabase() {
 		$stmt = $this->connection->prepare("INSERT INTO Accounts (institution, type, user_id) VALUES (:institution, :type, :user_id)");
-		$stmt->bindParam(':institution', $this->institution);
-		$stmt->bindParam(':type', $this->type);
-		$stmt->bindParam(':user_id', $this->user_id);
+		$stmt->bindParam(':institution', DBManager::unsafe_encrypt($this->institution));
+		$stmt->bindParam(':type', DBManager::unsafe_encrypt($this->type));
+		$stmt->bindParam(':user_id', DBManager::unsafe_encrypt($this->user_id));
 		$stmt->execute(); 	//safe from SQL injection
 	}
 
@@ -91,9 +91,9 @@ class Account extends DBManager
 	//Privately used in constructor. Sets id for this.
 	private function setId() {
 		$stmt = $this->connection->prepare("SELECT * FROM Accounts WHERE institution=:institution AND type=:type AND user_id=:user_id");
-		$stmt->bindParam(':institution', $this->institution);
-		$stmt->bindParam(':type', $this->type);
-		$stmt->bindParam(':user_id', $this->user_id);
+		$stmt->bindParam(':institution', DBManager::unsafe_encrypt($this->institution));
+		$stmt->bindParam(':type', DBManager::unsafe_encrypt($this->type));
+		$stmt->bindParam(':user_id', DBManager::unsafe_encrypt($this->user_id));
 		$stmt->execute();
 		$count = $stmt->rowCount();
 
