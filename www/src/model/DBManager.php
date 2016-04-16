@@ -58,9 +58,16 @@ class DBManager
 	 */
 	public function getUser($username, $password)
 	{
-		$statement = $this->connection->prepare("SELECT id FROM Users WHERE (email = ? AND password = ?)");
-		$statement->execute( [htmlentities($username), htmlentities($password)] );
-		return $statement->fetch()['id'];
+		$statement = $connection->prepare("SELECT * FROM Users WHERE email = ?");
+		$statement->bindParam('s', $username);
+		$statement->execute();
+
+		$retArr = $statement->fetch();
+
+		if(password_verify($password, $retArr['password']))
+			return $statement->fetch()['id'];
+		else
+			return null;
 	}
 
 	
