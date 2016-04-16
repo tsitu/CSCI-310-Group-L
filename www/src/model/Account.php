@@ -2,9 +2,13 @@
 
 
 class Account {
-	private $id;
+	/*private $id;
 	private $institution;
-	private $type;
+	private $type;*/
+	public $id;
+	public $institution;
+	public $type;
+
 
 	function __construct($_id, $_institution, $_type) {
 		$this->id = $_id;

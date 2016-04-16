@@ -24,6 +24,7 @@ require_once __DIR__ . '/src/inc/queries.php';
 
 <script type = "text/javascript">
 var transactions = [];
+var accountz = [];
 </script>
 
 <?php
@@ -34,11 +35,13 @@ foreach ($transactions as $tx)
 {
     $timestamp = $tx->timestamp;
     $amount = $tx->amount;
+    $accountId = $tx->accountId;
 ?>
 
 <script type="text/javascript">
 var accountInstitution = "<?php echo $account->getInstitution() ?>";
 var accountType = "<?php echo $account->getType() ?>";
+var accountId = "<?php echo $accountId ?>";
 
 //accountInstitutions.push(accountInstitution);
 //accountTypes.push(accountType);
@@ -46,6 +49,7 @@ var accountType = "<?php echo $account->getType() ?>";
 var timestamp = "<?php echo $timestamp ?>";
 var amount = "<?php echo $amount ?>";
 transactions.push([+timestamp, +amount]);
+accountz.push([+timestamp, +accountId]);
 </script>
 
 <?php
@@ -54,6 +58,7 @@ transactions.push([+timestamp, +amount]);
 
 <script>
 console.log(transactions);
+console.log(accountz);
 </script>
 
 <script>
@@ -74,7 +79,7 @@ console.log(transactions);
 
             xAxis: {
             	type: 'datetime',
-                tickInterval: 7 * 24 * 3600 * 1000, // one week
+                tickInterval: 60 * 1000, // one minute
                 tickWidth: 0,
                 gridLineWidth: 1,
                 labels: {
@@ -140,7 +145,15 @@ console.log(transactions);
                     radius: 4
                 },
                 data: transactions
-            }]
+            }, 
+            {
+	            name: 'Account ID',
+	            lineWidth: 4,
+                marker: {
+                    radius: 4
+                },
+                data: accountz
+	        }]
         });
 	});
 

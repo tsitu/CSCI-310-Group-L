@@ -60,3 +60,11 @@ $('.remove-account-confirm').click(function()
     $('#remove-account-dialog').toggleClass('active');
     removeAccount(accountInstitutions[id-1], accountTypes[id-1]);
 });
+
+/**
+ * Called when user presses button to graph account
+ */
+$('.account-chart').click(function()
+{
+    graphAccount();
+});

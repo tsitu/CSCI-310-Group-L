@@ -46,7 +46,7 @@ $username = $_SESSION['username'];
     </div>
     
     <div class='content wide'>
-        
+
         <div id='account-module' class='panel side-panel'>
             <ol id='account-list'>
                 <script type="text/javascript">
@@ -101,7 +101,6 @@ $username = $_SESSION['username'];
             <button id='add-account'>Add Account</button>
         </div>
         
-        
         <div class='panel main-panel'>
             <!-- Overview -->
             <div id='overview-module'>
@@ -109,8 +108,12 @@ $username = $_SESSION['username'];
             </div>
 
             <!-- Graph -->
-            <div id='graph-module'>
-
+            <div id='graph-module' class='module graph-module'>
+                <div class='module-header'>
+                    <h3 class='module-title'>Graph</h3>
+                    <!--<div class='flex-glue'></div>-->
+                    <div id='graph'></div>
+                </div>
             </div>
 
             <!-- Transaction -->
@@ -197,5 +200,16 @@ $username = $_SESSION['username'];
     
     <script src='js/dashboard.js'></script>
     <script src='js/utils.js'></script>
+
+    <!-- Highcharts -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+
+    <!-- Additional files for the Highslide popup effect -->
+    <script src="https://www.highcharts.com/samples/static/highslide-full.min.js"></script>
+    <script src="https://www.highcharts.com/samples/static/highslide.config.js" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="https://www.highcharts.com/samples/static/highslide.css" />
 </body>
 </html>

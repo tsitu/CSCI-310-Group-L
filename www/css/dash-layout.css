@@ -106,6 +106,9 @@
     font-weight: 300px;
 }
 
+#graph-module {
+    min-width: 800px;
+}
 
 .module {
     padding: 20px 20px;

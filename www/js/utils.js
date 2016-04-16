@@ -1,5 +1,103 @@
 var transactions = [];
 
+function graphAccount() {
+	var getTransactionsUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getTransactions&userId=3&accountId=76";
+	var getTransactions = httpGet(getTransactionsUrl);
+	var parsedTx = JSON.parse(getTransactions);
+
+	var modifiedTx = [];
+	for (var i=0; i<parsedTx.length; i++) {
+		var timestamp = parsedTx[i]["timestamp"];
+		var amount = parsedTx[i]["amount"];
+		modifiedTx.push([+timestamp, +amount]);
+	}
+
+    var chart = new Highcharts.Chart({
+
+    	chart: {
+    		renderTo: graph
+    	},
+
+        title: {
+            text: 'Account Graph'
+        },
+
+        subtitle: {
+            text: accountInstitution + " " + accountType
+        },
+
+        xAxis: {
+        	type: 'datetime',
+            tickInterval: 60 * 1000, // one minute
+            tickWidth: 0,
+            gridLineWidth: 1,
+            labels: {
+                align: 'left',
+                x: 3,
+                y: -3
+            }
+        },
+
+        yAxis: [{ // left y axis
+            title: {
+                text: null
+            },
+            labels: {
+                align: 'left',
+                x: 3,
+                y: 16,
+                format: '{value:.,0f}'
+            },
+            showFirstLabel: false
+        }, { // right y axis
+            linkedTo: 0,
+            gridLineWidth: 0,
+            opposite: true,
+            title: {
+                text: null
+            },
+            labels: {
+                align: 'right',
+                x: -3,
+                y: 16,
+                format: '{value:.,0f}'
+            },
+            showFirstLabel: false
+        }],
+
+        legend: {
+            align: 'left',
+            verticalAlign: 'top',
+            y: 20,
+            floating: true,
+            borderWidth: 0
+        },
+
+        tooltip: {
+            shared: true,
+            crosshairs: true
+        },
+
+        plotOptions: {
+            series: {
+                cursor: 'pointer',
+                marker: {
+                    lineWidth: 1
+                }
+            }
+        },
+
+        series: [{
+            name: 'Transaction Amount',
+            lineWidth: 4,
+            marker: {
+                radius: 4
+            },
+            data: modifiedTx
+        }]
+    });
+}
+
 function removeAccount(institution, type) {
 	var getAccountIdUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccountId&institution=" + institution + "&type=" + type;
 	var accountId = httpGet(getAccountIdUrl);
