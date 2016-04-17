@@ -40,7 +40,7 @@ $(document).ready(function()
     //init settings
     initPicker();
     
-    toggleSide();
+//    toggleSide();
 });
 
 /**
@@ -111,6 +111,9 @@ var toggleSide = function toggleSide()
     toggle = toggleSide;
 }
 
+/**
+ *
+ */
 function toggleEdit()
 {
     var module = $(this).parent().siblings('.account-edit');
@@ -196,6 +199,8 @@ function deleteAccount(event)
     event.preventDefault();
     
     var id = getAccountID(this);
+    
+    //TODO: confirmation check
     
     //remove
     $(this).parents('.account-item').remove();
@@ -304,7 +309,7 @@ function csvUpload(event)
 }
 
 /**
- *
+ * Callback for CSV upload post 
  */
 function csvCallback(accounts)
 {
@@ -319,24 +324,34 @@ function csvCallback(accounts)
             $(item).children('.account-amount').html(a.balance.toFixed(2));
         else
         {
-            $('#account-list').append(newAccountItem(a.id, a.institution + ' - ' + a.type, a.balance.toFixed(2)));
+            $('#account-list').append(newAccountItem(a.id, a.institution, a.type, a.balance.toFixed(2)));
         }
     }
 }
 
 /**
- *
+ * Return string for a new account list item with given params
  */
-function newAccountItem(id, name, amount)
+function newAccountItem(id, inst, type, amount)
 {
     return ""
     + "<li id='account-" + id + "' class='account-item'>" 
-    +   "<p class='account-name'>" + name + "</p>"
+    +   "<p class='account-name'>" + inst + " - " + type + "</p>"
     +   "<p class='account-amount'>" + amount + "</p>"
     +   "<div class='account-menu'>"
     +       "<button class='account-option fa fa-line-chart'></button>"
     +       "<button class='account-option fa fa-list-ul active'></button>"
     +       "<button class='account-option fa fa-cog'></button>"
+    +   "</div>"
+    +   "<div class='account-edit'>"
+    +       "<form class='edit-form'>"
+    +           "<input name='new-institution' placeholder='" + inst + "'"
+    +                   "class='edit-option edit-field inst-field'>"
+    +           "<input name='new-type' placeholder='" + type + "'"
+    +                   "class='edit-option edit-field type-field'>"
+    +           "<button class='edit-option confirm-edit'>Confirm</button>"
+    +           "<button class='edit-option delete-button'>Delete Account</button>"
+    +       "</form>"
     +   "</div>"
     + "</li>";
 }
