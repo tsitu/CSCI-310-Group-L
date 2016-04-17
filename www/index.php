@@ -179,7 +179,6 @@ $recent_transactions = [];
     <script src='js/libraries/papaparse.min.js'></script>
     <script src='js/libraries/moment.min.js'></script>
     <script src='js/libraries/pikaday.js'></script>
-    <script src='js/lib/papaparse.min.js'></script>
     
     <script src='js/dashboard.js'></script>
     <script src='js/utils.js'></script>
