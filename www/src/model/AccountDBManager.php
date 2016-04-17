@@ -60,7 +60,7 @@ class AccountDBManager {
 		$stmt->execute();
 
 		while($row = $stmt->fetch()) {
-			$ret[] = new Account($row['id'], $row['institution'], $row['type'], $row['user_id']);
+			$ret[] = new Account(DBManager::decrypt($row['id']), DBManager::decrypt(row['institution']), DBManager::decrypt($row['type']), DBManager::decrypt($row['user_id']));
 		}
 
 		return $ret;
@@ -82,7 +82,7 @@ class AccountDBManager {
 		}
 
 		$row = $stmt->fetch();
-		return new Account($row['id'], $row['institution'], $row['type'], $row['user_id']);
+		return new Account(DBManager::decrypt($row['id']), DBManager::decrypt(row['institution']), DBManager::decrypt($row['type']), DBManager::decrypt($row['user_id']));
 	}
 
 }
