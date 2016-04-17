@@ -34,8 +34,6 @@ $(document).ready(function()
     
     //init settings
     initPicker();
-    
-    toggleSide();
 });
 
 /**
