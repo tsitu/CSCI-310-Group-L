@@ -69,6 +69,6 @@ class UserManager
 		if (!$id)
 			return null;
 
-		return $id;
+		return $id['id'];
 	}
 }

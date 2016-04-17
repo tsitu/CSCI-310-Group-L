@@ -1,7 +1,5 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/AccountDBManager.php";
-
 /**
  * Account class.
  */

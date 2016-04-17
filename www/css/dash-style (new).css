@@ -19,7 +19,8 @@
 
 #add-toggle { color: #b5b5b5; }
 #add-toggle:hover { color: #ffa75c; }
-#csv-name { color: #7e7e7e; }
+#csv-msg { color: #7e7e7e; }
+#csv-msg.error { color: #ff5353; }
 #csv-choose {
     color: white;
     background-color: #ffa75c;
@@ -28,6 +29,7 @@
     color: white;
     background-color: #1faa6f;
 }
+#csv-upload[disabled='disabled'] { background-color: #7e7e7e; }
 
 
 /* MAIN & MODULES */

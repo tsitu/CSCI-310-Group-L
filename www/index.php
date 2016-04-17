@@ -1,6 +1,7 @@
 <?php
 
-//require_once __DIR__ . '/src/model/DBManager.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/AccountManager.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/TransactionManager.php";
 
 session_start();
 
@@ -18,7 +19,10 @@ $username = $_SESSION['username'];
 
 
 //data
-$accounts = [];
+$am = AccountManager::getInstance();
+$tm = TransactionManager::getInstance();
+
+$accounts = $am->getAccountsWithBalance($user_id);
 $recent_transactions = [];
 
 ?>
@@ -45,6 +49,7 @@ $recent_transactions = [];
         var accounts = <?= json_encode($accounts) ?>;
         var recent_transactions = <?= json_encode($recent_transactions) ?>;
         
+        console.log(<?= json_encode($am->getAccountWithBalance($user_id, 'Bank of America', 'Credit Card')) ?>);
         console.log(accounts);
         console.log(recent_transactions);
     </script>
@@ -109,17 +114,16 @@ $recent_transactions = [];
                 <div id='add-header' class='mini-module-header'>
                     <button id='add-toggle' class='fa fa-plus'></button>
                 </div>
-                <form id='add-form'>
-                    <p id='csv-name'>none selected</p>
+                <form id='add-form' method='post' action='src/scripts/upload.php'>
+                    <p id='csv-msg'>No CSV</p>
                     
                     <input type='file' id='csv-file' name='csv-file'>
                     <label for='csv-file' id='csv-choose' class='add-option file-label'>
                         <span class='option-icon fa fa-upload'></span>
-                        <span class='option-text'>Choose File</span>
+                        <span id='csv-label'>Choose CSV</span>
                     </label>
-                    <button id='csv-upload' class='add-option'>
-                        <span class='option-icon fa fa-check'></span>
-                        <span class='option-text'>Upload</span>
+                    <button id='csv-upload' class='add-option' disabled='disabled'>
+                        Upload
                     </button>
                 </form>
             </div>
@@ -175,23 +179,11 @@ $recent_transactions = [];
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src='js/libraries/papaparse.min.js'></script>
     <script src='js/libraries/moment.min.js'></script>
     <script src='js/libraries/pikaday.js'></script>
     
     <script src='js/dashboard.js'></script>
     <script src='js/utils.js'></script>
-
-    <!-- Highcharts -->
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/data.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-
-    <!-- Additional files for the Highslide popup effect -->
-    <script src="https://www.highcharts.com/samples/static/highslide-full.min.js"></script>
-    <script src="https://www.highcharts.com/samples/static/highslide.config.js" charset="utf-8"></script>
-    <link rel="stylesheet" type="text/css" href="https://www.highcharts.com/samples/static/highslide.css" />
 </body>
 </html>

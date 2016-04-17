@@ -7,7 +7,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/Transaction.php";
  * Singleton TransactionManager provides DB queries related to a user's transactions.
  * Uses connection from singleton DBManager to execute queries.
  */
-class TransactionDBManager
+class TransactionManager
 {
 	private static $instance;
 
@@ -54,5 +54,35 @@ class TransactionDBManager
 
 
 	/* --- QUERIES --- */
-	
+	/**
+	 *
+	 */
+	public function addTransaction($user_id, $t)
+	{
+		$str = "
+		INSERT IGNORE INTO Transactions(user_id, account_id, t, descriptor, category, amount, balance)
+		SELECT
+			:user_id, 
+			Accounts.id, 
+			:time,
+			:descriptor,
+			:category,
+		    :amount,
+			:amount2 + IFNULL((SELECT balance FROM Transactions WHERE account_id = Accounts.id ORDER BY t DESC LIMIT 1), 0)
+		FROM Accounts
+		WHERE (institution, type) = (:institution, :type);
+		";
+
+		$stmt = $this->connection->prepare($str);
+		$stmt->execute([':user_id' => $user_id, ':institution' => $t->institution, ':type' => $t->type, 
+						':time' => $t->time, ':descriptor' => $t->descriptor, ':category' => $t->category, 
+						':amount' => $t->amount, ':amount2' => $t->amount]);
+
+		return $this->connection->lastInsertId();
+	}
 }
+
+
+
+
+

@@ -131,7 +131,7 @@
 } 
 #add-form { height: 0px; }
 #add-form.show { height: 140px; }
-#csv-name {
+#csv-msg {
     height: 30px;
     font-size: 18px;
     text-align: center;
@@ -150,6 +150,7 @@
     position: relative;
 }
 .add-option:hover { top: -3px; }
+#csv-upload[disabled='disabled'] { top: 0px; }
 
 
 
