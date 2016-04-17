@@ -28,5 +28,4 @@ class Account
 		$this->user_id = (int) $this->user_id;
 		$this->balance = (double) $this->balance;
 	}
-
 }

@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/DBManager.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/DBConnection.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/Account.php";
 
 
@@ -35,6 +35,22 @@ class AccountDBManager
 	protected function __construct()
 	{
 		$this->connection = DBConnection::getConnection();
+	}
+
+	/**
+	 * Private clone to prevent two instances
+	 */
+	private function __clone()
+	{
+
+	}
+
+	/**
+	 * Private wakeup to prevent unserializing
+	 */
+	private function __wakeup()
+	{
+
 	}
 
 
@@ -127,5 +143,4 @@ class AccountDBManager
 		$row = $stmt->fetch();
 		return new Account(DBManager::decrypt($row['id']), DBManager::decrypt(row['institution']), DBManager::decrypt($row['type']), DBManager::decrypt($row['user_id']));
 	}
-
 }
