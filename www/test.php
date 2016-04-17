@@ -34,14 +34,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/User.php";
 // echo "<br>done.";
 
 
-
+echo "Attempting login...<br>";
 if(User::validateUser("test@gmail.com", "test")) {
-	echo $user->email . " logged in.";
+	echo $user->email . " logged in.<br>";
 } else {
-	echo "Login failed.";
+	echo "Login failed.<br>";
 }
 
-$user = new User("test@gmail.com", "test");
+// echo "Registering new user...<br>";
+// $user = new User("test@gmail.com", "test");
 
+// echo "User information...<br>";
+// echo "name: " . $user->email . " id: " . $user->id . "pass: " . $user->hashed_password . " encpass: " . DBManager::encrypt($user->hashed_password);
 
 echo "<br>";
