@@ -24,7 +24,7 @@ class AccountDBManager {
 
 		$stmt->bindParam(':institution', DBManager::encrypt($institution));
 		$stmt->bindParam(':type', DBManager::encrypt($type));
-		$stmt->bindParam(':user_id', DBManager::encrypt($user_id));
+		$stmt->bindParam(':user_id', $user_id);
 
 		$stmt->execute(); 	//safe from SQL injection
 	}
@@ -55,12 +55,13 @@ class AccountDBManager {
 
 		$stmt = DBManager::getConnection()->prepare("SELECT * FROM Accounts WHERE user_id=:user_id");
 
-		$stmt->bindParam(':user_id', DBManager::encrypt($user_id));
+		$stmt->bindParam(':user_id', $user_id);
 
 		$stmt->execute();
 
-		while($row = $stmt->fetch()) {
-			$ret[] = new Account(DBManager::decrypt($row['id']), DBManager::decrypt(row['institution']), DBManager::decrypt($row['type']), DBManager::decrypt($row['user_id']));
+		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		foreach ($rows as $row) {
+		   $ret[] = new Account($row['id'], DBManager::decrypt($row['institution']), DBManager::decrypt($row['type']), $row['user_id']);
 		}
 
 		return $ret;
@@ -70,7 +71,7 @@ class AccountDBManager {
 	public function getAccountByInfo($institution, $type, $user_id) {
 		$stmt = DBManager::getConnection()->prepare("SELECT * FROM Accounts WHERE user_id=:user_id AND type=:type AND institution=:institution");
 
-		$stmt->bindParam(':user_id', DBManager::encrypt($user_id));
+		$stmt->bindParam(':user_id', $user_id);
 		$stmt->bindParam(':type', DBManager::encrypt($type));
 		$stmt->bindParam(':institution', DBManager::encrypt($institution));
 
@@ -82,7 +83,7 @@ class AccountDBManager {
 		}
 
 		$row = $stmt->fetch();
-		return new Account(DBManager::decrypt($row['id']), DBManager::decrypt(row['institution']), DBManager::decrypt($row['type']), DBManager::decrypt($row['user_id']));
+		return new Account($row['id'], DBManager::decrypt(row['institution']), DBManager::decrypt($row['type']), $row['user_id']);
 	}
 
 }
