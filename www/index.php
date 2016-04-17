@@ -113,8 +113,7 @@ $recent_transactions = [];
                             <button class='edit-option delete-button'>Delete Account</button>
                         </form>
                     </div>
-                </li>
-
+                </li>  
             <?php
             }
             ?>

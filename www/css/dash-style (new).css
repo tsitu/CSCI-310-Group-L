@@ -55,10 +55,6 @@
 .module-subheader { border-bottom: 1px solid #e6e6e6; }
 
 .date-select {
-/*
-    color: white;
-    background-color: #ffa75c;
-*/
     color: #ffa75c;
     text-decoration: underline;
 }
