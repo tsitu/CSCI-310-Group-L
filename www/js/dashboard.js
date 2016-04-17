@@ -26,15 +26,21 @@ $(document).ready(function()
     //ui
     $('#curtain').click(hideDialog);
     $('.toggle-side').click(toggleSide);
+    $('.option-edit').click(toggleEdit);
     $('#add-toggle').click(toggleAdd);
     
     //events
     $('.logout').click(logout);
+    $('.confirm-edit').click(renameAccount);
+    $('.delete-button').click(deleteAccount);
     $('#csv-file').change(csvChange);
     $('#csv-upload').click(csvUpload);
     
+    
     //init settings
     initPicker();
+    
+    toggleSide();
 });
 
 /**
@@ -105,17 +111,27 @@ var toggleSide = function toggleSide()
     toggle = toggleSide;
 }
 
+function toggleEdit()
+{
+    var module = $(this).parent().siblings('.account-edit');
+    if (!module.hasClass('show'))
+        module.children('form')[0].reset();
+    
+    module.toggleClass('show');
+}
+
 /**
  * Show/hide add account form module by toggling class 'show' and 'active'
  */
 function toggleAdd()
 {
-    $('#add-form').toggleClass('show');
+    var form = $('#add-form');
+    if (!form.hasClass('show'))
+        csvReset();
     
+    form.toggleClass('show');
     $('#add-toggle').toggleClass('active');
     $('#add-header').toggleClass('active');
-    
-    csvReset();
 }
 
 
@@ -127,6 +143,57 @@ function toggleAdd()
 function logout()
 {
     window.location = 'src/scripts/logout.php';
+}
+
+/**
+ * Returns an account id given an element inside a 'li.account-item'
+ */
+function getAccountID(element)
+{
+    var search = $(element).parents('li.account-item');
+    if (search.size() == 0)
+        return -1;
+    
+    return search[0].id.split('-')[1];
+}
+
+/**
+ * 
+ */
+function renameAccount(event)
+{
+    event.preventDefault();
+    
+    var id = getAccountID(this);
+    
+    var instField = $(this).siblings('.inst-field')[0];
+    var typeField = $(this).siblings('.type-field')[0];
+    
+    var inst = instField.value;
+    var type = typeField.value;
+    
+    if (inst.length === 0)
+        inst = instField.getAttribute('placeholder');
+    if (type.length === 0)
+        type = typeField.getAttribute('placeholder');
+    
+    
+    //change
+    $(this).parents('.account-edit').siblings('.account-name').html(inst + ' - ' + type);
+    
+    $.ajax({
+        type: 'POST',
+        url: 'src/scripts/rename.php',
+        data: {id: id, inst: inst, type: type}
+    });
+}
+
+/**
+ *
+ */
+function deleteAccount(event)
+{
+    event.preventDefault();
 }
 
 /**
@@ -231,18 +298,6 @@ function csvUpload(event)
 function csvCallback(accounts)
 {
     toggleAdd();
-    
-    var template = ""
-    + "<li id='account-{id}' class='account-item'>" 
-    +   "<p class='account-name'>{name}</p>"
-    +   "<p class='account-amount'>{amount}</p>"
-    +   "<div class='account-menu'>"
-    +       "<button class='account-option fa fa-line-chart'></button>"
-    +       "<button class='account-option fa fa-list-ul active'></button>"
-    +       "<button class='account-option fa fa-cog'></button>"
-    +   "</div>"
-    + "</li>";
-    
     $('#csv-upload').html("Done");
     for (var i = 0; i < accounts.length; i++)
     {
@@ -250,14 +305,27 @@ function csvCallback(accounts)
         
         var item = document.getElementById('account-' + a.id);
         if (item)
-            $(item).children('.account-amount').html('$' + a.balance.toFixed(2));
+            $(item).children('.account-amount').html(a.balance.toFixed(2));
         else
         {
-            var newItem = template.replace('{id}', a.id)
-                                  .replace('{name}', a.institution + ' - ' + a.type)
-                                  .replace('{amount}', a.balance.toFixed(2));
-            $('#account-list').append(newItem);
+            $('#account-list').append(newAccountItem(a.id, a.institution + ' - ' + a.type, a.balance.toFixed(2)));
         }
     }
 }
 
+/**
+ *
+ */
+function newAccountItem(id, name, amount)
+{
+    return ""
+    + "<li id='account-" + id + "' class='account-item'>" 
+    +   "<p class='account-name'>" + name + "</p>"
+    +   "<p class='account-amount'>" + amount + "</p>"
+    +   "<div class='account-menu'>"
+    +       "<button class='account-option fa fa-line-chart'></button>"
+    +       "<button class='account-option fa fa-list-ul active'></button>"
+    +       "<button class='account-option fa fa-cog'></button>"
+    +   "</div>"
+    + "</li>";
+}

@@ -20,6 +20,7 @@
 .top-bar { display: none; }
 
 .side-panel,
+.account-edit,
 #add-toggle, #add-header, #add-form, .add-option
 {
     transition: all 0.2s linear;
@@ -56,8 +57,8 @@
 .side-panel.show { left: 0px; }
 
 .side-header, 
-.account-menu, 
-#account-module, 
+.account-menu, #account-module, 
+.edit-form,
 #add-header
 {
     display: flex;
@@ -69,7 +70,12 @@
 { 
     flex-flow: row nowrap; 
 }
-#account-module { flex-flow: column nowrap; }
+
+.edit-form,
+#account-module
+{ 
+    flex-flow: column nowrap;
+}
 
 .side-header {
     padding-right: 5px;
@@ -97,7 +103,7 @@
     font-weight: 400;
 }
 .account-menu {
-    margin-top: 5px;
+    margin: 5px 0px 10px 0px;
     justify-content: flex-end;
 }
 .account-option {
@@ -109,6 +115,34 @@
     -ms-border-radius: 18px;
     -moz-border-radius: 18px;
     -webkit-border-radius: 18px;
+}
+.account-edit {
+    height: 0px;
+    overflow: hidden;
+}
+.account-edit.show { height: 200px; }
+.edit-form { 
+    padding: 10px 0px; 
+    align-items: center;
+}
+.edit-option {
+    width: 90%;
+    margin: 0px auto;
+    
+    font-size: 16px;
+}
+.edit-field {
+    height: 40px;
+    padding-left: 10px;
+    margin-bottom: 10px;
+}
+.confirm-edit {
+    height: 50px;
+    padding: 10px;
+}
+.edit-option.delete-button {
+    font-size: 12px;
+    height: 30px;
 }
 
 #add-header {

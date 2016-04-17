@@ -90,7 +90,7 @@ class AccountManager
 	 * 
 	 */
 	public function updateAccount($id, $new_institution, $new_type) {
-		$stmt = DBManager::getConnection()->prepare("UPDATE Accounts SET institution=:institution, type=:type WHERE id=:id");
+		$stmt = $this->connection->prepare("UPDATE Accounts SET institution=:institution, type=:type WHERE id=:id");
 
 		$stmt->bindParam(':type', $new_type);
 		$stmt->bindParam(':institution', $new_institution);
@@ -148,18 +148,18 @@ class AccountManager
 	public function getAccountsWithBalance($user_id)
 	{
 		$str = "
-		SELECT id, user_id, institution, type, IFNULL(ta.balance, 0) AS balance
+		SELECT a.id, a.user_id, a.institution, a.type, ta.balance
 		FROM 
-			Accounts
-		LEFT JOIN 
-			(SELECT account_id, balance, t FROM Transactions ORDER BY t DESC limit 1) ta
-		ON Accounts.id = ta.account_id 
-		WHERE Accounts.user_id = :user_id;
+			Accounts as a
+		JOIN 
+			(SELECT account_id, balance FROM Transactions ORDER BY t DESC) ta
+		ON a.id = ta.account_id 
+		WHERE a.user_id = ?
+        GROUP BY a.id;
 		";
 
 		$stmt = $this->connection->prepare($str);
-		$stmt->bindParam(':user_id', $user_id);
-		$stmt->execute();
+		$stmt->execute([$user_id]);
 
 		$accounts = $stmt->fetchAll(PDO::FETCH_OBJ);
 		if (!$accounts)

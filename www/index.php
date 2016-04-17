@@ -96,12 +96,22 @@ $recent_transactions = [];
 
                 <li id='account-<?= $account->id ?>' class='account-item'>
                     <p class='account-name'><?= $name ?></p>
-                    <p class='account-amount'>$<?= number_format($account->balance, 2) ?></p>
+                    <p class='account-amount'><?= number_format($account->balance, 2) ?></p>
 
                     <div class='account-menu'>
                         <button class='account-option fa fa-line-chart'></button>
-                        <button class='account-option fa fa-list-ul active'></button>
-                        <button class='account-option fa fa-cog'></button>
+                        <button class='account-option fa fa-list-ul'></button>
+                        <button class='account-option option-edit fa fa-cog'></button>
+                    </div>
+                    <div class='account-edit'>
+                        <form class='edit-form'>
+                            <input name='new-institution' placeholder='<?= $account->institution ?>'
+                                   class='edit-option edit-field inst-field'>
+                            <input name='new-type' placeholder='<?= $account->type ?>'
+                                   class='edit-option edit-field type-field'>
+                            <button class='edit-option confirm-edit'>Confirm</button>
+                            <button class='edit-option delete-button'>Delete Account</button>
+                        </form>
                     </div>
                 </li>
 
