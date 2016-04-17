@@ -1,7 +1,7 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/DBConnection.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/Account.php";
+require_once "../model/DBConnection.php";
+require_once "../model/Account.php";
 
 
 /**
