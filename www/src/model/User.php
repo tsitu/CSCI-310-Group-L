@@ -10,13 +10,11 @@ class User
 	public $hashed_password;
 
 	//Omitting id parameter will automatically generate one.
-	function __construct($email, $raw_password) {
-
-		//immediately hash+salt the password
-		$this->hashed_password = $this->hashPassword($raw_password);
+	function __construct($id, $email, $hashed_password) {
 
 		$this->id = $id;
 		$this->email = $email;
+		$this->hashed_password = $hashed_password;
 	}
 
 	/**
