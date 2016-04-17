@@ -158,7 +158,7 @@ function getAccountID(element)
 }
 
 /**
- * 
+ * Rename account associated with clicked edit form.
  */
 function renameAccount(event)
 {
@@ -189,11 +189,22 @@ function renameAccount(event)
 }
 
 /**
- *
+ * Delete account associated with clicked delete form
  */
 function deleteAccount(event)
 {
     event.preventDefault();
+    
+    var id = getAccountID(this);
+    
+    //remove
+    $(this).parents('.account-item').remove();
+    
+    $.ajax({
+        type: 'POST',
+        url: 'src/scripts/delete.php',
+        data: {id: id}
+    });
 }
 
 /**

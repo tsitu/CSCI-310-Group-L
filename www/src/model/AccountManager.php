@@ -81,7 +81,7 @@ class AccountManager
 	 */
 	public function deleteAccount($id) {
 		$stmt = $this->connection->prepare("DELETE FROM Accounts WHERE id = :id");
-		$stmt->bindParam(':id', $account->id);
+		$stmt->bindParam(':id', $id);
 		$stmt->execute();	//safe from SQL injection
 	}
 

@@ -5,8 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/TransactionManager.php";
 
 session_start();
 
-$raw = $_POST['data'];
-$data = json_decode($raw);
+$data = json_decode($_POST['data']);
 $user_id = $_SESSION['user_id'];
 
 function comp($a, $b)
