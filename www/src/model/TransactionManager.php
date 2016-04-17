@@ -1,7 +1,7 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/DBConnection.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/Transaction.php";
+require_once "DBConnection.php";
+require_once "Transaction.php";
 
 /**
  * Singleton TransactionManager provides DB queries related to a user's transactions.

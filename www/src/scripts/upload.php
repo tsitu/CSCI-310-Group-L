@@ -1,7 +1,7 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/AccountManager.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/TransactionManager.php";
+require_once "../model/AccountManager.php";
+require_once "../model/TransactionManager.php";
 
 session_start();
 

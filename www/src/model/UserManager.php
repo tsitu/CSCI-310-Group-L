@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/DBConnection.php";
+require_once "DBConnection.php";
 
 /**
  * Singleton UserManager provides DB queries related to users.

@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/AccountManager.php";
+require_once "../src/model/AccountManager.php";
 
 $id = $_POST['id'];
 $inst = $_POST['inst'];

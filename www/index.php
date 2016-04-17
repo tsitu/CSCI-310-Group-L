@@ -1,7 +1,7 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/AccountManager.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/TransactionManager.php";
+require_once "src/model/AccountManager.php";
+require_once "src/model/TransactionManager.php";
 
 session_start();
 
@@ -120,19 +120,19 @@ $recent_transactions = [];
             ?>
             </ul>
             
-            <div id='add-module' class='mini-module'>
-                <div id='add-header' class='mini-module-header'>
-                    <button id='add-toggle' class='fa fa-plus'></button>
+            <div id='add-module' class='add-module mini-module'>
+                <div id='add-header' class='add-header mini-module-header'>
+                    <button id='add-toggle' class='add-toggle fa fa-plus'></button>
                 </div>
-                <form id='add-form' method='post' action='src/scripts/upload.php'>
-                    <p id='csv-msg'>No CSV</p>
+                <form id='add-form' class='add-form' method='post' action='src/scripts/upload.php'>
+                    <p id='csv-msg' class='csv-msg'>No CSV</p>
                     
                     <input type='file' id='csv-file' name='csv-file'>
-                    <label for='csv-file' id='csv-choose' class='add-option file-label'>
+                    <label for='csv-file' id='csv-choose' class='csv-choose add-option file-label'>
                         <span class='option-icon fa fa-upload'></span>
                         <span id='csv-label'>Choose CSV</span>
                     </label>
-                    <button id='csv-upload' class='add-option' disabled='disabled'>
+                    <button id='csv-upload' class='csv-upload add-option' disabled='disabled'>
                         Upload
                     </button>
                 </form>
@@ -147,10 +147,10 @@ $recent_transactions = [];
         <div id='graph-module' class='module graph-module'>
             <div class='module-header'>
                 <h3 class='label module-label'>Graph</h3>
-                <div class='flex-glue'></div>
-                
+            </div>
+            <div class='module-subheader'>
                 <button id='beg-date' class='date-select'>4/8/2016</button>
-                <pre> ~ </pre>
+                ~
                 <button id='end-date' class='date-select'>4/8/2016</button>
             </div>
             <div id='graph'></div>

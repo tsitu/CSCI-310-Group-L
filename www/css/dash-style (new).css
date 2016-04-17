@@ -29,19 +29,19 @@
 }
 .delete-button { color: #d84646; }
 
-#add-toggle { color: #b5b5b5; }
-#add-toggle:hover { color: #ffa75c; }
-#csv-msg { color: #7e7e7e; }
-#csv-msg.error { color: #ff5353; }
-#csv-choose {
+.add-toggle { color: #b5b5b5; }
+.add-toggle:hover { color: #ffa75c; }
+.csv-msg { color: #7e7e7e; }
+.csv-msg.error { color: #ff5353; }
+.csv-choose {
     color: white;
     background-color: #ffa75c;
 }
-#csv-upload {
+.csv-upload {
     color: white;
     background-color: #1faa6f;
 }
-#csv-upload[disabled='disabled'] { 
+.csv-upload[disabled='disabled'] { 
     cursor: default;
     background-color: #7e7e7e; 
 }
@@ -52,6 +52,7 @@
     background-color: #f5f5f5;
 }
 .module { background-color: white; }
+.module-subheader { border-bottom: 1px solid #e6e6e6; }
 
 .date-select {
 /*
