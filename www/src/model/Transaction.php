@@ -1,7 +1,7 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/TransactionDBManager.php";
-
+//require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/TransactionDBManager.php";
+require_once "TransactionDBManager.php";
 
 
 /**

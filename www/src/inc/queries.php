@@ -278,10 +278,11 @@ function uploadCSV($filePath) {
         $newAccountList = array();
         $index = 0; //for new stock list
         $isFirstLine = TRUE;
+        $isEmpty = TRUE;
         //getting csv and put that into array
 
 		$info = pathinfo($filePath);
-		if($info[(]"extension"] == "csv") {
+		if($info['extension'] == "csv") {
 			if(($csv_reader = fopen($filePath, 'r')) !== FALSE) {
 	            //read line by line
 	            //data is array that contains all elements in a row.
@@ -299,11 +300,12 @@ function uploadCSV($filePath) {
 	                //error checking if ticker is in the API
 	                //if not, just don't add it and don't add up to the new balance
 	                //syntax for stock -> Stock($name, $symbol, $closingPrice, $quantity)
-	                if($isFirstLine == FLASE) { //ignore first line since first row is not actaul data.
+	                if($isFirstLine == FALSE) { //ignore first line since first row is not actaul data.
 
 	                    $account = new account(1 , $accountInstitution, $accountType);
 	                    $newAccountList[$index] = $account;
 	                    $index++;
+	                    $isEmpty = FALSE;
 	                }
 	                $isFirstLine = FALSE;
 	            }
@@ -316,6 +318,9 @@ function uploadCSV($filePath) {
 		$arraySize = sizeof($newAccountList);
 		if($arraySize == 0) {
 			//if the size of array is zero, then returns false
+			return false;
+		}
+		if($isEmpty == TRUE) {
 			return false;
 		}
 		//echo "Hello world!<br>";
