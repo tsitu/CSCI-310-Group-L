@@ -1,10 +1,9 @@
 var id='';
 var graphClickedId = 0;
-var listClickedId = 0;
+var listClicked = [];
 
 $(document).ready(function() {
     document.getElementById("graph-module").style.display = "none";
-    document.getElementById("transaction-module").style.display = "none";
 });
 
 /**
@@ -90,13 +89,14 @@ $('.account-chart').click(function()
 $('.account-list').click(function()
 {
     var x = this.id;
-    if (x == listClickedId) {
-        document.getElementById("transaction-module").style.display = "none";
-        listClickedId = 0;
+    if (listClicked.indexOf(x) > -1) {
+        $(this).toggleClass("active");
+        listAccountRemove(x);
+        listClicked.splice(listClicked.indexOf(x), 1);
     }
     else {
-        document.getElementById("transaction-module").style.display = "inherit";
+        $(this).toggleClass("active");
+        listClicked.push(x);
         listAccount(x);
-        listClickedId = x;
     }
 });

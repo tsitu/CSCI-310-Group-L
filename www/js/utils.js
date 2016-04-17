@@ -1,5 +1,26 @@
 var transactions = [];
 
+function listAccountRemove(accountId) {
+	var getAccountUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccount&userId=3&accountId=" + accountId;
+	var getAccount = httpGet(getAccountUrl);
+	var parsedAccount = JSON.parse(getAccount);
+	var accountName = parsedAccount["institution"] + " " + parsedAccount["type"];
+
+	var table = document.getElementById("transaction-table");
+
+	var count = $('#transaction-table tr').length;
+	var rowsToDelete = [];
+	for (var i=1; i<count; i++) {
+		if (table.rows[i].cells[0].innerHTML == accountName) {
+			rowsToDelete.push(i);
+		}
+	}
+
+	for (var i=0; i<rowsToDelete.length; i++) {
+		table.deleteRow(rowsToDelete[i]-i);
+	}
+}
+
 function listAccount(accountId) {
 	var getTransactionsUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getTransactions&userId=3&accountId=" + accountId;
 	var getTransactions = httpGet(getTransactionsUrl);
@@ -11,11 +32,6 @@ function listAccount(accountId) {
 	var accountName = parsedAccount["institution"] + " " + parsedAccount["type"];
 
 	var table = document.getElementById("transaction-table");
-
-	var count = $('#transaction-table tr').length;
-	for (var i=1; i<count; i++) {
-		table.deleteRow(count-i);
-	}
 
 	for (var i=0; i<parsedTx.length; i++) {
 		var row = table.insertRow(table.rows.length);
