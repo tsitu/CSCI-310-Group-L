@@ -1,42 +1,19 @@
 <?php
 
-//require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/AccountDBManager.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/Account.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/AccountDBManager.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/User.php";
 
-// echo "These are the accounts related to userid 1:<br>";
 
-// $accountdb = new AccountDBManager();
-// $theirAccounts = $accountdb->getAccountsWithBalance(1);
-
-// foreach ($theirAccounts as $account) {
-// 	echo $account->institution . " - " . $account->type . " --- $" . $account->balance . "<br>";
-// }
-
-// echo "<br>";
-
-
-
-// echo "These are the last 3 transactions for userid 1:<br>";
-
-// $transactiondb = new TransactionDBManager();
-// $theirTransactions = $transactiondb->getTransactionsForUser(1);
-
-// foreach ($theirTransactions as $transaction) {
-// 	echo $transaction->category . " - " . $transaction->descriptor . " --- $" . $transaction->amount . "<br>";
-// }
-
-
-// $account = new Account(1, "Bank of America", "Savings");
-// echo "<br>";
-// $account2 = new Account(1, "Chase", "Savings");
-
-// echo "<br>done.";
-
-
-$user = new User("test@gmail.com", "test");
-$user2 = new User("test@gmail.com", "test");
-
-echo $user->email . " logged in.";
-echo "<br>";
-echo $user2->email . " logged in.";
+//Account functions
+$account_db = AccountDBManager::getAccountDBManager();
+//$account_db->addAccount(1, "Chase", "loan", 2266);
+//$account_db->addAccount(2, "Wells Fargo", "loan", 2266);
+//$account_db->addAccount(3, "Chase3", "loan", 2266);
+//$account_db->addAccount(4, "Chase4", "loan", 2266);
+$account_db->deleteAccount(1);
+$account_db->updateAccount(2, "Chase2", "loan", 2266);
+$list = $account_db->getAllAccounts(2266);
+$x = $account_db->getAccountByInfo("Chase2", "loan", 2266);
+$x = $account_db->getAccountByInfo("Chase2", "loan", 123456);
+if(is_null($x)) echo "tests done successfully<br>";
+else echo "something wrong with AccountDBManager<br>";

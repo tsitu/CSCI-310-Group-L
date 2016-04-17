@@ -1,23 +1,50 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/DBManager.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/User.php";
 
-class TransactionDBManager {
+class UserDBManager {
 
 	private $db;
-	protected static $transactiondb;
+	protected static $userdb;
 
 	private function __construct() {
 		$db = DBManager::getConnection();
 	}
 
 	public static function getUserDBManager() {
-		if(null === static::$transactiondb) {
-			static::$transactiondb = new static();
+		if(null === static::$userdb) {
+			static::$userdb = new static();
 		}
 
-		return static::$transactiondb;
+		return static::$userdb;
 	}
+
+	//Adds user to database with given parameters.
+	public static function addUser($id, $email, $raw_password) {
+		$stmt = DBManager::getConnection()->prepare("INSERT INTO Users (id, email, password) VALUES (:id, :email, :hashed_password)");
+
+		$stmt->bindParam(':id', $id);
+		$stmt->bindParam(':email', DBManager::encrypt($email));
+		$stmt->bindParam(':hashed_password', $hashed_password);
+
+		$stmt->execute(); 	//safe from SQL injection
+	}
+
+	//Deletes account from database matching $id.
+	public function deleteUser($id) {
+		$stmt = DBManager::getConnection()->prepare("DELETE FROM Users WHERE id = :id");
+
+		$stmt->bindParam(':id', $id);
+
+		$stmt->execute();	//safe from SQL injection
+	}
+
+	//Returns user matching given paramters
+	public function getUser($email, $raw_password) {
+
+	}
+
 }
 
 

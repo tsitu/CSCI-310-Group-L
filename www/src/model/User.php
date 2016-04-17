@@ -3,29 +3,20 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/DBManager.php";
 
 
-class User extends DBManager
+class User
 {
 	public $id;
 	public $email;
 	public $hashed_password;
 
-	private $db;
-	private $connetion;
+	//Omitting id parameter will automatically generate one.
+	function __construct($email, $raw_password) {
 
-	//If id isn't given, it finds one for it.
-	function __construct($email, $hashed_password, $id = -1) {
-		$this->db = new DBManager();
-		$this->connection = $this->db->connection;
+		//immediately hash+salt the password
+		$this->hashed_password = $this->hashPassword($raw_password);
 
 		$this->id = $id;
 		$this->email = $email;
-		$this->hashed_password = $hashed_password;
-
-		if($id === -1) {	//if id was given...
-			$this->id = $this->setId();
-		} else {	//if id was not given...
-			$this->id = $id;
-		}
 	}
 
 	/**
@@ -36,60 +27,8 @@ class User extends DBManager
 		$this->id = (int) $this->id;
 	}
 
-	//Adds this to database.
-	public function addToDatabase() {
-		$stmt = $this->connection->prepare("INSERT INTO Users (email, password) VALUES (:email, :password)");
-		$stmt->bindParam(':email', $this->email);
-		$stmt->bindParam(':password', $this->hashed_password);
-		$stmt->execute(); 	//safe from SQL injection
-	}
-
-	//Removes this from database.
-	public function removeFromDatabase() {
-		$stmt = $this->connection->prepare("DELETE FROM Users WHERE id = :id");
-		$stmt->bindParam(':id', $this->id);
-		$stmt->execute();	//safe from SQL injection
-	}
-
-	//Privately used in constructor. Sets id for this.
-	private function setId() {
-		$stmt = $this->connection->prepare("SELECT * FROM Users WHERE email=:email AND password=:password");
-		$stmt->bindParam(':email', $this->email);
-		$stmt->bindParam(':password', $this->hashed_password);
-		$stmt->execute();
-		$count = $stmt->rowCount();
-
-		if($count === 0) {	//account doesn't exist...
-			//echo " -created new account.";
-			$this->addToDatabase();
-			$this->setId();
-		} else {	//account exists in db already...
-			$row = $stmt->fetch();
-			$this->id = $row['id'];
-			//echo " -used existing account (" . $this->id . ").";
-		}
-	}
-
-	/**
-	 * Return user id with given username and password.
-	 *
-	 * @param username - email of user to get
-	 * @param password - of user to get
-	 * @return user_id if valid; null otherwise.
-	 * @throws exception when statement fails
-	 */
-	public static function getUser($username, $password)
-	{
-		$statement = $connection->prepare("SELECT * FROM Users WHERE email = ?");
-		$statement->bindParam('s', $username);
-		$statement->execute();
-
-		$retArr = $statement->fetch();
-
-		if(password_verify($password, $retArr['password']))
-			//return $statement->fetch()['id'];
-			return new User($username, $hashed_password, $statement->fetch()['id']);
-		else
-			return null;
+	//Wrapper for password_hash().
+	public static function hashPassword($raw_password) {
+		return password_hash($raw_password, PASSWORD_DEFAULT);
 	}
 }

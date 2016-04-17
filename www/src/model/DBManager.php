@@ -1,4 +1,3 @@
-
 <?php
 
 //require_once "Account.php";
@@ -18,15 +17,12 @@ const PORT 		= "3306";
  * When initialized, connects to the MySQL server specified by constants.
  * Provides query methods that return data as php objects.
  */
+//Singleton design
 class DBManager
 {
-	protected $connection;
+	private static $db;
 
-	/**
-	 * Initialize DBManager object and connect to MySQL specified by constants.
-	 * @throws exception if connection fails
-	 */
-	function __construct()
+	protected function __construct()
 	{
 		$dsn = "mysql:host=54.215.148.52;dbname=sql3114710";
 		$this->connection = new PDO($dsn, USERNAME, PASSWORD);
@@ -37,26 +33,46 @@ class DBManager
 		$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
-	/**
-	 * Close connection when destructing
-	 */
-	function __destruct()
-	{
-		$this->connection = null;
+	public static function getConnection() {
+		if(null === static::$db) {
+			static::$db = new static();
+		} 
+
+		//var_dump(static::$db);
+		return static::$db->connection;
 	}
 
+	public static function encrypt($plaintext) {
+		//hexadecimal key
+		$key = pack('H*', "ccc04b7e103a0cd8b54763051cef08bc55abe029fdebae5e1d417e2ffb2a0ccc");
 
+		//
+		$iv = "0000000000000000";
 
-	/* --- QUERIES --- */
-	/**
-	 * Return user id with given username and password.
-	 *
-	 * @param username - email of user to get
-	 * @param password - of user to get
-	 * @return user_id if valid; null otherwise.
-	 * @throws exception when statement fails
-	 */
-	
+		//produces encrypted "object" of length 128.
+		$ciphertext = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $plaintext, MCRYPT_MODE_CBC, $iv);
+
+		//translate encrypted object to readable text.
+		$ciphertext = base64_encode($ciphertext);
+
+		return $ciphertext;
+	}
+
+	public static function decrypt($ciphertext) {
+		//hexadecimal key
+		$key = pack('H*', "ccc04b7e103a0cd8b54763051cef08bc55abe029fdebae5e1d417e2ffb2a0ccc");
+
+		//
+		$iv = "0000000000000000";
+
+		//translate readable text to encrypted object.
+		$ciphertext = base64_decode($ciphertext);
+
+		//decryption step
+		$plaintext = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $ciphertext, MCRYPT_MODE_CBC, $iv);
+
+		return $plaintext;
+	}
 
 	
 	
