@@ -1,68 +1,88 @@
 <?php
 
-
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/Account.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/DBManager.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/Account.php";
 
-class AccountDBManager extends DBManager {
+class AccountDBManager {
 
-	/**
-	 * Fetch all distinct financial accounts of specified user, including each account's balance.
-	 * Balance is retrieved by doing left join with Transactions table.
-	 *
-	 * @param user_id - unique id of user to get accounts of
-	 * @return array of Account objects for user
-	 * @throws exception when MySQL statement fails
-	 */
-	public function getAccountsWithBalance($user_id)
-	{
-		$str = "
-		SELECT Accounts.*, IFNULL(t.balance, 0) AS balance, t.time
-		FROM 
-			Accounts
-		LEFT JOIN 
-			(SELECT account_id, balance, time FROM Transactions ORDER BY time DESC limit 1) t
-		ON Accounts.id = t.account_id 
-		WHERE Accounts.user_id = ?;
-		";
+	protected static $accountdb;
 
-		$statement = $this->connection->prepare($str);
-		$statement->execute( [$user_id] );
-		$accounts = $statement->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, "Account", ["_id", "_user_id", "_institution", "_type", "_balance"]);
-
-		foreach ($accounts as $a)
-			$a->fixTypes();
-
-		return $accounts;
+	private function __construct() {
 	}
 
-	//Adds Account to database.
-	public function addToDatabase($account) {
-		$stmt = $this->connection->prepare("INSERT INTO Accounts (institution, type, user_id) VALUES (:institution, :type, :user_id)");
-		$stmt->bindParam(':institution', $account->institution);
-		$stmt->bindParam(':value', $account->type);
-		$stmt->bindParam(':user_id', $account->user_id);
+	public static function getAccountDBManager() {
+		if(null === static::$accountdb) {
+			static::$accountdb = new static();
+		}
+
+		return static::$accountdb;
+	}
+
+	//Adds account to database with given parameters.
+	public static function addAccount($id, $institution, $type, $user_id) {
+		$stmt = DBManager::getConnection()->prepare("INSERT INTO Accounts (institution, type, user_id) VALUES (:institution, :type, :user_id)");
+
+		$stmt->bindParam(':institution', DBManager::encrypt($institution));
+		$stmt->bindParam(':type', DBManager::encrypt($type));
+		$stmt->bindParam(':user_id', DBManager::encrypt($user_id));
+
 		$stmt->execute(); 	//safe from SQL injection
 	}
 
-	//Removes Account from database.
-	public function removeFromDatabase($account) {
-		$stmt = $this->connection->prepare("DELETE FROM Accounts WHERE id = :id");
-		$stmt->bindParam(':id', $account->institution);
+	//Deletes account from database matching $id.
+	public function deleteAccount($id) {
+		$stmt = DBManager::getConnection()->prepare("DELETE FROM Accounts WHERE id = :id");
+
+		$stmt->bindParam(':id', $account->id);
+
 		$stmt->execute();	//safe from SQL injection
 	}
 
-	//Returns an Account matching the id.
-	public function getAccount($type, $institution, $user_id) {
-		$stmt = $this->connection->prepare("SELECT * FROM Accounts WHERE institution=:institution AND type=:type");
-		$stmt->bindParam(':institution', $institution);
-		$stmt->bindParam(':type', $type);
+	//Updates institution and type of account matching $id.
+	public function updateAccount($id, $new_institution, $new_type) {
+		$stmt = DBManager::getConnection()->prepare("UPDATE Accounts SET institution=:institution, type=:type WHERE id=:id");
+
+		$stmt->bindParam(':type', DBManager::encrypt($new_type));
+		$stmt->bindParam(':institution', DBManager::encrypt($new_institution));
+		$stmt->bindParam(':id', $id);
+
+		$stmt->execute();	//safe from SQL injection
+	}
+
+	//Returns an array containing all accounts owned by user_id.
+	public function getAllAccounts($user_id) {
+		$ret = array();
+
+		$stmt = DBManager::getConnection()->prepare("SELECT * FROM Accounts WHERE user_id=:user_id");
+
+		$stmt->bindParam(':user_id', DBManager::encrypt($user_id));
+
 		$stmt->execute();
 
-		$row = $stmt->fetch();
+		while($row = $stmt->fetch()) {
+			$ret[] = new Account(DBManager::decrypt($row['id']), DBManager::decrypt(row['institution']), DBManager::decrypt($row['type']), DBManager::decrypt($row['user_id']));
+		}
 
-		echo "got it... <br> ";
-		print_r($row);
+		return $ret;
+	}
+
+	//Returns an account matching parameters. Returns null if not found.
+	public function getAccountByInfo($institution, $type, $user_id) {
+		$stmt = DBManager::getConnection()->prepare("SELECT * FROM Accounts WHERE user_id=:user_id AND type=:type AND institution=:institution");
+
+		$stmt->bindParam(':user_id', DBManager::encrypt($user_id));
+		$stmt->bindParam(':type', DBManager::encrypt($type));
+		$stmt->bindParam(':institution', DBManager::encrypt($institution));
+
+		$stmt->execute();
+		$count = $stmt->rowCount();
+
+		if($count == 0) {
+			return null;
+		}
+
+		$row = $stmt->fetch();
+		return new Account(DBManager::decrypt($row['id']), DBManager::decrypt(row['institution']), DBManager::decrypt($row['type']), DBManager::decrypt($row['user_id']));
 	}
 
 }

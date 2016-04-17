@@ -2,21 +2,21 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/DBManager.php";
 
-class TransactionDBManager {
+class UserDBManager {
 
 	private $db;
-	protected static $transactiondb;
+	protected static $userdb;
 
 	private function __construct() {
 		$db = DBManager::getConnection();
 	}
 
 	public static function getUserDBManager() {
-		if(null === static::$transactiondb) {
-			static::$transactiondb = new static();
+		if(null === static::$userdb) {
+			static::$userdb = new static();
 		}
 
-		return static::$transactiondb;
+		return static::$userdb;
 	}
 }
 
