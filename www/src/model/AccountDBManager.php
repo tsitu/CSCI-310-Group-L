@@ -33,7 +33,7 @@ class AccountDBManager {
 	public function deleteAccount($id) {
 		$stmt = DBManager::getConnection()->prepare("DELETE FROM Accounts WHERE id = :id");
 
-		$stmt->bindParam(':id', $account->id);
+		$stmt->bindParam(':id', $id);
 
 		$stmt->execute();	//safe from SQL injection
 	}
