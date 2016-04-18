@@ -1,5 +1,5 @@
 Given(/^user is on the main UI$/) do
-	visit("https://localhost/login/")
+	visit("https://localhost/www/login/")
 	find('#login-username').set('test@gmail.com')
 	find('#login-password').set('test')
 	page.execute_script("$('#login-button').click()")

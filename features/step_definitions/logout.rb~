@@ -13,6 +13,6 @@ When(/^I click on the log out button$/) do
 end
 
 Then(/^the page goes back to login page$/) do
-	expect(current_path).to eq '/login/' 
+	expect(current_path).to eq '/www/login/' 
 
 end

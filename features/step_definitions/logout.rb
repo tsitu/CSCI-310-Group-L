@@ -1,6 +1,6 @@
 Given(/^I am about to log out$/) do
 
-	visit("https://localhost/www/login/")
+	visit("https://localhost/login/")
 	find('#login-username').set('test@gmail.com')
 	find('#login-password').set('test')
 	page.execute_script("$('#login-button').click()")
@@ -13,6 +13,6 @@ When(/^I click on the log out button$/) do
 end
 
 Then(/^the page goes back to login page$/) do
-	expect(current_path).to eq '/www/login/' 
+	expect(current_path).to eq '/login/' 
 
 end

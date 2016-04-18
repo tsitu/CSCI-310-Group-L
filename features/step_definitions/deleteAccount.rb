@@ -1,6 +1,6 @@
-Given(/^User has an account$/) do
-	Capybara.reset_sessions!
-	visit("https://localhost/www/login/")
+Given(/^user has an account$/) do
+	
+	visit("https://localhost/login/")
 	find('#login-username').set('test@gmail.com')
 	find('#login-password').set('test')
 	page.execute_script("$('#login-button').click()")
@@ -8,7 +8,6 @@ Given(/^User has an account$/) do
 	list = find('#account-list').all('li')
 	@size = list.size
 	@size.should be > 0
-	
 end
 
 When(/^user clicks on the delete button$/) do

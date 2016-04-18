@@ -1,6 +1,6 @@
 Given(/^user has an account csv file$/) do 
 	Capybara.reset_sessions!
-	visit("https://localhost/www/login/")
+	visit("https://localhost/login/")
 	find('#login-username').set('test@gmail.com')
 	find('#login-password').set('test')
 	page.execute_script("$('#login-button').click()")
