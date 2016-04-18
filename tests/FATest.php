@@ -22,7 +22,7 @@ class FATest extends PHPUnit_Framework_TestCase
 	}
 	public function testParsingCorretFormat() {
 		$filePath = '/var/www/html/CSCI-310-Group-L/CFTest.csv';
-		$returnArray = uploadCSV($filePathm "testing");
+		$returnArray = uploadCSV($filePath, "testing");
 		$arraySize = sizeof($returnArray);
 		print $arraySize;
 		$this->assertEquals($arraySize , 4);
@@ -30,19 +30,20 @@ class FATest extends PHPUnit_Framework_TestCase
 	}
 	public function testIncorrectData(){
 		$filePath = '/var/www/html/CSCI-310-Group-L/incorrectData.csv';
-		$type = uploadCSV($filepath, "testing");
+		$type = uploadCSV($filePath, "testing");
 		$this->assertEquals($type, null);
 	}
 	public function testIncorrectFormat() {
 		$filePath = '/var/www/html/CSCI-310-Group-L/wrongFormat.txt';
-		$type = uploadCSV($filepath, "testing");
+		$type = uploadCSV($filePath, "testing");
 		$this->assertEquals($type, null);
 	}
 	public function testAddAccount(){
 
 		//institution/type/userid
 		//BankofAmerica/creditcard/userid
-		$ADBManager = new AccountDBManager();
+		$ADBManager = AccountDBManager::getAccountDBManager();
+
 		$before = getNumberOfRowsAccounts();
 		$ADBManager->addAccount("PHPTest Bank", "Credit Card", 500);
 		//check the size of db table 
@@ -59,9 +60,11 @@ class FATest extends PHPUnit_Framework_TestCase
 	} 
 	public function testDeleteAccount() {
 
-		$ADBManager = new AccountDBManager();
+		
+		$ADBManager = AccountDBManager::getAccountDBManager();
 		$before = getNumberOfRowsAccounts();
 		$info = $ADBManager->getAccountByInfo("PHPTest Bank", "Credit Card", 500);
+		echo $info->id;
 		$ADBManager->deleteAccount($info->id);
 		$after = getNumberOfRowsAccounts();
 		//check the size of database to confirm it is 
