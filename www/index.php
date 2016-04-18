@@ -189,10 +189,6 @@ foreach ($accounts as $aid => $a)
                 <h3 class='label module-label'>Transactions</h3>
             </div>
             <div class='module-subheader'>
-                <input class="search" placeholder="Search" />
-                <button class="sort" data-sort="transaction-amount">
-                    Sort by Account
-                </button>
                 <button id='list-beg' class='date-select'>4/8/2016</button>
                 ~
                 <button id='list-end' class='date-select'>4/8/2016</button>
