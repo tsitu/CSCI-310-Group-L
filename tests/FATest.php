@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../www/src/inc/queries.php';
+require_once __DIR__ . '/../www/src/model/AccountManager.php';
 
 class FATest extends PHPUnit_Framework_TestCase
 {
@@ -44,7 +45,7 @@ class FATest extends PHPUnit_Framework_TestCase
 
 		//institution/type/userid
 		//BankofAmerica/creditcard/userid
-		$ADBManager = AccountManager::getAccountDBManager();
+		$ADBManager = AccountManager::getInstance();
 
 		$before = getNumberOfRowsAccounts();
 		$ADBManager->addAccount("PHPTest Bank", "Credit Card", 500);
@@ -52,19 +53,22 @@ class FATest extends PHPUnit_Framework_TestCase
 		$after = getNumberOfRowsAccounts();
 
 		//it returns account object
-		$info = $ADBManager->getAccountByInfo("PHPTest Bank", "Credit Card", 1);
+		$info = $ADBManager->getAccountByInfo(500, "PHPTest Bank", "Credit Card");
+
+
 		$this->assertEquals($before+1,$after);
-		$this->assertEquals($info->institution,"PHPTest Bank");
-		$this->assertEquals($info->type,"Credit Card");
+		echo "\r\n".addslashes($info->institution)."\r\n"."PHPTest Bank\r\n";
+		$this->assertEquals($info->institution, "PHPTest Bank\0\0\0\0");
+		$this->assertEquals($info->type,"Credit Card\0\0\0\0\0");
 		$this->assertEquals($info->user_id,500);
 
 	} 
 	public function testDeleteAccount() {
 
 		
-		$ADBManager = AccountManager::getAccountDBManager();
+		$ADBManager = AccountManager::getInstance();
 		$before = getNumberOfRowsAccounts();
-		$info = $ADBManager->getAccountByInfo("PHPTest Bank", "Credit Card", 500);
+		$info = $ADBManager->getAccountByInfo(500, "PHPTest Bank", "Credit Card");
 		$ADBManager->deleteAccount($info->id);
 		$after = getNumberOfRowsAccounts();
 		//check the size of database to confirm it is 

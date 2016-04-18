@@ -234,7 +234,7 @@ function getNumberOfRowsTransactions(){
 
 	global $mysqli;
     //prepare
-	if( ($stmt = $mysqli->prepare("SELECT id FROM transactions") )) {
+	if( ($stmt = $mysqli->prepare("SELECT id FROM Transactions") )) {
 
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
@@ -252,7 +252,7 @@ function getNumberOfRowsAccounts(){
 
 	global $mysqli;
     //prepare
-	if( ($stmt = $mysqli->prepare("SELECT id FROM accounts") )) {
+	if( ($stmt = $mysqli->prepare("SELECT id FROM Accounts") )) {
 
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
