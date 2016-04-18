@@ -289,7 +289,9 @@ function uploadCSV($filePath) {
 
 	            while(($data = fgetcsv($csv_reader, 1000, ',')) !== FALSE)  {
 	                $numElementInRow = count($data); //number of element in a row
-
+	                if($numElementInRow != 6) {
+	                	return false;
+	                }
 	       
 	                $accountInstitution = $data[0];
 	                $accountType = $data[1];
