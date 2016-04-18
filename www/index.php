@@ -30,10 +30,10 @@ $accounts = $am->getAccountsWithBalance($user_id);
 
 $initMap = [];
 $initList = [];
-foreach ($accounts as $a)
+foreach ($accounts as $aid)
 {
-    $list = $tm->getListForAccountBetween($aid, $mon, $now);;
-    $initMap[$a->id] = $list
+    $list = $tm->getListForAccountBetween($aid, $mon, $now);
+    $initMap[$a->id] = $list;
     $iniList = array_merge($initList, $list);
 }
 
