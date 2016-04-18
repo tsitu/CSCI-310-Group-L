@@ -10,7 +10,7 @@ Given(/^user has an account csv file$/) do
 end 
 
 When(/^user adds it through browse$/) do 
-	attach_file('#csv-file', File.absolute_path('test.csv'))
+	attach_file('#csv-file', File.absolute_path('./test.csv'))
 	page.execute_script("$('.new-account-button').click()")
 end 
 

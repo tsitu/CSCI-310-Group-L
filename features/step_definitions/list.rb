@@ -1,8 +1,8 @@
 Given(/^user is on the main UI$/) do
-	visit("http://localhost:80")
+	visit("https://localhost/CSCI-310-Group-L/www/login/")
 	find('#login-username').set('test@gmail.com')
 	find('#login-password').set('test')
-	page.execute_script("$('button.login-button').click()")
+	page.execute_script("$('#login-button').click()")
 end
 
 

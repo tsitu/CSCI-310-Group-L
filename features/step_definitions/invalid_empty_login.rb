@@ -1,5 +1,5 @@
 Given(/^I am logging in empty$/) do
-	visit('http://localhost:80')
+	visit("https://localhost/CSCI-310-Group-L/www/login/")
 
 end
 

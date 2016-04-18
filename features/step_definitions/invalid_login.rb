@@ -1,5 +1,4 @@
 Given(/^I am logging in$/) do
-	visit('http://localhost:80')
 	Capybara.reset_sessions!
 	visit('https://localhost/CSCI-310-Group-L/www/login/')
 
