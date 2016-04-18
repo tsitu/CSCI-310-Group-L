@@ -1,6 +1,6 @@
 <?php
 
-require_once "DBConnection.php";
+require_once "DBManager.php";
 require_once "Account.php";
 
 
@@ -30,11 +30,11 @@ class AccountManager
 
 	/**
 	 * Protected constructor to prevent new instances.
-	 * Store reference to connection from `DBConnection`
+	 * Store reference to connection from `DBManager`
 	 */
 	protected function __construct()
 	{
-		$this->connection = DBConnection::getConnection();
+		$this->connection = DBManager::getConnection();
 	}
 
 	/**
@@ -194,6 +194,7 @@ class AccountManager
 		if (!$a)
 			return null;
 		
+		//decrypt
 		$a->id = (int) $a->id;
 		$a->user_id = (int) $a->user_id;
 		$a->balance = (double) $a->balance;

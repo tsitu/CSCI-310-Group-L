@@ -340,7 +340,7 @@ function newAccountItem(id, inst, type, amount)
     +   "<p class='account-amount'>" + amount + "</p>"
     +   "<div class='account-menu'>"
     +       "<button class='account-option fa fa-line-chart'></button>"
-    +       "<button class='account-option fa fa-list-ul active'></button>"
+    +       "<button class='account-option fa fa-list-ul'></button>"
     +       "<button class='account-option fa fa-cog'></button>"
     +   "</div>"
     +   "<div class='account-edit'>"

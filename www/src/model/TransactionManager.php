@@ -1,6 +1,6 @@
 <?php
 
-require_once "DBConnection.php";
+require_once "DBManager.php";
 require_once "Transaction.php";
 
 /**
@@ -28,11 +28,11 @@ class TransactionManager
 
 	/**
 	 * Protected constructor to prevent new instances.
-	 * Store reference to connection from `DBConnection`
+	 * Store reference to connection from `DBManager`
 	 */
 	private function __construct()
 	{
-		$this->connection = DBConnection::getConnection();
+		$this->connection = DBManager::getConnection();
 	}
 
 	/**
@@ -73,10 +73,18 @@ class TransactionManager
 		WHERE (institution, type) = (:institution, :type);
 		";
 
+		$a = $t->amount;
+
 		$stmt = $this->connection->prepare($str);
-		$stmt->execute([':user_id' => $user_id, ':institution' => $t->institution, ':type' => $t->type, 
-						':time' => $t->time, ':descriptor' => $t->descriptor, ':category' => $t->category, 
-						':amount' => $t->amount, ':amount2' => $t->amount]);
+		$stmt->execute([':user_id' => $user_id, 
+						':institution' => $t->institution, 
+						':type' => $t->type, 
+						':time' => $t->time,
+						':descriptor' => $t->descriptor,
+						':category' => $t->category, 
+						':amount' => $a,
+						':amount2' => $a
+						]);
 
 		return $this->connection->lastInsertId();
 	}
