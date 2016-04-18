@@ -12,8 +12,10 @@ var DAY_MS = 24 * 60 * 60 * 1000;
 /* VARS */
 var toggle = null;
 
-var begPicker = null;
-var endPicker = null;
+var graph = null;
+var highcharts = null;
+//var begPicker = null;
+//var endPicker = null;
 
 var csvInput = document.getElementById('csv-file');
 
@@ -39,6 +41,7 @@ $(document).ready(function()
     
     //init settings
     initPicker();
+    initGraph();
     
 //    toggleSide();
 });
@@ -49,34 +52,140 @@ $(document).ready(function()
 function initPicker()
 {
     //get buttons
-    var beg = document.getElementById('beg-date');
-    var end = document.getElementById('end-date');
+    var begGraph = document.getElementById('beg-graph');
+    var endGraph = document.getElementById('end-graph');
+    var begTransaction = document.getElementById('beg-transaction');
+    var endTransaction = document.getElementById('end-transaction');
     
     //init pickers
-    begPicker = new Pikaday({
-        field: beg,
+    var begGraphPicker = new Pikaday({
+        field: begGraph,
         position: 'bottom right',
         onSelect: function(date)
         {
             //store or pass date to graph
-            beg.innerHTML = this.toString('YYYY. M. D');
+            begGraph.innerHTML = this.toString('YYYY. M. D');
         }
     });
     
-    endPicker = new Pikaday({
-        field: end,
+    var endGraphPicker = new Pikaday({
+        field: endGraph,
         onSelect: function(date)
         {
             //store or pass date to graph
-            end.innerHTML = this.toString('YYYY. M. D');
+            endGraph.innerHTML = this.toString('YYYY. M. D');
         }
     });
     
-    //default to 1 week
+    var begTransactionPicker = new Pikaday({
+        field: begTransaction,
+        onSelect: function(date)
+        {
+            //store or pass date to graph
+            begTransaction.innerHTML = this.toString('YYYY. M. D');
+        }
+    });
+    
+    var endTransactionPicker = new Pikaday({
+        field: endTransaction,
+        onSelect: function(date)
+        {
+            //store or pass date to graph
+            endTransaction.innerHTML = this.toString('YYYY. M. D');
+            console.log(endTransaction.innerHTML);
+        }
+    });
+    
+    //default to 1 month
     var today = new Date();
     var weekAgo = new Date(today.valueOf() - (7 * DAY_MS));
-    begPicker.setDate(weekAgo);
-    endPicker.setDate(today);
+    var monthAgo = new Date(today.valueOf() - (30 * DAY_MS));
+    
+    begGraphPicker.setDate(monthAgo);
+    endGraphPicker.setDate(today);
+    begTransactionPicker.setDate(monthAgo);
+    endTransactionPicker.setDate(today);
+}
+
+/**
+ *
+ */
+function initGraph()
+{
+    var data = [];
+    for (var i=0; i < initList.length; i++)
+    {
+        var a = initList[i];
+        data.timestamp = 
+    }
+    
+    graph = document.getElementById('graph');
+    highcharts = new Highcharts.Chart({
+        chart: {
+    		renderTo: graph
+    	},
+//        title: {
+//            text: 'Account Graph'
+//        },
+//        subtitle: {
+//            text: accountName
+//        },
+
+        xAxis: {
+        	type: 'datetime',
+            tickInterval: DAY_MS, // one minute
+            tickWidth: 0,
+            gridLineWidth: 1,
+            labels: {
+                align: 'left',
+                x: 3,
+                y: -3
+            }
+        },
+        yAxis: [{ // left y axis
+            title: {
+                text: null
+            },
+            labels: {
+                align: 'left',
+                x: 3,
+                y: 16,
+                format: '{value:.,0f}'
+            },
+            showFirstLabel: false
+        }],
+
+        legend: {
+            align: 'left',
+            verticalAlign: 'top',
+            y: 20,
+            floating: true,
+            borderWidth: 0
+        },
+
+        tooltip: {
+            shared: true,
+            crosshairs: true
+        },
+
+        plotOptions: {
+            series: {
+                cursor: 'pointer',
+                marker: {
+                    lineWidth: 1
+                }
+            }
+        },
+
+        series: [{
+            name: 'Transaction Amount',
+            lineWidth: 4,
+            marker: {
+                radius: 4
+            },
+            data: modifiedTx
+        }]
+    });
 }
 
 

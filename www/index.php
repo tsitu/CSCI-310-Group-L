@@ -22,8 +22,20 @@ $username = $_SESSION['username'];
 $am = AccountManager::getInstance();
 $tm = TransactionManager::getInstance();
 
+$now = new DateTime();
+$mon = clone $now;
+$mon->modify('-1 month');
+
 $accounts = $am->getAccountsWithBalance($user_id);
-$recent_transactions = [];
+
+$aid = 0;
+$initList = [];
+if (count($accounts) > 0)
+{
+    $a = $accounts[0];
+    $aid = $a->id;
+    $initList = $tm->getListForAccountBetween($aid, $mon, $now);
+}
 
 ?>
 
@@ -46,12 +58,8 @@ $recent_transactions = [];
 <body>
     
     <script>
-        var accounts = <?= json_encode($accounts) ?>;
-        var recent_transactions = <?= json_encode($recent_transactions) ?>;
-        
-        console.log(<?= json_encode($am->getAccountWithBalance($user_id, 'Bank of America', 'Credit Card')) ?>);
-        console.log(accounts);
-        console.log(recent_transactions);
+        var initList = <?= json_encode($initList) ?>;
+        console.log(initList);
     </script>
     
     <!-- Top -->
@@ -92,6 +100,8 @@ $recent_transactions = [];
             {
                 $name = $account->institution . ' - ' . $account->type;
                 $account_map[$account->id] = $name;
+                
+                $listed = ($aid === $account->id) ? 'active' : '';
             ?>
 
                 <li id='account-<?= $account->id ?>' class='account-item'>
@@ -100,7 +110,7 @@ $recent_transactions = [];
 
                     <div class='account-menu'>
                         <button class='account-option fa fa-line-chart'></button>
-                        <button class='account-option fa fa-list-ul'></button>
+                        <button class='account-option fa fa-list-ul <?= $listed ?>'></button>
                         <button class='account-option option-edit fa fa-cog'></button>
                     </div>
                     <div class='account-edit'>
@@ -148,9 +158,9 @@ $recent_transactions = [];
                 <h3 class='label module-label'>Graph</h3>
             </div>
             <div class='module-subheader'>
-                <button id='beg-date' class='date-select'>4/8/2016</button>
+                <button id='beg-graph' class='date-select'>4/8/2016</button>
                 ~
-                <button id='end-date' class='date-select'>4/8/2016</button>
+                <button id='end-graph' class='date-select'>4/8/2016</button>
             </div>
             <div id='graph'></div>
         </div>
@@ -158,18 +168,21 @@ $recent_transactions = [];
         <div id='transaction-module' class='module transactions-module'>
             <div class='module-header'>
                 <h3 class='label module-label'>Transactions</h3>
-                
-                <div class='module-subheader'></div>
+            </div>
+            <div class='module-subheader'>
+                <button id='beg-transaction' class='date-select'>4/8/2016</button>
+                ~
+                <button id='end-transaction' class='date-select'>4/8/2016</button>
             </div>
             
         <?php 
-        foreach ($recent_transactions as $t)
+        foreach ($initList as $t)
         {
         ?>    
             <ul id='transaction-list' class='table-list'>
                 <li class='transaction-item'>
                     <p class='transaction-account'><?= $account_map[$t->account_id] ?></p>
-                    <p class='transaction-date'   ><?= date_format($t->time, "Y. n. j") ?></p>
+                    <p class='transaction-date'   ><?= date_format(new Datetime($t->t), "Y. n. j") ?></p>
                     <p class='transaction-amount' ><?= number_format($t->amount, 2) ?></p>
                     <p class='transaction-category'><?= $t->category ?></p>
                     <p class='transaction-descriptor'><?= $t->descriptor ?></p>
@@ -185,9 +198,10 @@ $recent_transactions = [];
     <!-- Popup -->
     <div id='curtain'></div>
     
-    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    
     <script src='js/libraries/papaparse.min.js'></script>
     <script src='js/libraries/moment.min.js'></script>
     <script src='js/libraries/pikaday.js'></script>

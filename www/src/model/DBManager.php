@@ -110,4 +110,10 @@ class DBManager
 
 		return $plaintext;
 	}
+
+	
+	public static function sqlDatetime($datetime)
+	{
+		return $datetime->format("Y-m-d H:i:s");
+	}
 }

@@ -88,6 +88,34 @@ class TransactionManager
 
 		return $this->connection->lastInsertId();
 	}
+
+	/**
+	 *
+	 */
+	public function getListForAccountBetween($account_id, $beg, $end)
+	{
+		$str = "
+		SELECT ta.id, a.id as account_id, a.institution, a.type, ta.t, ta.descriptor, ta.category, ta.amount, ta.balance 
+		FROM Transactions as ta
+		JOIN
+		Accounts as a
+		ON a.id = ta.account_id
+		WHERE a.id = :id AND (ta.t BETWEEN :beg AND :end) ORDER BY ta.t DESC;
+		";
+
+		$stmt = $this->connection->prepare($str);
+		$stmt->execute([':id' => $account_id, 
+						':beg' => DBManager::sqlDatetime($beg),
+						':end' => DBManager::sqlDatetime($end)
+						]);
+
+		$list = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Transaction',
+								['_id', '_user_id', '_account_id', '_t', '_amount', '_category', '_descriptor', '_balance']);
+		foreach ($list as $a)
+			$a->fixTypes();
+
+		return $list;
+	}
 }
 
 
