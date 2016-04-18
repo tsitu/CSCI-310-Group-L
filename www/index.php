@@ -12,28 +12,40 @@ if ( !isset($_SESSION['user_id']) )
     exit();
 }
 
-
 //session vars
 $user_id = $_SESSION['user_id'];
 $username = $_SESSION['username'];
 
-
-//data
+//managers
 $am = AccountManager::getInstance();
 $tm = TransactionManager::getInstance();
 
+
+//get accounts and map [id, account]
+$awb = $am->getAccountsWithBalance($user_id);
+$accounts = [];
+foreach ($awb as $a)
+{
+    $a->institution = rtrim($a->institution);
+    $a->type = rtrim($a->type);
+    $a->name = $a->institution . ' - ' . $a->type;
+    $accounts[$a->id] = $a;
+}
+
+//default to 3 months
 $now = new DateTime();
 $mon = clone $now;
 $mon->modify('-3 month');
 
-$accounts = $am->getAccountsWithBalance($user_id);
 
+//get list of transactions for each account over 3 months
+//map [account id, ta. list] and also create all transaction list
 $initMap = [];
 $initList = [];
-foreach ($accounts as $a)
+foreach ($accounts as $aid => $a)
 {
-    $list = $tm->getListForAccountBetween($a->id, $mon, $now);
-    $initMap[$a->id] = $list;
+    $list = $tm->getListForAccountBetween($aid, $mon, $now);
+    $initMap[$aid] = $list;
     $initList = array_merge($initList, $list);
 }
 
@@ -101,19 +113,15 @@ foreach ($accounts as $a)
             //account list
     
             $first = true;
-            foreach($accounts as $account)
+            foreach($accounts as $aid => $a)
             {
-                $inst = rtrim($account->institution);
-                $type = rtrim($account->type);
-                $name = $inst . ' - '. $type;
-                
                 $active = $first ? 'active' : '';
                 $first = false;
             ?>
 
-                <li id='account-<?= $account->id ?>' class='account-item'>
-                    <p class='account-name'><?= $name ?></p>
-                    <p class='account-amount'><?= number_format($account->balance, 2) ?></p>
+                <li id='account-<?= $a->id ?>' class='account-item'>
+                    <p class='account-name'><?= $a->name ?></p>
+                    <p class='account-amount'><?= number_format($a->balance, 2) ?></p>
 
                     <div class='account-menu'>
                         <button class='account-option fa fa-line-chart'></button>
@@ -122,9 +130,9 @@ foreach ($accounts as $a)
                     </div>
                     <div class='account-edit'>
                         <form class='edit-form'>
-                            <input name='new-institution' placeholder='<?= $inst ?>'
+                            <input name='new-institution' placeholder='<?= $a->institution ?>'
                                    class='edit-option edit-field inst-field'>
-                            <input name='new-type' placeholder='<?= $type ?>'
+                            <input name='new-type' placeholder='<?= $a->type ?>'
                                    class='edit-option edit-field type-field'>
                             <button class='edit-option confirm-edit'>Confirm</button>
                             <button class='edit-option delete-button'>Delete Account</button>
@@ -185,14 +193,17 @@ foreach ($accounts as $a)
         <?php 
         foreach ($initList as $t)
         {
+            $a = $accounts[$t->account_id];
+            $name = $a->institution . ' - ' . $a->type;
+            
         ?>    
             <ul id='transaction-list' class='table-list'>
                 <li class='transaction-item'>
-                    <p class='transaction-account'><?= $account_map[$t->account_id] ?></p>
-                    <p class='transaction-date'   ><?= date_format(new Datetime($t->t), "Y. n. j") ?></p>
-                    <p class='transaction-amount' ><?= number_format($t->amount, 2) ?></p>
-                    <p class='transaction-category'><?= $t->category ?></p>
-                    <p class='transaction-merchant'><?= $t->merchant ?></p>
+                    <p class='transaction-account'><?= $name; ?></p>
+                    <p class='transaction-date'   ><?= date_format(new Datetime($t->t), "Y. n. j"); ?></p>
+                    <p class='transaction-amount' ><?= number_format($t->amount, 2); ?></p>
+                    <p class='transaction-category'><?= $t->category; ?></p>
+                    <p class='transaction-merchant'><?= $t->merchant; ?></p>
                 </li>
             </ul>
         <?php 

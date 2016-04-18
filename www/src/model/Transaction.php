@@ -24,6 +24,7 @@ class Transaction
 		$this->id = $_id;
 		$this->user_id = $_user_id;
 		$this->account_id = $_account_id;
+
 		$this->time = $_time;
 		$this->amount = $_amount;
 		$this->category = $_category;

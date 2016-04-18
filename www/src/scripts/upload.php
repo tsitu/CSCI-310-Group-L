@@ -21,17 +21,12 @@ usort($data, "comp");
 $am = AccountManager::getInstance();
 $tm = TransactionManager::getInstance();
 
-$result = [];
 foreach ($data as $t)
 {
-	$aid = $am->addAccount($t->institution, $t->type, $user_id);
-	$tid = $tm->addTransaction($user_id, $t);
-
-	if ($aid > 0 || $tid > 0)
-	{
-		$account = $am->getAccountWithBalance($user_id, $t->institution, $t->type);
-		$result[$account->id] = $account;
-	}
+	$am->addAccount($t->institution, $t->type, $user_id);
+	$tm->addTransaction($user_id, $t);
 }
 
-echo json_encode(array_values($result));
+$updated = $am->getAccountsWithBalance($user_id);
+
+echo json_encode($updated);

@@ -361,9 +361,7 @@ function csvCallback(accounts)
         if (item)
             $(item).children('.account-amount').html(a.balance.toFixed(2));
         else
-        {
-            $('#account-list').append(newAccountItem(a.id, a.institution, a.type, Number(a.balance).toFixed(2)));
-        }
+            $('#account-list').append(newAccountItem(a.id, a.institution, a.type, a.balance.toFixed(2)));
     }
 }
 

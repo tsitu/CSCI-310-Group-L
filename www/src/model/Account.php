@@ -28,4 +28,9 @@ class Account
 		$this->user_id = (int) $this->user_id;
 		$this->balance = (double) $this->balance;
 	}
+
+	public function getName()
+	{
+		return $institution . $type;
+	}
 }
