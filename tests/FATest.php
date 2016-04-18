@@ -15,14 +15,14 @@ class FATest extends PHPUnit_Framework_TestCase
 //case 1; when empty csv file 
 	public function testParsingEmpty(){
 		$filePath = '/var/www/html/CSCI-310-Group-L/empty.csv';
-		$returnValue = uploadCSV($filePath);
+		$returnValue = uploadCSV($filePath, "testing");
 		$this->assertEquals($returnValue,0);
 		//check if size of the data table has been changed.
 	
 	}
 	public function testParsingCorretFormat() {
 		$filePath = '/var/www/html/CSCI-310-Group-L/CFTest.csv';
-		$returnArray = uploadCSV($filePath);
+		$returnArray = uploadCSV($filePathm "testing");
 		$arraySize = sizeof($returnArray);
 		print $arraySize;
 		$this->assertEquals($arraySize , 4);
@@ -30,12 +30,12 @@ class FATest extends PHPUnit_Framework_TestCase
 	}
 	public function testIncorrectData(){
 		$filePath = '/var/www/html/CSCI-310-Group-L/incorrectData.csv';
-		$type = uploadCSV($filepath);
+		$type = uploadCSV($filepath, "testing");
 		$this->assertEquals($type, null);
 	}
 	public function testIncorrectFormat() {
 		$filePath = '/var/www/html/CSCI-310-Group-L/wrongFormat.txt';
-		$type = uploadCSV($filepath);
+		$type = uploadCSV($filepath, "testing");
 		$this->assertEquals($type, null);
 	}
 	public function testAddAccount(){

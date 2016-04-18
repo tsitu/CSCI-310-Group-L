@@ -268,7 +268,7 @@ function getNumberOfRowsAccounts(){
 }
 
   // upload a CSV to be a new portfolio
-function uploadCSV($filePath) {
+function uploadCSV($filePath, $userID) {
 		//it create 2D array 
         //structure of csv
 		//accountInstitution,accountType,txTime,txMerchant,txAmount,txCategory
@@ -303,8 +303,7 @@ function uploadCSV($filePath) {
 	                //if not, just don't add it and don't add up to the new balance
 	                //syntax for stock -> Stock($name, $symbol, $closingPrice, $quantity)
 	                if($isFirstLine == FALSE) { //ignore first line since first row is not actaul data.
-
-	                    $account = new Account(1 , $accountInstitution, $accountType);
+	                    $account = new Account(1 , $accountInstitution, $accountType, $userID);
 	                    $newAccountList[$index] = $account;
 	                    $index++;
 	                    $isEmpty = FALSE;
