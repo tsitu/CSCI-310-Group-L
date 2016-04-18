@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/DBManager.php";
+require_once __DIR__ . "/DBManager.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/User.php";
 
 class UserDBManager {
@@ -21,12 +21,11 @@ class UserDBManager {
 	}
 
 	//Adds user to database with given parameters.
-	public static function addUser($id, $email, $raw_password) {
-		$stmt = DBManager::getConnection()->prepare("INSERT INTO Users (id, email, password) VALUES (:id, :email, :hashed_password)");
+	public function addUser($email, $raw_password) {
+		$stmt = DBManager::getConnection()->prepare("INSERT INTO Users (email, password) VALUES (:email, :hashed_password)");
 
-		$stmt->bindParam(':id', $id);
 		$stmt->bindParam(':email', DBManager::encrypt($email));
-		$stmt->bindParam(':hashed_password', $hashed_password);
+		$stmt->bindParam(':hashed_password', password_hash($raw_password, PASSWORD_DEFAULT));
 
 		$stmt->execute(); 	//safe from SQL injection
 	}
@@ -40,9 +39,30 @@ class UserDBManager {
 		$stmt->execute();	//safe from SQL injection
 	}
 
-	//Returns user matching given paramters
-	public function getUser($email, $raw_password) {
+	//Returns id matching given paramters
+	public function getUserId($email, $raw_password) {
+		$stmt = DBManager::getConnection()->prepare("SELECT * FROM Users WHERE email = :email");
 
+		$stmt->bindParam(":email", DBManager::encrypt($email));
+		$stmt->execute();
+
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+		
+		if(password_verify($raw_password, $row['password']))
+			return $row['id'];
+
+	}
+
+	//returns user object matching id.
+	public function getUser($id) {
+		$stmt = DBManager::getConnection()->prepare("SELECT * FROM Users WHERE id = :id");
+
+		$stmt->bindParam(':id', $id);
+
+		$stmt->execute();	//safe from SQL injection
+
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+		return new User($row['id'], DBManager::decrypt($row['email']), $row['password']);
 	}
 
 }
