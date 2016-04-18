@@ -1,6 +1,6 @@
 <?php
 
-require_once "../model/DBConnection.php";
+require_once "DBManager.php";
 
 /**
  * Singleton UserManager provides DB queries related to users.
@@ -28,11 +28,11 @@ class UserManager
 
 	/**
 	 * Protected constructor to prevent new instance.
-	 * Store reference to connection from `DBConnection`
+	 * Store reference to connection from `DBManager`
 	 */
 	protected function __construct()
 	{
-		$this->connection = DBConnection::getConnection();
+		$this->connection = DBManager::getConnection();
 	}
 
 	/**
@@ -69,7 +69,7 @@ class UserManager
 		if (!$id)
 			return null;
 
-		return $id;
+		return $id['id'];
 	}
 
 	//Adds user to database with given parameters.

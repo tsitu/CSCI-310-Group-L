@@ -20,6 +20,7 @@
 .top-bar { display: none; }
 
 .side-panel,
+.account-edit,
 #add-toggle, #add-header, #add-form, .add-option
 {
     transition: all 0.2s linear;
@@ -55,21 +56,36 @@
 }
 .side-panel.show { left: 0px; }
 
+
+/* --- FLEXBOX --- */
 .side-header, 
-.account-menu, 
-#account-module, 
-#add-header
+.account-menu, #account-module, 
+.edit-form,
+.add-header,
+.module-subheader
 {
     display: flex;
 }
 
 .side-header, 
 .account-menu,
-#add-header
+.add-header
 { 
     flex-flow: row nowrap; 
 }
-#account-module { flex-flow: column nowrap; }
+
+.edit-form,
+#account-module
+{ 
+    flex-flow: column nowrap;
+}
+
+.account-menu,
+.add-header,
+.module-subheader
+{
+    justify-content: flex-end;
+}
 
 .side-header {
     padding-right: 5px;
@@ -96,10 +112,7 @@
     font-size: 20px;
     font-weight: 400;
 }
-.account-menu {
-    margin-top: 5px;
-    justify-content: flex-end;
-}
+.account-menu { margin: 5px 0px 10px 0px; }
 .account-option {
     width: 36px;
     height: 36px;
@@ -110,28 +123,55 @@
     -moz-border-radius: 18px;
     -webkit-border-radius: 18px;
 }
+.account-edit {
+    height: 0px;
+    overflow: hidden;
+}
+.account-edit.show { height: 200px; }
+.edit-form { 
+    padding: 10px 0px; 
+    align-items: center;
+}
+.edit-option {
+    width: 90%;
+    margin: 0px auto;
+    
+    font-size: 16px;
+}
+.edit-field {
+    height: 40px;
+    padding-left: 10px;
+    margin-bottom: 10px;
+}
+.confirm-edit {
+    height: 50px;
+    padding: 10px;
+}
+.edit-option.delete-button {
+    font-size: 12px;
+    height: 30px;
+}
 
-#add-header {
+.add-header {
     width: 100%;
     height: 50px; 
-    justify-content: flex-end;
 }
-#add-header.active { width: 50px; }
-#add-toggle {
+.add-header.active { width: 50px; }
+.add-toggle {
     width: 50px;
     height: 100%;
     
     font-size: 20px;
 }
-#add-toggle.active {    
+.add-toggle.active {    
     transform: rotate(45deg);
     -mz-transform: rotate(45deg);
     -moz-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
 } 
-#add-form { height: 0px; }
-#add-form.show { height: 140px; }
-#csv-name {
+.add-form { height: 0px; }
+.add-form.show { height: 140px; }
+.csv-msg {
     height: 30px;
     font-size: 18px;
     text-align: center;
@@ -150,13 +190,13 @@
     position: relative;
 }
 .add-option:hover { top: -3px; }
+.csv-upload[disabled='disabled'] { top: 0px; }
 
 
 
 /* - CONTENT - */
 .content { 
-    padding: 70px 10px 10px 10px;
-    
+    padding: 70px 10px 10px 10px;   
 }
 
 .module {
@@ -176,16 +216,14 @@
     font-size: 18px;
     font-weight: 400;
 }
+.module-subheader { align-items: center; }
 
 /* --- GRAPH --- */
 .date-select {
-    width: 100px;
+    width: 80px;
     height: 32px;
     
-    padding: 0px 10px;
-    border-radius: 4px;
-    
-    font-size: 0.8em;
+    font-size: 12px;
 }
 
 #graph {

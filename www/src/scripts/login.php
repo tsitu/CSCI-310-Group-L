@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/UserManager.php";
+require_once "../model/UserManager.php";
 
 session_start();
 

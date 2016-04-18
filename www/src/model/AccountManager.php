@@ -1,14 +1,14 @@
 <?php
 
-require_once "../model/DBConnection.php";
-require_once "../model/Account.php";
+require_once "DBManager.php";
+require_once "Account.php";
 
 
 /**
  * Singleton AccountManager provides DB queries related to a user's financial accounts.
  * Uses connection from singleton DBManager to execute queries.
  */
-class AccountDBManager
+class AccountManager
 {
 	protected static $instance;
 
@@ -30,11 +30,11 @@ class AccountDBManager
 
 	/**
 	 * Protected constructor to prevent new instances.
-	 * Store reference to connection from `DBConnection`
+	 * Store reference to connection from `DBManager`
 	 */
 	protected function __construct()
 	{
-		$this->connection = DBConnection::getConnection();
+		$this->connection = DBManager::getConnection();
 	}
 
 	/**
@@ -62,14 +62,16 @@ class AccountDBManager
 	 * @param $type 		- string of account type (ex. Credit, Debit)
 	 * @param $user_id 		- user_id of user this account belongs to
 	 */
-	public static function addAccount($institution, $type, $user_id) {
-		$stmt = $this->connection->prepare("INSERT INTO Accounts (institution, type, user_id) VALUES (:institution, :type, :user_id)");
+	public function addAccount($institution, $type, $user_id) {
+		$stmt = $this->connection->prepare("INSERT IGNORE INTO Accounts (institution, type, user_id) VALUES (:institution, :type, :user_id)");
 
-		$stmt->bindParam(':institution', DBManager::encrypt($institution));
-		$stmt->bindParam(':type', DBManager::encrypt($type));
-		$stmt->bindParam(':user_id', DBManager::encrypt($user_id));
+		$stmt->bindParam(':institution', $institution);
+		$stmt->bindParam(':type', $type);
+		$stmt->bindParam(':user_id', $user_id);
 
 		$stmt->execute();
+
+		return $this->connection->lastInsertId();
 	}
 
 	/**
@@ -79,7 +81,7 @@ class AccountDBManager
 	 */
 	public function deleteAccount($id) {
 		$stmt = $this->connection->prepare("DELETE FROM Accounts WHERE id = :id");
-		$stmt->bindParam(':id', $account->id);
+		$stmt->bindParam(':id', $id);
 		$stmt->execute();	//safe from SQL injection
 	}
 
@@ -88,10 +90,10 @@ class AccountDBManager
 	 * 
 	 */
 	public function updateAccount($id, $new_institution, $new_type) {
-		$stmt = DBManager::getConnection()->prepare("UPDATE Accounts SET institution=:institution, type=:type WHERE id=:id");
+		$stmt = $this->connection->prepare("UPDATE Accounts SET institution=:institution, type=:type WHERE id=:id");
 
-		$stmt->bindParam(':type', DBManager::encrypt($new_type));
-		$stmt->bindParam(':institution', DBManager::encrypt($new_institution));
+		$stmt->bindParam(':type', $new_type);
+		$stmt->bindParam(':institution', $new_institution);
 		$stmt->bindParam(':id', $id);
 
 		$stmt->execute();	//safe from SQL injection
@@ -106,41 +108,97 @@ class AccountDBManager
 	 */
 	public function getAllAccounts($user_id) {
 		$stmt = $this->connection->prepare("SELECT * FROM Accounts WHERE user_id=:user_id");
-		$stmt->bindParam(':user_id', DBManager::encrypt($user_id));
+		$stmt->bindParam(':user_id', $user_id);
 		$stmt->execute();
 
 		$ret = array();
 		while($row = $stmt->fetch()) {
-			$ret[] = new Account(DBManager::decrypt($row['id']), DBManager::decrypt($row['institution']), DBManager::decrypt($row['type']), DBManager::decrypt($row['user_id']));
+			$ret[] = new Account($row['id'], $row['institution'], $row['type'], $row['user_id']);
 		}
 
 		return $ret;
 	}
 
-	//Returns an account matching parameters. Returns null if not found.
 	/**
 	 * Returns an `Account` instance with the given name owned by the specified user.
 	 *
 	 * @param $institution  - string of account's institution (ex. Bank of America)
 	 * @param $type 		- string of account type (ex. Credit, Debit)
 	 * @param $user_id 		- user_id of user this account belongs to
-	 * @return new `Account` instance matching given params
+	 * @return new `Account` instance if found, null otherwise
 	 */
 	public function getAccountByInfo($institution, $type, $user_id) {
 		$stmt = $this->connection->prepare("SELECT * FROM Accounts WHERE user_id=:user_id AND type=:type AND institution=:institution");
 
-		$stmt->bindParam(':user_id', DBManager::encrypt($user_id));
-		$stmt->bindParam(':type', DBManager::encrypt($type));
-		$stmt->bindParam(':institution', DBManager::encrypt($institution));
+		$stmt->bindParam(':user_id', $user_id);
+		$stmt->bindParam(':type', $type);
+		$stmt->bindParam(':institution', $institution);
 
 		$stmt->execute();
-		$count = $stmt->rowCount();
-
-		if($count == 0) {
+		$row = $stmt->fetch();
+		if (!$row)
 			return null;
+
+		return new Account($row['id'], $row['institution'], $row['type'], $row['user_id']);
+	}
+
+	/**
+	 *
+	 */
+	public function getAccountsWithBalance($user_id)
+	{
+		$str = "
+		SELECT a.id, a.user_id, a.institution, a.type, ta.balance
+		FROM 
+			Accounts as a
+		JOIN 
+			(SELECT account_id, balance FROM Transactions ORDER BY t DESC) ta
+		ON a.id = ta.account_id 
+		WHERE a.user_id = ?
+        GROUP BY a.id;
+		";
+
+		$stmt = $this->connection->prepare($str);
+		$stmt->execute([$user_id]);
+
+		$accounts = $stmt->fetchAll(PDO::FETCH_OBJ);
+		if (!$accounts)
+			return [];
+
+		foreach ($accounts as $a)
+		{
+			$a->id = (int) $a->id;
+			$a->user_id = (int) $a->user_id;
+			$a->balance = (double) $a->balance;
 		}
 
-		$row = $stmt->fetch();
-		return new Account(DBManager::decrypt($row['id']), DBManager::decrypt(row['institution']), DBManager::decrypt($row['type']), DBManager::decrypt($row['user_id']));
+		return $accounts;
+	}
+
+	public function getAccountWithBalance($user_id, $institution, $type)
+	{
+		$str = "
+		SELECT id, user_id, institution, type, IFNULL(ta.balance, 0) AS balance
+		FROM 
+			Accounts
+		LEFT JOIN 
+			(SELECT account_id, balance, t FROM Transactions ORDER BY t DESC limit 1) ta
+		ON Accounts.id = ta.account_id 
+		WHERE (Accounts.user_id, Accounts.institution, Accounts.type) = (?, ?, ?);
+		";
+
+		$stmt = $this->connection->prepare($str);
+		$stmt->execute([$user_id, $institution, $type]);
+
+		$a = $stmt->fetch(PDO::FETCH_OBJ);
+		if (!$a)
+			return null;
+		
+		//decrypt
+		$a->id = (int) $a->id;
+		$a->user_id = (int) $a->user_id;
+		$a->balance = (double) $a->balance;
+
+		return $a;
 	}
 }

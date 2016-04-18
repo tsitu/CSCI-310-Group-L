@@ -12,7 +12,7 @@ const PORT 		= "3306";
  * Single DBConnection class maintains one PDO connection to DB specified by constants.
  * All data managers should use `DBConnection::getConnection()` for working with DB.
  */
-class DBConnection
+class DBManager
 {
 	private static $instance;
 

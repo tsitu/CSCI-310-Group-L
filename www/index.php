@@ -1,6 +1,7 @@
 <?php
 
-//require_once __DIR__ . '/src/model/DBManager.php';
+require_once "src/model/AccountManager.php";
+require_once "src/model/TransactionManager.php";
 
 session_start();
 
@@ -18,7 +19,10 @@ $username = $_SESSION['username'];
 
 
 //data
-$accounts = [];
+$am = AccountManager::getInstance();
+$tm = TransactionManager::getInstance();
+
+$accounts = $am->getAccountsWithBalance($user_id);
 $recent_transactions = [];
 
 ?>
@@ -45,6 +49,7 @@ $recent_transactions = [];
         var accounts = <?= json_encode($accounts) ?>;
         var recent_transactions = <?= json_encode($recent_transactions) ?>;
         
+        console.log(<?= json_encode($am->getAccountWithBalance($user_id, 'Bank of America', 'Credit Card')) ?>);
         console.log(accounts);
         console.log(recent_transactions);
     </script>
@@ -91,35 +96,43 @@ $recent_transactions = [];
 
                 <li id='account-<?= $account->id ?>' class='account-item'>
                     <p class='account-name'><?= $name ?></p>
-                    <p class='account-amount'>$<?= number_format($account->balance, 2) ?></p>
+                    <p class='account-amount'><?= number_format($account->balance, 2) ?></p>
 
                     <div class='account-menu'>
                         <button class='account-option fa fa-line-chart'></button>
-                        <button class='account-option fa fa-list-ul active'></button>
-                        <button class='account-option fa fa-cog'></button>
+                        <button class='account-option fa fa-list-ul'></button>
+                        <button class='account-option option-edit fa fa-cog'></button>
                     </div>
-                </li>
-
+                    <div class='account-edit'>
+                        <form class='edit-form'>
+                            <input name='new-institution' placeholder='<?= $account->institution ?>'
+                                   class='edit-option edit-field inst-field'>
+                            <input name='new-type' placeholder='<?= $account->type ?>'
+                                   class='edit-option edit-field type-field'>
+                            <button class='edit-option confirm-edit'>Confirm</button>
+                            <button class='edit-option delete-button'>Delete Account</button>
+                        </form>
+                    </div>
+                </li>  
             <?php
             }
             ?>
             </ul>
             
-            <div id='add-module' class='mini-module'>
-                <div id='add-header' class='mini-module-header'>
-                    <button id='add-toggle' class='fa fa-plus'></button>
+            <div id='add-module' class='add-module mini-module'>
+                <div id='add-header' class='add-header mini-module-header'>
+                    <button id='add-toggle' class='add-toggle fa fa-plus'></button>
                 </div>
-                <form id='add-form'>
-                    <p id='csv-name'>none selected</p>
+                <form id='add-form' class='add-form' method='post' action='src/scripts/upload.php'>
+                    <p id='csv-msg' class='csv-msg'>No CSV</p>
                     
                     <input type='file' id='csv-file' name='csv-file'>
-                    <label for='csv-file' id='csv-choose' class='add-option file-label'>
+                    <label for='csv-file' id='csv-choose' class='csv-choose add-option file-label'>
                         <span class='option-icon fa fa-upload'></span>
-                        <span class='option-text'>Choose File</span>
+                        <span id='csv-label'>Choose CSV</span>
                     </label>
-                    <button id='csv-upload' class='add-option'>
-                        <span class='option-icon fa fa-check'></span>
-                        <span class='option-text'>Upload</span>
+                    <button id='csv-upload' class='csv-upload add-option' disabled='disabled'>
+                        Upload
                     </button>
                 </form>
             </div>
@@ -133,10 +146,10 @@ $recent_transactions = [];
         <div id='graph-module' class='module graph-module'>
             <div class='module-header'>
                 <h3 class='label module-label'>Graph</h3>
-                <div class='flex-glue'></div>
-                
+            </div>
+            <div class='module-subheader'>
                 <button id='beg-date' class='date-select'>4/8/2016</button>
-                <pre> ~ </pre>
+                ~
                 <button id='end-date' class='date-select'>4/8/2016</button>
             </div>
             <div id='graph'></div>
@@ -175,23 +188,11 @@ $recent_transactions = [];
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src='js/libraries/papaparse.min.js'></script>
     <script src='js/libraries/moment.min.js'></script>
     <script src='js/libraries/pikaday.js'></script>
     
     <script src='js/dashboard.js'></script>
     <script src='js/utils.js'></script>
-
-    <!-- Highcharts -->
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/data.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-
-    <!-- Additional files for the Highslide popup effect -->
-    <script src="https://www.highcharts.com/samples/static/highslide-full.min.js"></script>
-    <script src="https://www.highcharts.com/samples/static/highslide.config.js" charset="utf-8"></script>
-    <link rel="stylesheet" type="text/css" href="https://www.highcharts.com/samples/static/highslide.css" />
 </body>
 </html>
