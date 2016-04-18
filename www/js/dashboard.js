@@ -24,17 +24,17 @@ var csvInput = document.getElementById('csv-file');
 $(document).ready(function()
 {
     //ui
-    $('#curtain').click(hideDialog);
-    $('.toggle-side').click(toggleSide);
-    $('.option-edit').click(toggleEdit);
-    $('#add-toggle').click(toggleAdd);
+    $(document).on('click', '#curtain', hideDialog);
+    $(document).on('click', '.toggle-side', toggleSide);
+    $(document).on('click', '.option-edit', toggleEdit);
+    $(document).on('click', '#add-toggle', toggleAdd);
     
     //events
-    $('.logout').click(logout);
-    $('.confirm-edit').click(renameAccount);
-    $('.delete-button').click(deleteAccount);
-    $('#csv-file').change(csvChange);
-    $('#csv-upload').click(csvUpload);
+    $(document).on('click', '.logout', logout);
+    $(document).on('click', '.confirm-edit', renameAccount);
+    $(document).on('click', '.delete-button', deleteAccount);
+    $(document).on('change', '#csv-file', csvChange);
+    $(document).on('click', '#csv-upload', csvUpload);
     
     
     //init settings
@@ -127,7 +127,7 @@ function toggleEdit()
  * Show/hide add account form module by toggling class 'show' and 'active'
  */
 function toggleAdd()
-{
+{    
     var form = $('#add-form');
     if (!form.hasClass('show'))
         csvReset();
@@ -292,7 +292,7 @@ function csvUpload(event)
         dynamicTyping: true,
         skipEmptyLines: true,
         complete: function(results) {
-            // console.log(JSON.stringify(results.data));
+            console.log('done parsing');
             
             $.ajax({
                 type: "POST",
@@ -313,6 +313,8 @@ function csvUpload(event)
  */
 function csvCallback(accounts)
 {
+    console.log('upload callback: ' + accounts);
+    
     toggleAdd();
     $('#csv-upload').html("Done");
     for (var i = 0; i < accounts.length; i++)
@@ -334,14 +336,14 @@ function csvCallback(accounts)
  */
 function newAccountItem(id, inst, type, amount)
 {
-    return ""
+    var str = ""
     + "<li id='account-" + id + "' class='account-item'>" 
     +   "<p class='account-name'>" + inst + " - " + type + "</p>"
     +   "<p class='account-amount'>" + amount + "</p>"
     +   "<div class='account-menu'>"
     +       "<button class='account-option fa fa-line-chart'></button>"
     +       "<button class='account-option fa fa-list-ul'></button>"
-    +       "<button class='account-option fa fa-cog'></button>"
+    +       "<button class='account-option option-edit fa fa-cog'></button>"
     +   "</div>"
     +   "<div class='account-edit'>"
     +       "<form class='edit-form'>"
@@ -354,4 +356,6 @@ function newAccountItem(id, inst, type, amount)
     +       "</form>"
     +   "</div>"
     + "</li>";
+    
+    return str;
 }
