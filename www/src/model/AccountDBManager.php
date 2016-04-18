@@ -19,7 +19,7 @@ class AccountDBManager {
 	}
 
 	//Adds account to database with given parameters.
-	public static function addAccount($id, $institution, $type, $user_id) {
+	public function addAccount($institution, $type, $user_id) {
 		$stmt = DBManager::getConnection()->prepare("INSERT INTO Accounts (institution, type, user_id) VALUES (:institution, :type, :user_id)");
 
 		$stmt->bindParam(':institution', DBManager::encrypt($institution));
