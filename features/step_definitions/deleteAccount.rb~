@@ -7,6 +7,8 @@ Given(/^User has an account$/) do
 	list = Array.new
 	list = find('#account-list').all('li')
 	@size = list.size
+	@size.should be > 0
+	
 end
 
 When(/^user clicks on the delete button$/) do

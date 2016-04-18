@@ -1,6 +1,6 @@
 Given(/^user is on the login page$/) do
 	Capybara.reset_sessions!
-	visit("https://localhost/CSCI-310-Group-L/www/login/")
+	visit("https://localhost/login/")
 end
 
 When(/^user types the right password and username$/) do
