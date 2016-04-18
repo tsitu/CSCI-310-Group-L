@@ -62,44 +62,74 @@ class UserManager
 	 */
 	public function verify($username, $password)
 	{
-		$stmt = $this->connection->prepare("SELECT id FROM Users WHERE (email = ? AND password = ?)");
-		$stmt->execute([$username, $password]);
+		$str = "SELECT id, password FROM Users WHERE email = ?";
 
-		$id = $stmt->fetch();
-		if (!$id)
+		//encrypt
+		$username = DBManager::encrypt($username);
+
+		// echo $username . '<br>';
+		// echo $password . '<br>';
+
+		$stmt = $this->connection->prepare($str);
+		$stmt->execute([$username]);
+
+		$row = $stmt->fetch(PDO::FETCH_OBJ);
+		if (!$row)
 			return null;
 
-		return $id['id'];
+		if ( !password_verify($password, $row->password) )
+			return null;
+
+		return $row->id;
 	}
 
-	//Adds user to database with given parameters.
-	public function addUser($email, $raw_password) {
-		$stmt = DBManager::getConnection()->prepare("INSERT INTO Users (email, password) VALUES (:email, :hashed_password)");
+	/** 
+	 * Adds user to database with given parameters.
+	 */
+	public function addUser($username, $password)
+	{
+		$str = "INSERT INTO Users (email, password) VALUES (:username, :password)";
 
-		$stmt->bindParam(':email', DBManager::encrypt($email));
-		$stmt->bindParam(':hashed_password', password_hash($raw_password, PASSWORD_DEFAULT));
+		//encrypt
+		$username = DBManager::encrypt($username);
+		$password = password_hash($password, PASSWORD_DEFAULT);
 
-		$stmt->execute(); 	//safe from SQL injection
+		$stmt = $this->connection->prepare($str);
+		$stmt->bindParam(':username', $username);
+		$stmt->bindParam(':password', $password);
+		$stmt->execute();
 	}
 
-	//Deletes account from database matching $id.
-	public function deleteUser($id) {
-		$stmt = DBManager::getConnection()->prepare("DELETE FROM Users WHERE id = :id");
+	/**
+	 * Delete specified user
+	 */
+	public function deleteUser($id)
+	{
+		$str = "DELETE FROM Users WHERE id = :id";
 
+		$stmt = $this->connection->prepare($str);
 		$stmt->bindParam(':id', $id);
-
-		$stmt->execute();	//safe from SQL injection
+		$stmt->execute();
 	}
 
-	//returns user object matching id.
-	public function getUser($id) {
-		$stmt = DBManager::getConnection()->prepare("SELECT * FROM Users WHERE id = :id");
+	/**
+	 * Get specified user
+	 */
+	public function getUser($id)
+	{
+		$str = "SELECT id, email, password FROM Users WHERE id = :id";
 
+		$stmt = $this->connection->prepare($str);
 		$stmt->bindParam(':id', $id);
+		$stmt->execute();
 
-		$stmt->execute();	//safe from SQL injection
+		$row = $stmt->fetch(PDO::FETCH_OBJ);
+		if (!$row)
+			return null;
 
-		$row = $stmt->fetch(PDO::FETCH_ASSOC);
-		return new User($row['id'], DBManager::decrypt($row['email']), $row['password']);
+		//decrypt
+		$row->email = DBManager::decrypt($row->email);
+
+		return new User($row->id, $row->email, $row->password);
 	}
 }

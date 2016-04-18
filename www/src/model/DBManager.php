@@ -3,9 +3,9 @@
 /* CONST */
 const HOST_NAME = "sql3.freemysqlhosting.net";
 const HOST_IP 	= "54.215.148.52";
-const USERNAME  = "sql3114710";
-const PASSWORD  = "3zaKKK36kN";
-const DB 		= "sql3114710";
+const USERNAME  = "sql3112429";
+const PASSWORD  = "NqxhS6d8yQ";
+const DB 		= "sql3112429";
 const PORT 		= "3306";
 
 /**

@@ -32,9 +32,9 @@ $initMap = [];
 $initList = [];
 foreach ($accounts as $a)
 {
-    $list = $tm->getListForAccountBetween($aid, $mon, $now);;
-    $initMap[$a->id] = $list
-    $iniList = array_merge($initList, $list);
+    $list = $tm->getListForAccountBetween($a->id, $mon, $now);
+    $initMap[$a->id] = $list;
+    $initList = array_merge($initList, $list);
 }
 
 ?>
@@ -58,7 +58,10 @@ foreach ($accounts as $a)
 <body>
     
     <script>
+        var initMap = <?= json_encode($initMap) ?>;
         var initList = <?= json_encode($initList) ?>;
+        
+        console.log(initMap);
         console.log(initList);
     </script>
     
@@ -96,12 +99,15 @@ foreach ($accounts as $a)
             <ul id='account-list' class='flex-glue'>
             <?php
             //account list
+    
+            $first = true;
             foreach($accounts as $account)
             {
                 $name = $account->institution . ' - ' . $account->type;
                 $account_map[$account->id] = $name;
                 
-                $listed = ($aid === $account->id) ? 'active' : '';
+                $active = $first ? 'active' : '';
+                $first = false;
             ?>
 
                 <li id='account-<?= $account->id ?>' class='account-item'>
@@ -110,7 +116,7 @@ foreach ($accounts as $a)
 
                     <div class='account-menu'>
                         <button class='account-option fa fa-line-chart'></button>
-                        <button class='account-option fa fa-list-ul <?= $listed ?>'></button>
+                        <button class='account-option fa fa-list-ul <?= $active ?>'></button>
                         <button class='account-option option-edit fa fa-cog'></button>
                     </div>
                     <div class='account-edit'>
@@ -176,7 +182,7 @@ foreach ($accounts as $a)
             </div>
             
         <?php 
-        foreach ($initList as $aid => $a)
+        foreach ($initList as $t)
         {
         ?>    
             <ul id='transaction-list' class='table-list'>

@@ -55,7 +55,7 @@ class TransactionManager
 
 	/* --- QUERIES --- */
 	/**
-	 *
+	 * Add the given transaction object to specified $user
 	 */
 	public function addTransaction($user_id, $t)
 	{
@@ -73,6 +73,11 @@ class TransactionManager
 		WHERE (institution, type) = (:institution, :type);
 		";
 
+		//encrypt
+		$t->institution = DBManager::encrypt($t->institution);
+		$t->type = DBManager::encrypt($t->type);
+		$t->category = DBManager::encrypt($t->category);
+		$t->merchant = DBManager::encrypt($t->merchant);
 		$a = $t->amount;
 
 		$stmt = $this->connection->prepare($str);
@@ -90,23 +95,24 @@ class TransactionManager
 	}
 
 	/**
-	 *
+	 * Get transaction list for specified user between [`$beg`, `$end`] datetime objects
 	 */
-	public function getListBetween($beg, $end)
+	public function getListForUserBetween($user_id, $beg, $end)
 	{
 		$str = "
 		SELECT ta.id, a.id as account_id, a.institution, a.type, ta.t, ta.merchant, ta.category, ta.amount, ta.balance 
-		FROM Transactions as ta
-		JOIN
-		Accounts as a
+		FROM Transactions as ta JOIN Accounts as a
 		ON a.id = ta.account_id
 		WHERE (ta.t BETWEEN :beg AND :end) ORDER BY ta.t DESC;
 		";
 
+
+		//format
+		$beg = DBManager::sqlDatetime($beg);
+		$end = DBManager::sqlDatetime($end);
+
 		$stmt = $this->connection->prepare($str);
-		$stmt->execute([':beg' => DBManager::sqlDatetime($beg),
-						':end' => DBManager::sqlDatetime($end)
-						]);
+		$stmt->execute([':beg' => $beg, ':end' => $end]);
 
 		$list = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Transaction',
 								['_id', '_user_id', '_account_id', '_t', '_amount', '_category', '_merchant', '_balance']);
@@ -117,15 +123,13 @@ class TransactionManager
 	}
 
 	/**
-	 *
+	 * Get transaction list for specified account between [`$beg`, `$end`] datetime objects
 	 */
 	public function getListForAccountBetween($account_id, $beg, $end)
 	{
 		$str = "
 		SELECT ta.id, a.id as account_id, a.institution, a.type, ta.t, ta.merchant, ta.category, ta.amount, ta.balance 
-		FROM Transactions as ta
-		JOIN
-		Accounts as a
+		FROM Transactions as ta JOIN Accounts as a
 		ON a.id = ta.account_id
 		WHERE a.id = :id AND (ta.t BETWEEN :beg AND :end) ORDER BY ta.t DESC;
 		";
