@@ -1,13 +1,13 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/DBManager.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/Account.php";
+require_once __DIR__ .  "/DBManager.php";
+require_once __DIR__ . "/Account.php";
 
 class AccountDBManager {
 
 	protected static $accountdb;
 
-	private function __construct() {
+	function __construct() {
 	}
 
 	public static function getAccountDBManager() {

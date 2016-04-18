@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/AccountDBManager.php";
+require_once __DIR__ . "/AccountDBManager.php";
 
 
 /**

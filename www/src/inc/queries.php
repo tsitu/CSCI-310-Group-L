@@ -304,7 +304,7 @@ function uploadCSV($filePath) {
 	                //syntax for stock -> Stock($name, $symbol, $closingPrice, $quantity)
 	                if($isFirstLine == FALSE) { //ignore first line since first row is not actaul data.
 
-	                    $account = new account(1 , $accountInstitution, $accountType);
+	                    $account = new Account(1 , $accountInstitution, $accountType);
 	                    $newAccountList[$index] = $account;
 	                    $index++;
 	                    $isEmpty = FALSE;
