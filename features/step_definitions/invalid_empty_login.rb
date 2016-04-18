@@ -3,12 +3,6 @@ Given(/^I am logging in empty$/) do
 
 end
 
-When(/^I enter empty username and password/) do
-	find('#login-username').set('')
-	find('#login-password').set('')
-	page.execute_script("$('#login-button').click()")
-
-end
 
 When(/^I enter empty username and password$/) do
 	find('#login-username').set('')

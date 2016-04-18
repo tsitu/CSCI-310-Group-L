@@ -1,5 +1,4 @@
 Given(/^user clicks on the account and transactions$/) do
-	Capybara.reset_sessions!
 	visit("https://localhost/CSCI-310-Group-L/www/login/")
 	find('#login-username').set('test@gmail.com')
 	find('#login-password').set('test')
