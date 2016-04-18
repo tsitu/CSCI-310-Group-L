@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../model/User.php';
+require_once "../model/UserManager.php";
 
 session_start();
 
@@ -12,23 +12,24 @@ $password = $_POST['password'];
 if ( empty($username) || empty($password) )
 {
     $_SESSION['error'] = 'Empty username or password';
-    header('Location: /CSCI-310-Group-L/www/login');
+    header('Location: /login');
     exit();
 }
 
 
 //check against db for login
-if (!User::validateUser($username, $password) )
+$user_id = UserManager::getInstance()->verify($username, $password);
+if (!$user_id)
 {
     $_SESSION['error'] = 'Invalid login parameters';
-    header('Location: /CSCI-310-Group-L/www/login');
+    header('Location: /login');
     exit();
 }
 
 
 //set login session
-$_SESSION['user_id'] = $uid;
+$_SESSION['user_id'] = $user_id;
 $_SESSION['username'] = $username;
 
-header('Location: /CSCI-310-Group-L/www/');
+header('Location: /');
 exit();

@@ -1,8 +1,8 @@
 Given(/^I am logging in empty$/) do
-	Capybara.reset_sessions!
-	visit('https://localhost/CSCI-310-Group-L/www/login/')
+	visit("https://localhost/login/")
 
 end
+
 
 When(/^I enter empty username and password$/) do
 	find('#login-username').set('')

@@ -1,6 +1,6 @@
 Given(/^user is on the login page$/) do
 	Capybara.reset_sessions!
-	visit("https://localhost/CSCI-310-Group-L/www/login/")
+	visit("https://localhost/login/")
 end
 
 When(/^user types the right password and username$/) do
@@ -10,5 +10,7 @@ When(/^user types the right password and username$/) do
 end
 
 Then(/^user can login$/)do
-	expect(current_path).to eq '/CSCI-310-Group-L/www/'
-end 
+	expect(current_path).to eq '/'
+end
+
+

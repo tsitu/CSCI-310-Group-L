@@ -1,28 +1,53 @@
 <?php
 
-require_once __DIR__ . '/src/model/DBManager.php';
+require_once "src/model/AccountManager.php";
+require_once "src/model/TransactionManager.php";
 
 session_start();
 
 //redirect if not logged in
 if ( !isset($_SESSION['user_id']) )
 {
-    header('Location: /');
+    header('Location: /login');
     exit();
 }
-
 
 //session vars
 $user_id = $_SESSION['user_id'];
 $username = $_SESSION['username'];
 
+//managers
+$am = AccountManager::getInstance();
+$tm = TransactionManager::getInstance();
 
-//data
-$manager = new DBManager();
-$accounts = $manager->getAccountsWithBalance($user_id);
-$recent_transactions = $manager->getTransactionsForUser($user_id);
 
-$account_map = [];
+//get accounts and map [id, account]
+$awb = $am->getAccountsWithBalance($user_id);
+$accounts = [];
+foreach ($awb as $a)
+{
+    $a->institution = rtrim($a->institution);
+    $a->type = rtrim($a->type);
+    $a->name = $a->institution . ' - ' . $a->type;
+    $accounts[$a->id] = $a;
+}
+
+//default to 3 months
+$now = new DateTime();
+$mon = clone $now;
+$mon->modify('-3 month');
+
+
+//get list of transactions for each account over 3 months
+//map [account id, ta. list] and also create all transaction list
+$initMap = [];
+$initList = [];
+foreach ($accounts as $aid => $a)
+{
+    $list = $tm->getListForAccountBetween($aid, $mon, $now);
+    $initMap[$aid] = $list;
+    $initList = array_merge($initList, $list);
+}
 
 ?>
 
@@ -45,11 +70,11 @@ $account_map = [];
 <body>
     
     <script>
-        var accounts = <?= json_encode($accounts) ?>;
-        var recent_transactions = <?= json_encode($recent_transactions) ?>;
+        var initMap = <?= json_encode($initMap) ?>;
+        var initList = <?= json_encode($initList) ?>;
         
-        console.log(accounts);
-        console.log(recent_transactions);
+        console.log(initMap);
+        console.log(initList);
     </script>
     
     <!-- Top -->
@@ -67,45 +92,77 @@ $account_map = [];
     </div>
     
     <!-- Side -->
-    <button class='show-side toggle-side fa fa-bars'></button>
+    <button id='show_side' class='show-side toggle-side fa fa-bars'></button>
     <div class='panel side-panel'>
+        
         <div class='side-header'>
             <button class='toggle-side side-option'>
                 <span class='fa fa-times'></span>
                 <p class='label'>Close</p>
             </button>
-            <button class='logout side-option'>
+            <button id='side-logout' class='logout side-option'>
                 <span class='fa fa-sign-out'></span>
                 <p class='label'>Logout</p>
             </button>
         </div>
-        <ul id='account-list' class='flex-glue'>
-        <?php
-        //account list
-        foreach($accounts as $account)
-        {
-            $name = $account->institution . ' - ' . $account->type;
-            $account_map[$account->id] = $name;
-        ?>
+        
+        <div id='account-module' class='flex-glue'>
             
-            <li id='account-<?= $account->id ?>' class='account-item'>
-                <p class='account-name'><?= $name ?></p>
-                <p class='account-amount'>$<?= number_format($account->balance, 2) ?></p>
+            <ul id='account-list' class='flex-glue'>
+            <?php
+            //account list
+    
+            $first = true;
+            foreach($accounts as $aid => $a)
+            {
+                $active = $first ? 'active' : '';
+                $first = false;
+            ?>
 
-                <div class='account-menu'>
-                    <button class='account-option fa fa-line-chart'></button>
-                    <button class='account-option fa fa-list-ul active'></button>
-                    <button class='account-option fa fa-cog'></button>
+                <li id='account-<?= $a->id ?>' class='account-item'>
+                    <p class='account-name'><?= $a->name ?></p>
+                    <p class='account-amount'><?= number_format($a->balance, 2) ?></p>
+
+                    <div class='account-menu'>
+                        <button class='account-option fa fa-line-chart'></button>
+                        <button class='account-option fa fa-list-ul <?= $active ?>'></button>
+                        <button class='account-option toggle-edit fa fa-cog'></button>
+                    </div>
+                    <div class='account-edit'>
+                        <form class='edit-form'>
+                            <input name='new-institution' placeholder='<?= $a->institution ?>'
+                                   class='edit-option edit-field inst-field'>
+                            <input name='new-type' placeholder='<?= $a->type ?>'
+                                   class='edit-option edit-field type-field'>
+                            <button class='edit-option rename-button'>Rename</button>
+                            <button class='edit-option delete-button'>Delete Account</button>
+                        </form>
+                    </div>
+                </li>  
+            <?php
+            }
+            ?>
+            </ul>
+            
+            <div id='upload-module' class='upload-module mini-module'>
+                <div id='upload-header' class='upload-header mini-module-header'>
+                    <button id='toggle-upload' class='toggle-upload fa fa-plus'></button>
                 </div>
-            </li>
+                <form id='upload-form' class='upload-form'>
+                    <p id='csv-msg' class='csv-msg'>No CSV</p>
+                    
+                    <input type='file' id='csv-file' name='csv-file'>
+                    <label for='csv-file' id='csv-choose' class='csv-choose upload-option file-label'>
+                        <span class='option-icon fa fa-upload'></span>
+                        <span id='csv-label'>Choose CSV</span>
+                    </label>
+                    <button id='csv-upload' class='csv-upload upload-option' disabled='disabled'>
+                        Upload
+                    </button>
+                </form>
+            </div>
             
-        <?php
-        }
-        ?>
-        </ul>
-
-        <button id='show-add' class='show-add'>Add Account</button>
-        <div class=''></div>
+        </div>
     </div>
     
     <!-- Main Content -->
@@ -114,11 +171,11 @@ $account_map = [];
         <div id='graph-module' class='module graph-module'>
             <div class='module-header'>
                 <h3 class='label module-label'>Graph</h3>
-                <div class='flex-glue'></div>
-                
-                <button id='beg-date' class='date-select'>4/8/2016</button>
-                <pre> ~ </pre>
-                <button id='end-date' class='date-select'>4/8/2016</button>
+            </div>
+            <div class='module-subheader'>
+                <button id='graph-beg' class='date-select'>4/8/2016</button>
+                ~
+                <button id='graph-end' class='date-select'>4/8/2016</button>
             </div>
             <div id='graph'></div>
         </div>
@@ -126,26 +183,36 @@ $account_map = [];
         <div id='transaction-module' class='module transactions-module'>
             <div class='module-header'>
                 <h3 class='label module-label'>Transactions</h3>
-                
-                <div class='module-subheader'></div>
+            </div>
+            <div class='module-subheader'>
+                <input class="search" placeholder="Search" />
+  <button class="sort" data-sort="transaction-account">
+    Sort by Account
+  </button>
+                <button id='list-beg' class='date-select'>4/8/2016</button>
+                ~
+                <button id='list-end' class='date-select'>4/8/2016</button>
             </div>
             
-        <?php 
-        foreach ($recent_transactions as $t)
-        {
-        ?>    
-            <ul id='transaction-list' class='table-list'>
+            <ul id='transaction-list' class='table-list list'>
+                
+            <?php 
+            foreach ($initList as $t)
+            {
+                $a = $accounts[$t->account_id];
+                $name = $a->institution . ' - ' . $a->type;
+            ?>    
                 <li class='transaction-item'>
-                    <p class='transaction-account'><?= $account_map[$t->account_id] ?></p>
-                    <p class='transaction-date'   ><?= date_format($t->time, "Y. n. j") ?></p>
-                    <p class='transaction-amount' ><?= number_format($t->amount, 2) ?></p>
-                    <p class='transaction-category'><?= $t->category ?></p>
-                    <p class='transaction-descriptor'><?= $t->descriptor ?></p>
+                    <p class='transaction-account'><?= $name; ?></p>
+                    <p class='transaction-date'   ><?= date_format(new Datetime($t->t), "Y. n. j"); ?></p>
+                    <p class='transaction-amount' ><?= number_format($t->amount, 2); ?></p>
+                    <p class='transaction-category'><?= $t->category; ?></p>
+                    <p class='transaction-merchant'><?= $t->merchant; ?></p>
                 </li>
+            <?php 
+            }
+            ?>
             </ul>
-        <?php 
-        }
-        ?>
         </div>
     </div>
     
@@ -153,16 +220,17 @@ $account_map = [];
     <!-- Popup -->
     <div id='curtain'></div>
     
-    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    
     <script src='js/libraries/papaparse.min.js'></script>
     <script src='js/libraries/moment.min.js'></script>
     <script src='js/libraries/pikaday.js'></script>
-    <script src='js/lib/papaparse.min.js'></script>
     
     <script src='js/dashboard.js'></script>
-    <script src='js/utils.js'></script>
+    <script src='js/dash-graph.js'></script>
+    <script src='js/dash-list.js'></script>
+    <script src='js/dash-ui.js'></script>
 </body>
 </html>

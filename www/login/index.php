@@ -4,7 +4,7 @@ session_start();
 
 if ( isset($_SESSION['user_id']) )
 {
-    header('Location: /CSCI-310-Group-L/www/');
+    header('Location: /');
     exit();
 }
 

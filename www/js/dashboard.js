@@ -7,119 +7,141 @@
 
 
 /* CONST */
+var DATE_FORMAT = 'YYYY. M. D';
 var DAY_MS = 24 * 60 * 60 * 1000;
 
-/* VARS */
-var toggle = null;
-
-var begPicker = null;
-var endPicker = null;
+var today = new Date();
+var tmAgo = new Date();
+    tmAgo.setMonth(today.getMonth() - 3);
 
 
 /**
- * Init function
+ * Initialize functionality
  */
 $(document).ready(function()
 {
-    //ui
-    $('#curtain').click(hideDialog);
-    $('.toggle-side').click(toggleSide);
-    
-    //events
-    $('.logout').click(logout);
-    
-    
-    //init settings
-    hideUnsupported();
-    initPicker();
+    initGraph();
+    initList();
+    initUI();
 });
 
-/**
- * Check if features are supported and hide elements if not
- */
-function hideUnsupported()
-{
-//    var fileInput = document.getElementById('csv-new');
-//    
-//    if (fileInput.disabled)
-//        $('#showAdd').addClass('hidden');
-}
 
-/**
- * Initialize and setup date pickers
- */
-function initPicker()
-{
-    //get buttons
-    var beg = document.getElementById('beg-date');
-    var end = document.getElementById('end-date');
-    
-    //init pickers
-    begPicker = new Pikaday({
-        field: beg,
-        position: 'bottom right',
-        onSelect: function(date)
-        {
-            //store or pass date to graph
-            beg.innerHTML = this.toString('YYYY. M. D');
-        }
-    });
-    
-    endPicker = new Pikaday({
-        field: end,
-        onSelect: function(date)
-        {
-            //store or pass date to graph
-            end.innerHTML = this.toString('YYYY. M. D');
-        }
-    });
-    
-    //default to 1 week
-    var today = new Date();
-    var weekAgo = new Date(today.valueOf() - (7 * DAY_MS));
-    begPicker.setDate(weekAgo);
-    endPicker.setDate(today);
-}
-
-
-
-/* --- UI --- */
-/**
- * Show/hide curtain backdrop by toggling class 'show'
- */
-function toggleCurtain()
-{
-    $('#curtain').toggleClass('show');
-}
-
-/**
- * Hide the currently open dialog and curtain
- */
-function hideDialog()
-{
-    toggle();
-    toggle = null;
-}
-
-/**
- * Show/hide side panel by toggling class 'show'
- * and store it as currently shown
- */
-var toggleSide = function toggleSide()
-{
-    toggleCurtain();
-    var target = $('.side-panel').toggleClass('show');
-    
-    toggle = toggleSide;
-}
-
-
-
-/* --- EVENTS ---*/
+/* --- FUNCTIONS ---*/
 /**
  * Logout user
  */
 function logout()
 {
     window.location = 'src/scripts/logout.php';
+}
+
+/**
+ * Rename account associated with clicked edit form.
+ */
+function renameAccount(id, inst, type)
+{
+    //change
+    $(this).parents('.account-edit').siblings('.account-name').html(inst + ' - ' + type);
+    
+    $.ajax({
+        type: 'POST',
+        url: 'src/scripts/rename.php',
+        data: {id: id, inst: inst, type: type}
+    });
+}
+
+/**
+ * Delete account associated with clicked delete form
+ */
+function deleteAccount(id)
+{
+    $(this).parents('.account-item').remove();
+    
+    $.ajax({
+        type: 'POST',
+        url: 'src/scripts/delete.php',
+        data: {id: id}
+    });
+}
+
+/**
+ * Upload the given file
+ */
+function upload(file)
+{
+    Papa.parse(file, {
+        newline: '\n',
+        delimiter: ', ',
+        header: true,
+        fastMode: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: function(results)
+        {
+            var json = JSON.stringify(results.data);
+            //console.log(json);
+            
+            $.ajax({
+                type: "POST",
+                url: "src/scripts/upload.php",
+                data: {data: json},
+                dataType: "json",
+                success: uploadSuccess
+            });
+        },
+        error: function(xhr, status, error)
+        {
+            console.log(xhr.responseText);
+        }
+    });
+}
+
+/**
+ * Callback for CSV upload post 
+ */
+function uploadSuccess(accounts)
+{
+    toggleUpload();
+
+    //console.log('upload callback: ' + accounts);
+    
+    for (var i = 0; i < accounts.length; i++)
+    {
+        var a = accounts[i];
+        
+        var item = document.getElementById('account-' + a.id);
+        if (item)
+            $(item).children('.account-amount').html(a.balance.toFixed(2));
+        else
+            $('#account-list').append(newAccountItem(a.id, a.institution, a.type, a.balance.toFixed(2)));
+    }
+}
+
+/**
+ * Return string for a new account list item with given params
+ */
+function newAccountItem(id, inst, type, amount)
+{
+    var str = ""
+    + "<li id='account-" + id + "' class='account-item'>" 
+    +   "<p class='account-name'>" + inst + " - " + type + "</p>"
+    +   "<p class='account-amount'>" + amount + "</p>"
+    +   "<div class='account-menu'>"
+    +       "<button class='account-option fa fa-line-chart'></button>"
+    +       "<button class='account-option fa fa-list-ul'></button>"
+    +       "<button class='account-option option-edit fa fa-cog'></button>"
+    +   "</div>"
+    +   "<div class='account-edit'>"
+    +       "<form class='edit-form'>"
+    +           "<input name='new-institution' placeholder='" + inst + "'"
+    +                   "class='edit-option edit-field inst-field'>"
+    +           "<input name='new-type' placeholder='" + type + "'"
+    +                   "class='edit-option edit-field type-field'>"
+    +           "<button class='edit-option rename-button'>Rename</button>"
+    +           "<button class='edit-option delete-button'>Delete Account</button>"
+    +       "</form>"
+    +   "</div>"
+    + "</li>";
+    
+    return str;
 }

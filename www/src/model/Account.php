@@ -1,11 +1,14 @@
 <?php
 
+<<<<<<< HEAD
 require_once __DIR__ . "/AccountDBManager.php";
 
+<?php
 
 /**
  * Account class.
  */
+
 class Account
 {
 	public $id;
@@ -31,5 +34,5 @@ class Account
 		$this->user_id = (int) $this->user_id;
 		$this->balance = (double) $this->balance;
 	}
-
 }
+?>
