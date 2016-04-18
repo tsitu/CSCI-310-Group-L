@@ -24,17 +24,17 @@ $tm = TransactionManager::getInstance();
 
 $now = new DateTime();
 $mon = clone $now;
-$mon->modify('-1 month');
+$mon->modify('-3 month');
 
 $accounts = $am->getAccountsWithBalance($user_id);
 
-$aid = 0;
+$initMap = [];
 $initList = [];
-if (count($accounts) > 0)
+foreach ($accounts as $a)
 {
-    $a = $accounts[0];
-    $aid = $a->id;
-    $initList = $tm->getListForAccountBetween($aid, $mon, $now);
+    $list = $tm->getListForAccountBetween($aid, $mon, $now);;
+    $initMap[$a->id] = $list
+    $iniList = array_merge($initList, $list);
 }
 
 ?>
@@ -176,7 +176,7 @@ if (count($accounts) > 0)
             </div>
             
         <?php 
-        foreach ($initList as $t)
+        foreach ($initList as $aid => $a)
         {
         ?>    
             <ul id='transaction-list' class='table-list'>
@@ -185,7 +185,7 @@ if (count($accounts) > 0)
                     <p class='transaction-date'   ><?= date_format(new Datetime($t->t), "Y. n. j") ?></p>
                     <p class='transaction-amount' ><?= number_format($t->amount, 2) ?></p>
                     <p class='transaction-category'><?= $t->category ?></p>
-                    <p class='transaction-descriptor'><?= $t->descriptor ?></p>
+                    <p class='transaction-merchant'><?= $t->merchant ?></p>
                 </li>
             </ul>
         <?php 
