@@ -30,7 +30,7 @@ $accounts = $am->getAccountsWithBalance($user_id);
 
 $initMap = [];
 $initList = [];
-foreach ($accounts as $aid)
+foreach ($accounts as $a)
 {
     $list = $tm->getListForAccountBetween($a->id, $mon, $now);
     $initMap[$a->id] = $list;
@@ -103,8 +103,9 @@ foreach ($accounts as $aid)
             $first = true;
             foreach($accounts as $account)
             {
-                $name = $account->institution . ' - ' . $account->type;
-                $account_map[$account->id] = $name;
+                $inst = rtrim($account->institution);
+                $type = rtrim($account->type);
+                $name = $inst . ' - '. $type;
                 
                 $active = $first ? 'active' : '';
                 $first = false;
@@ -121,9 +122,9 @@ foreach ($accounts as $aid)
                     </div>
                     <div class='account-edit'>
                         <form class='edit-form'>
-                            <input name='new-institution' placeholder='<?= $account->institution ?>'
+                            <input name='new-institution' placeholder='<?= $inst ?>'
                                    class='edit-option edit-field inst-field'>
-                            <input name='new-type' placeholder='<?= $account->type ?>'
+                            <input name='new-type' placeholder='<?= $type ?>'
                                    class='edit-option edit-field type-field'>
                             <button class='edit-option confirm-edit'>Confirm</button>
                             <button class='edit-option delete-button'>Delete Account</button>

@@ -5,8 +5,7 @@ require_once "../model/TransactionManager.php";
 
 session_start();
 
-$data = json_decode('[{"institution":"Bank of America","type":"Debit Card","time":"2016-01-01 10:00:00","descriptor":"Self","category":"Deposit","amount":1000},{"institution":"Bank of America","type":"Debit Card","time":"2016-01-01 17:30:00","descriptor":"Sketch","category":"App","amount":-99},{"institution":"Bank of America","type":"Debit Card","time":"2016-01-21 20:10:00","descriptor":"Blizzard - Overwatch","category":"Game","amount":-60},{"institution":"Bank of America","type":"Debit Card","time":"2016-01-22 21:08:00","descriptor":"Blizzard - Hearthstone Pack","category":"Game","amount":-3.99}]');
-	//$_POST['data']);
+$data = json_decode($_POST['data']);
 $user_id = $_SESSION['user_id'];
 
 function comp($a, $b)

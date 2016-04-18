@@ -1,5 +1,7 @@
 <?php
 
+require_once "DBManager.php";
+
 /**
  * Transaction model class.
  */
@@ -40,6 +42,9 @@ class Transaction
 		$this->time = date_create($this->time);
 		$this->amount = (double) $this->amount;
 		$this->balance = (double) $this->balance;
+
+		$this->category = DBManager::decrypt($this->category);
+		$this->merchant = DBManager::decrypt($this->merchant);
 	}
 }
 
