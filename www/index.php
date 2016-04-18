@@ -30,7 +30,7 @@ $accounts = $am->getAccountsWithBalance($user_id);
 
 $initMap = [];
 $initList = [];
-foreach ($accounts as $a)
+foreach ($accounts as $aid)
 {
     $list = $tm->getListForAccountBetween($a->id, $mon, $now);
     $initMap[$a->id] = $list;

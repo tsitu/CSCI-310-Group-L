@@ -62,7 +62,7 @@ class AccountManager
 	 * @param $type 		- string of account type (ex. Credit, Debit)
 	 * @param $user_id 		- user_id of user this account belongs to
 	 */
-	public function addAccount($institution, $type, $user_id)
+	public function addAccount($inst, $type, $user_id)
 	{
 		$str = "INSERT IGNORE INTO Accounts (institution, type, user_id) VALUES (:institution, :type, :user_id)";
 

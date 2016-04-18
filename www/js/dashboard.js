@@ -112,77 +112,7 @@ function initPicker()
  */
 function initGraph()
 {
-    var data = [];
-    for (var i=0; i < initList.length; i++)
-    {
-        var time = initList[i]["t"];
-        var balance = initList[i]["balance"];
-        data.push([time, balance]);
-    }
-    var accountName = initList[0]["institution"] + " - " + initList[0]["type"];
-
-    graph = document.getElementById('graph');
-    highcharts = new Highcharts.Chart({
-        chart: {
-    		renderTo: graph
-    	},
-       title: { text: '' },
-
-        xAxis: {
-        	type: 'datetime',
-            tickInterval: DAY_MS, // one minute
-            tickWidth: 0,
-            gridLineWidth: 1,
-            labels: {
-                align: 'left',
-                x: 3,
-                y: -3
-            }
-        },
-        yAxis: [{ // left y axis
-            title: {
-                text: null
-            },
-            labels: {
-                align: 'left',
-                x: 3,
-                y: 16,
-                format: '{value:.,0f}'
-            },
-            showFirstLabel: false
-        }],
-
-        legend: {
-            align: 'left',
-            verticalAlign: 'top',
-            y: 20,
-            floating: true,
-            borderWidth: 0
-        },
-
-        tooltip: {
-            shared: true,
-            crosshairs: true
-        },
-
-        plotOptions: {
-            series: {
-                cursor: 'pointer',
-                marker: {
-                    lineWidth: 1
-                }
-            }
-        },
-
-        series: [{
-            name: accountName,
-            lineWidth: 4,
-            marker: {
-                radius: 4
-            },
-            data: data
-        }]
-    });
+    
 }
 
 
@@ -398,7 +328,7 @@ function csvUpload(event)
         dynamicTyping: true,
         skipEmptyLines: true,
         complete: function(results) {
-            console.log('done parsing');
+            console.log(JSON.stringify(results.data));
             
             $.ajax({
                 type: "POST",
