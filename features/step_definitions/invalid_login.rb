@@ -8,7 +8,6 @@ end
 When(/^I enter wrong password$/) do
 	find('#login-username').set('test@gmail.com')
 	find('#login-password').set('testWrong')
-	page.execute_script("$('button.login-button').click()")
 	page.execute_script("$('#login-button').click()")
 end
 

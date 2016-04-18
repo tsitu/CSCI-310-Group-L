@@ -6,9 +6,7 @@ end
 When(/^I enter empty username and password/) do
 	find('#login-username').set('')
 	find('#login-password').set('')
-	page.execute_script("$('button.login-button').click()")
-	Capybara.reset_sessions!
-	visit('https://localhost/CSCI-310-Group-L/www/login/')
+	page.execute_script("$('#login-button').click()")
 
 end
 

@@ -12,9 +12,6 @@ end
 
 Then(/^user can login$/)do
 	expect(current_path).to eq '/'
-	page.execute_script("$('#login-button').click()")
 end
 
-Then(/^user can login$/)do
-	expect(current_path).to eq '/CSCI-310-Group-L/www/'
-end 
+
