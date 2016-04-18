@@ -23,7 +23,7 @@
 }
 .edit-field { border-left: 2px solid #7e7e7e; }
 .edit-field:focus { border-left: 2px solid #ffa75c; }
-.confirm-edit {
+.rename-button {
     color: white;
     background-color: #44cc92;
 }

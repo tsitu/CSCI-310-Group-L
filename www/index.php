@@ -100,7 +100,7 @@ foreach ($accounts as $aid => $a)
                 <span class='fa fa-times'></span>
                 <p class='label'>Close</p>
             </button>
-            <button class='logout side-option'>
+            <button id='side-logout' class='logout side-option'>
                 <span class='fa fa-sign-out'></span>
                 <p class='label'>Logout</p>
             </button>
@@ -126,7 +126,7 @@ foreach ($accounts as $aid => $a)
                     <div class='account-menu'>
                         <button class='account-option fa fa-line-chart'></button>
                         <button class='account-option fa fa-list-ul <?= $active ?>'></button>
-                        <button class='account-option option-edit fa fa-cog'></button>
+                        <button class='account-option toggle-edit fa fa-cog'></button>
                     </div>
                     <div class='account-edit'>
                         <form class='edit-form'>
@@ -134,7 +134,7 @@ foreach ($accounts as $aid => $a)
                                    class='edit-option edit-field inst-field'>
                             <input name='new-type' placeholder='<?= $a->type ?>'
                                    class='edit-option edit-field type-field'>
-                            <button class='edit-option confirm-edit'>Confirm</button>
+                            <button class='edit-option rename-button'>Rename</button>
                             <button class='edit-option delete-button'>Delete Account</button>
                         </form>
                     </div>
@@ -144,19 +144,19 @@ foreach ($accounts as $aid => $a)
             ?>
             </ul>
             
-            <div id='add-module' class='add-module mini-module'>
-                <div id='add-header' class='add-header mini-module-header'>
-                    <button id='add-toggle' class='add-toggle fa fa-plus'></button>
+            <div id='upload-module' class='upload-module mini-module'>
+                <div id='upload-header' class='upload-header mini-module-header'>
+                    <button id='toggle-upload' class='toggle-upload fa fa-plus'></button>
                 </div>
-                <form id='add-form' class='add-form' method='post' action='src/scripts/upload.php'>
+                <form id='upload-form' class='upload-form'>
                     <p id='csv-msg' class='csv-msg'>No CSV</p>
                     
                     <input type='file' id='csv-file' name='csv-file'>
-                    <label for='csv-file' id='csv-choose' class='csv-choose add-option file-label'>
+                    <label for='csv-file' id='csv-choose' class='csv-choose upload-option file-label'>
                         <span class='option-icon fa fa-upload'></span>
                         <span id='csv-label'>Choose CSV</span>
                     </label>
-                    <button id='csv-upload' class='csv-upload add-option' disabled='disabled'>
+                    <button id='csv-upload' class='csv-upload upload-option' disabled='disabled'>
                         Upload
                     </button>
                 </form>
@@ -173,9 +173,9 @@ foreach ($accounts as $aid => $a)
                 <h3 class='label module-label'>Graph</h3>
             </div>
             <div class='module-subheader'>
-                <button id='beg-graph' class='date-select'>4/8/2016</button>
+                <button id='graph-beg' class='date-select'>4/8/2016</button>
                 ~
-                <button id='end-graph' class='date-select'>4/8/2016</button>
+                <button id='graph-end' class='date-select'>4/8/2016</button>
             </div>
             <div id='graph'></div>
         </div>
@@ -185,19 +185,23 @@ foreach ($accounts as $aid => $a)
                 <h3 class='label module-label'>Transactions</h3>
             </div>
             <div class='module-subheader'>
-                <button id='beg-transaction' class='date-select'>4/8/2016</button>
+                <input class="search" placeholder="Search" />
+  <button class="sort" data-sort="transaction-account">
+    Sort by Account
+  </button>
+                <button id='list-beg' class='date-select'>4/8/2016</button>
                 ~
-                <button id='end-transaction' class='date-select'>4/8/2016</button>
+                <button id='list-end' class='date-select'>4/8/2016</button>
             </div>
             
-        <?php 
-        foreach ($initList as $t)
-        {
-            $a = $accounts[$t->account_id];
-            $name = $a->institution . ' - ' . $a->type;
-            
-        ?>    
-            <ul id='transaction-list' class='table-list'>
+            <ul id='transaction-list' class='table-list list'>
+                
+            <?php 
+            foreach ($initList as $t)
+            {
+                $a = $accounts[$t->account_id];
+                $name = $a->institution . ' - ' . $a->type;
+            ?>    
                 <li class='transaction-item'>
                     <p class='transaction-account'><?= $name; ?></p>
                     <p class='transaction-date'   ><?= date_format(new Datetime($t->t), "Y. n. j"); ?></p>
@@ -205,10 +209,10 @@ foreach ($accounts as $aid => $a)
                     <p class='transaction-category'><?= $t->category; ?></p>
                     <p class='transaction-merchant'><?= $t->merchant; ?></p>
                 </li>
+            <?php 
+            }
+            ?>
             </ul>
-        <?php 
-        }
-        ?>
         </div>
     </div>
     
@@ -225,6 +229,8 @@ foreach ($accounts as $aid => $a)
     <script src='js/libraries/pikaday.js'></script>
     
     <script src='js/dashboard.js'></script>
-    <script src='js/utils.js'></script>
+    <script src='js/dash-graph.js'></script>
+    <script src='js/dash-list.js'></script>
+    <script src='js/dash-ui.js'></script>
 </body>
 </html>

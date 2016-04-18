@@ -133,7 +133,7 @@
     padding: 10px 0px; 
     align-items: center;
 }
-.edit-option {
+.toggle-edit {
     width: 90%;
     margin: 0px auto;
     
@@ -144,40 +144,40 @@
     padding-left: 10px;
     margin-bottom: 10px;
 }
-.confirm-edit {
+.rename-button {
     height: 50px;
     padding: 10px;
 }
-.edit-option.delete-button {
+.toggle-edit.delete-button {
     font-size: 12px;
     height: 30px;
 }
 
-.add-header {
+.upload-header {
     width: 100%;
     height: 50px; 
 }
-.add-header.active { width: 50px; }
-.add-toggle {
+.upload-header.active { width: 50px; }
+.upload-toggle {
     width: 50px;
     height: 100%;
     
     font-size: 20px;
 }
-.add-toggle.active {    
+.upload-toggle.active {    
     transform: rotate(45deg);
     -mz-transform: rotate(45deg);
     -moz-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
 } 
-.add-form { height: 0px; }
-.add-form.show { height: 140px; }
+.upload-form { height: 0px; }
+.upload-form.show { height: 140px; }
 .csv-msg {
     height: 30px;
     font-size: 18px;
     text-align: center;
 }
-.add-option {
+.upload-option {
     display: block;
     width: 60%;
     height: 40px;
@@ -190,7 +190,7 @@
     top: 0px;
     position: relative;
 }
-.add-option:hover { top: -3px; }
+.upload-option:hover { top: -3px; }
 .csv-upload[disabled='disabled'] { top: 0px; }
 
 
