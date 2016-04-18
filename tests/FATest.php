@@ -73,7 +73,6 @@ class FATest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($info, null);
 
 	}
-	public function 
 
 }
 
