@@ -92,7 +92,7 @@ foreach ($accounts as $aid => $a)
     </div>
     
     <!-- Side -->
-    <button id='show_side' class='show-side toggle-side fa fa-bars'></button>
+    <button id='show-side' class='show-side toggle-side fa fa-bars'></button>
     <div class='panel side-panel'>
         
         <div class='side-header'>
@@ -106,7 +106,7 @@ foreach ($accounts as $aid => $a)
             </button>
         </div>
         
-        <div id='account-module' class='flex-glue'>
+        <div id='account-module' class='account-module flex-glue'>
             
             <ul id='account-list' class='flex-glue'>
             <?php
@@ -186,9 +186,9 @@ foreach ($accounts as $aid => $a)
             </div>
             <div class='module-subheader'>
                 <input class="search" placeholder="Search" />
-  <button class="sort" data-sort="transaction-account">
-    Sort by Account
-  </button>
+                <button class="sort" data-sort="transaction-amount">
+                    Sort by Account
+                </button>
                 <button id='list-beg' class='date-select'>4/8/2016</button>
                 ~
                 <button id='list-end' class='date-select'>4/8/2016</button>

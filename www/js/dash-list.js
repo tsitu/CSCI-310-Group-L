@@ -26,8 +26,8 @@ function initList()
 		valueNames: ['transction-account', 'transction-date', 'transction-amount', 'transction-category', 'transction-merchant']
 	});
 
-	listManager.sort('transaction-category', {
-		order: 'desc'
+	listManager.sort('transaction-amount', {
+		order: 'asc'
 	});
 }
 
