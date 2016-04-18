@@ -84,7 +84,7 @@ class AccountDBManager {
 		}
 
 		$row = $stmt->fetch();
-		return new Account($row['id'], DBManager::decrypt(row['institution']), DBManager::decrypt($row['type']), $row['user_id']);
+		return new Account($row['id'], DBManager::decrypt($row['institution']), DBManager::decrypt($row['type']), $row['user_id']);
 	}
 
 }

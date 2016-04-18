@@ -14,10 +14,12 @@ class Account
 	public $type;
 
 	function __construct($id, $institution, $type, $user_id) {
-		$this->$id = $id;
-		$this->$institution = $institution;
-		$this->$type = $type;
-		$this->$user_id = $user_id;
+		echo "<br>--running constructor<br>";
+
+		$this->id = $id;
+		$this->institution = $institution;
+		$this->type = $type;
+		$this->user_id = $user_id;
 	}
 
 	/**
