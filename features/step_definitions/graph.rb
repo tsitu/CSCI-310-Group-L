@@ -1,5 +1,5 @@
 Given(/^user clicks on the account and transactions$/) do
-	visit("https://localhost/login/")
+	visit("https://localhost/www/login/")
 	find('#login-username').set('test@gmail.com')
 	find('#login-password').set('test')
 	page.execute_script("$('#login-button').click()")

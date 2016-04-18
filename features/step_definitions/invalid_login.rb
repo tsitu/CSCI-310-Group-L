@@ -1,6 +1,6 @@
 Given(/^I am logging in$/) do
 	Capybara.reset_sessions!
-	visit('https://localhost/login/')
+	visit('https://localhost/www/login/')
 
 end
 
