@@ -8,5 +8,5 @@ end
 
 
 Then(/^I should see a user menu$/) do
-	expect(page).to have_selector('#show_side', visible: true)
+	expect(page).to have_selector('#show-side', visible: true)
 end 

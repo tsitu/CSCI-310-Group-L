@@ -7,7 +7,7 @@ Given (/^user is on UI$/) do
 end
 
 When(/^user clicks the account button$/) do
-	page.find('#show_side').click()
+	page.find('#show-side').click()
 end
 
 Then(/^user can create new account$/) do

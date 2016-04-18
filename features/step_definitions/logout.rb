@@ -9,8 +9,8 @@ end
 
 When(/^I click on the log out button$/) do
 	expect(current_path).to eq '/'
-	page.execute_script("$('.show-side toggle-side fa fa-bars').click()")
-	page.execute_script("$('.logout side-option').click()")
+	page.find('#show-side').click()
+	page.click_on("Logout")
 end
 
 Then(/^the page goes back to login page$/) do
