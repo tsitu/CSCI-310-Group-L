@@ -21,6 +21,7 @@ if ( empty($username) || empty($password) )
 $user_id = UserManager::getInstance()->verify($username, $password);
 if (!$user_id)
 {
+	//error out
     $_SESSION['error'] = 'Invalid login parameters';
     header('Location: /login');
     exit();
@@ -30,6 +31,7 @@ if (!$user_id)
 //set login session
 $_SESSION['user_id'] = $user_id;
 $_SESSION['username'] = $username;
+
 
 header('Location: /');
 exit();
