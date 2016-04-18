@@ -99,7 +99,7 @@ function initPicker()
     //default to 1 month
     var today = new Date();
     var weekAgo = new Date(today.valueOf() - (7 * DAY_MS));
-    var monthAgo = new Date(today.valueOf() - (30 * DAY_MS));
+    var monthAgo = new Date(today.valueOf() - (3 * 30 * DAY_MS));
     
     begGraphPicker.setDate(monthAgo);
     endGraphPicker.setDate(today);
@@ -119,19 +119,14 @@ function initGraph()
         var balance = initList[i]["balance"];
         data.push([time, balance]);
     }
-    var accountName = initList[0]["institution"] + " " + initList[0]["type"];
+    var accountName = initList[0]["institution"] + " - " + initList[0]["type"];
 
     graph = document.getElementById('graph');
     highcharts = new Highcharts.Chart({
         chart: {
     		renderTo: graph
     	},
-       title: {
-           text: 'Account Graph'
-       },
-       subtitle: {
-           text: accountName
-       },
+       title: { text: '' },
 
         xAxis: {
         	type: 'datetime',
@@ -180,7 +175,7 @@ function initGraph()
         },
 
         series: [{
-            name: 'Balance',
+            name: accountName,
             lineWidth: 4,
             marker: {
                 radius: 4

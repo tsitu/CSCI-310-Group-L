@@ -246,8 +246,8 @@
     font-size: 15px;
 } 
 .transaction-category,
-.transaction-descriptor { left: 8px; }
-.transaction-descriptor {
+.transaction-merchant { left: 8px; }
+.transaction-merchant {
     bottom: 30px;
     height: 30px;
     line-height: 30px;

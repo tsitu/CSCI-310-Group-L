@@ -11,13 +11,13 @@ class Transaction
 	public $t;		//datetime object of transaction time
 	public $amount;		//double
 	public $category;	//"fast food", "loan"
-	public $descriptor;	//"McDonalds", "Loan Payment", etc.
+	public $merchant;	//"McDonalds", "Loan Payment", etc.
 	public $balance;
 
 	/**
 	 * Create a new Transaction object from given fields.
 	 */
-	function __construct($_id, $_user_id, $_account_id, $_time, $_amount, $_category, $_descriptor, $_balance)
+	function __construct($_id, $_user_id, $_account_id, $_time, $_amount, $_category, $_merchant, $_balance)
 	{
 		$this->id = $_id;
 		$this->user_id = $_user_id;
@@ -25,7 +25,7 @@ class Transaction
 		$this->time = $_time;
 		$this->amount = $_amount;
 		$this->category = $_category;
-		$this->descriptor = $_descriptor;
+		$this->merchant = $_merchant;
 	}
 
 	/**
