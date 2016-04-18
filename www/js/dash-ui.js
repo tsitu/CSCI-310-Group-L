@@ -15,6 +15,9 @@ function initUI()
     $(document).on('click', '.toggle-side', toggleSide);
     $(document).on('click', '.toggle-edit', toggleEdit);
     $(document).on('click', '.toggle-upload', toggleUpload);
+
+    $(document).on('click', '.toggle-list', toggleList);
+    $(document).on('click', '.toggle-graph', toggleGraph);
     
     //events
     $(document).on('click', '.logout', logout);
@@ -57,7 +60,7 @@ function toggleEdit()
 }
 
 /**
- * Show/hide add account form module by toggling class 'show' and 'active'
+ * Show/hide add account from module by toggling class 'show' and 'active'
  */
 function toggleUpload()
 {    
@@ -69,6 +72,31 @@ function toggleUpload()
     $('.upload-toggle').toggleClass('active');
     $('.upload-header').toggleClass('active');
 }
+
+/**
+ * Toggle account from transactions list
+ */
+function toggleList()
+{
+    var id = +$(this).parents('.account-item').attr('data-account-id');
+
+    if (listActive.has(id))
+        listActive.delete(id);
+    else
+        listActive.add(id);
+
+    listManager.filter(filterList);
+    $(this).toggleClass('active');
+}
+
+/**
+ * 
+ */
+function toggleGraph()
+{
+
+}
+
 
 
 /* --- ACCOUNT --- */
@@ -126,7 +154,7 @@ function uploadClicked(event)
 	event.preventDefault();
     $('#csv-upload').html('Uploading...');
 
-    upload();
+    upload(document.getElementById('csv-file').files[0]);
 }
 
 /**

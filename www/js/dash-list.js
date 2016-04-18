@@ -14,6 +14,14 @@ var listEndPicker = null;
 
 var listManager = null;
 
+var listItem = "<li class='transaction-item'>" +
+                    "<p class='account-id hidden'></p>" +
+                    "<p class='transaction-account'></p>" +
+                    "<p class='transaction-date'   ></p>" +
+                    "<p class='transaction-amount' ></p>" +
+                    "<p class='transaction-category'></p>" +
+                    "<p class='transaction-merchant'></p>" +
+                "</li>";
 
 /**
  * Initialize transaction list
@@ -23,12 +31,20 @@ function initList()
 	initListPickers();
 
 	listManager = new List('transaction-module', {
-		valueNames: ['transction-account', 'transction-date', 'transction-amount', 'transction-category', 'transction-merchant']
+		valueNames: ['account-id', 'transaction-account', 'transaction-date', 'transaction-amount', 'transaction-category', 'transaction-merchant'],
+		item: listItem
 	});
 
-	listManager.sort('transaction-amount', {
-		order: 'asc'
-	});
+	listManager.filter(filterList);
+}
+
+
+/**
+ * 
+ */
+function filterList(item)
+{
+	return listActive.has( +item.values()['account-id'] );
 }
 
 

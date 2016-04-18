@@ -20,7 +20,7 @@
 .top-bar { display: none; }
 
 .side-panel,
-.account-edit,
+.account-option, .account-edit, 
 .toggle-upload, .upload-header, .upload-form, .upload-option
 {
     transition: all 0.2s linear;
@@ -124,6 +124,10 @@
     -moz-border-radius: 18px;
     -webkit-border-radius: 18px;
 }
+.account-option:hover {
+    top: -2px;
+    position: relative;
+}
 .account-edit {
     height: 0px;
     overflow: hidden;
@@ -148,7 +152,7 @@
     height: 50px;
     padding: 10px;
 }
-.toggle-edit.delete-button {
+.delete-button {
     font-size: 12px;
     height: 30px;
 }

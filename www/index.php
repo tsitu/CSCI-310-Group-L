@@ -45,8 +45,12 @@ $initList = [];
 foreach ($accounts as $aid => $a)
 {
     $list = $tm->getListForAccountBetween($aid, $mon, $now);
-    $initMap[$aid] = $list;
-    $initList = array_merge($initList, $list);
+    
+    if (count($list) > 0)
+    {
+        $initMap[$aid] = $list;
+        $initList = array_merge($initList, $list);
+    }
 }
 
 ?>
@@ -72,7 +76,9 @@ foreach ($accounts as $aid => $a)
     <script>
         var initMap = <?= json_encode($initMap) ?>;
         var initList = <?= json_encode($initList) ?>;
+        var listActive = new Set(<?= json_encode(array_keys($initMap)) ?>);
         
+        console.log(listActive);
         console.log(initMap);
         console.log(initList);
     </script>
@@ -115,17 +121,15 @@ foreach ($accounts as $aid => $a)
             $first = true;
             foreach($accounts as $aid => $a)
             {
-                $active = $first ? 'active' : '';
-                $first = false;
             ?>
 
-                <li id='account-<?= $a->id ?>' class='account-item'>
+                <li id='account-<?= $a->id ?>' class='account-item' data-account-id='<?= $a->id ?>'>
                     <p class='account-name'><?= $a->name ?></p>
                     <p class='account-amount'><?= number_format($a->balance, 2) ?></p>
 
                     <div class='account-menu'>
-                        <button class='account-option fa fa-line-chart'></button>
-                        <button class='account-option fa fa-list-ul <?= $active ?>'></button>
+                        <button class='account-option toggle-graph fa fa-line-chart'></button>
+                        <button class='account-option toggle-list fa fa-list-ul active'></button>
                         <button class='account-option toggle-edit fa fa-cog'></button>
                     </div>
                     <div class='account-edit'>
@@ -203,11 +207,12 @@ foreach ($accounts as $aid => $a)
                 $name = $a->institution . ' - ' . $a->type;
             ?>    
                 <li class='transaction-item'>
-                    <p class='transaction-account'><?= $name; ?></p>
-                    <p class='transaction-date'   ><?= date_format(new Datetime($t->t), "Y. n. j"); ?></p>
-                    <p class='transaction-amount' ><?= number_format($t->amount, 2); ?></p>
-                    <p class='transaction-category'><?= $t->category; ?></p>
-                    <p class='transaction-merchant'><?= $t->merchant; ?></p>
+                    <p class="account-id hidden"><?= $a->id ?></p>
+                    <p class="transaction-account"><?= $name; ?></p>
+                    <p class="transaction-date"   ><?= date_format(new Datetime($t->t), "Y. n. j"); ?></p>
+                    <p class="transaction-amount" ><?= number_format($t->amount, 2); ?></p>
+                    <p class="transaction-category"><?= $t->category; ?></p>
+                    <p class="transaction-merchant"><?= $t->merchant; ?></p>
                 </li>
             <?php 
             }

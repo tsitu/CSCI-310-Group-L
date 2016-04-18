@@ -12,10 +12,10 @@
 .fa-list-ul, .neg { color: #f45170; }
 .fa-line-chart, .pos { color: #1faa6f; }
 
-.account-option:hover, .account-option.active { color: white; }
-.fa-cog:hover, .fa-cog.active { background-color: #6f6f6f; }
-.fa-list-ul:hover, .fa-list-ul.active { background-color: #f45170; }
-.fa-line-chart:hover, .fa-line-chart.active { background-color: #1faa6f; }
+.account-option.active { color: white; }
+.fa-cog.active { background-color: #6f6f6f; }
+.fa-list-ul.active { background-color: #f45170; }
+.fa-line-chart.active { background-color: #1faa6f; }
 
 .edit-form {
     box-shadow: inset 0px 6px 8px -10px black,
