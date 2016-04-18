@@ -45,8 +45,8 @@ class Transaction
 		$this->amount = (double) $this->amount;
 		$this->balance = (double) $this->balance;
 
-		$this->category = DBManager::decrypt($this->category);
-		$this->merchant = DBManager::decrypt($this->merchant);
+		$this->category = rtrim(DBManager::decrypt($this->category));
+		$this->merchant = rtrim(DBManager::decrypt($this->merchant));
 	}
 }
 

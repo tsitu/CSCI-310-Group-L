@@ -40,13 +40,17 @@ $mon->modify('-3 month');
 //map [account id, ta. list] and also create all transaction list
 $initMap = [];
 $initList = [];
+
+$alist = [];
 foreach ($accounts as $aid => $a)
 {
     $list = $tm->getListForAccountBetween($aid, $mon, $now);
     
     if (count($list) > 0)
     {
-        $initMap[$aid] = $list;
+        $alist[] = $aid;
+        
+        $initMap[] = $list;
         $initList = array_merge($initList, $list);
     }
 }
@@ -74,7 +78,7 @@ foreach ($accounts as $aid => $a)
     <script>
         var initMap = <?= json_encode($initMap) ?>;
         var initList = <?= json_encode($initList) ?>;
-        var listActive = new Set(<?= json_encode(array_keys($initMap)) ?>);
+        var listActive = new Set(<?= json_encode($alist) ?>);
         
         console.log(listActive);
         console.log(initMap);
@@ -202,11 +206,11 @@ foreach ($accounts as $aid => $a)
             ?>    
                 <li class='transaction-item'>
                     <p class="account-id hidden"><?= $a->id ?></p>
-                    <p class="transaction-account"><?= $name; ?></p>
-                    <p class="transaction-date"   ><?= date_format(new Datetime($t->t), "Y. n. j"); ?></p>
-                    <p class="transaction-amount" ><?= number_format($t->amount, 2); ?></p>
-                    <p class="transaction-category"><?= $t->category; ?></p>
-                    <p class="transaction-merchant"><?= $t->merchant; ?></p>
+                    <p class="transaction-account"><?= $name ?></p>
+                    <p class="transaction-date"   ><?= date_format($t->t, "Y. n. j") ?></p>
+                    <p class="transaction-amount" ><?= number_format($t->amount, 2) ?></p>
+                    <p class="transaction-category"><?= $t->category ?></p>
+                    <p class="transaction-merchant"><?= $t->merchant ?></p>
                 </li>
             <?php 
             }
