@@ -64,7 +64,6 @@ class FATest extends PHPUnit_Framework_TestCase
 		$ADBManager = AccountDBManager::getAccountDBManager();
 		$before = getNumberOfRowsAccounts();
 		$info = $ADBManager->getAccountByInfo("PHPTest Bank", "Credit Card", 500);
-		echo $info->id;
 		$ADBManager->deleteAccount($info->id);
 		$after = getNumberOfRowsAccounts();
 		//check the size of database to confirm it is 

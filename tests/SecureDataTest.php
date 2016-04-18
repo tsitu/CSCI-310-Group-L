@@ -10,8 +10,8 @@ class SecureDataTest extends PHPUnit_Framework_TestCase
 	protected $decrypted;
 	protected $DB;
 
-	protected function __construct(){
-		$DB = new DBManager();
+	function __construct(){
+
 	}
 
 
@@ -19,17 +19,17 @@ class SecureDataTest extends PHPUnit_Framework_TestCase
 		$_SERVER['DOCUMENT_ROOT'] = dirname(__FILE__) . '.../www';
 	}
 
-	public function testEncrypt(){\
+	public function testEncrypt(){
 
-		$encrypted = $DB->encrypt("Testing");
-		$this->assertNotEquals($encrypted, "Testing");
+		$this->encrypted = DBManager::encrypt('Testing');
+		$this->assertNotEquals($this->encrypted, "Testing");
 
 		
 	}
 	public function testDecrypt(){
 
-		$decrypted = $DB->decrypt($encrypted);
-		$this->asserNotEquals($encrypted, $decrypted);
+		$decrypted = DBManager::decrypt($this->encrypted);
+		$this->assertNotEquals($this->encrypted, $decrypted);
 
 
 	}
