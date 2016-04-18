@@ -20,14 +20,16 @@ class FATest extends PHPUnit_Framework_TestCase
 		//check if size of the data table has been changed.
 	
 	}
-	public function testParsingCorretFormat() {
+	
+	public function testParsingCorrectFormat() {
 		$filePath = '/var/www/html/CSCI-310-Group-L/CFTest.csv';
 		$returnArray = uploadCSV($filePath, "testing");
 		$arraySize = sizeof($returnArray);
-		print $arraySize;
-		$this->assertEquals($arraySize , 4);
+	
+		$this->assertEquals($arraySize , 3);
 
 	}
+	
 	public function testIncorrectData(){
 		$filePath = '/var/www/html/CSCI-310-Group-L/incorrectData.csv';
 		$type = uploadCSV($filePath, "testing");
@@ -48,7 +50,6 @@ class FATest extends PHPUnit_Framework_TestCase
 		$ADBManager->addAccount("PHPTest Bank", "Credit Card", 500);
 		//check the size of db table 
 		$after = getNumberOfRowsAccounts();
-
 
 		//it returns account object
 		$info = $ADBManager->getAccountByInfo("PHPTest Bank", "Credit Card", 1);

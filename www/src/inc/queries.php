@@ -273,14 +273,14 @@ function uploadCSV($filePath, $userID) {
         //structure of csv
 		//accountInstitution,accountType,txTime,txMerchant,txAmount,txCategory
 		//Bank of America,Credit Card,1459542957,Best Buy,-30,Electronics
-
-        $csv_reader = NULL;     //csv file
+		$ac = "asd";
+        $csv_reader;     //csv file
         $newAccountList = array();
         $index = 0; //for new stock list
         $isFirstLine = TRUE;
         $isEmpty = TRUE;
         //getting csv and put that into array
-
+   
 		$info = pathinfo($filePath);
 		if($info['extension'] == "csv") {
 			if(($csv_reader = fopen($filePath, 'r')) !== FALSE) {
@@ -292,13 +292,13 @@ function uploadCSV($filePath, $userID) {
 	                if($numElementInRow != 6) {
 	                	return false;
 	                }
-	       
 	                $accountInstitution = $data[0];
 	                $accountType = $data[1];
 	                $txTime = $data[2];
 	                $txMerchant = $data[3];
 	                $txAmount = $data[4];
 	                $txCategory = $data[5];
+
 	                //error checking if ticker is in the API
 	                //if not, just don't add it and don't add up to the new balance
 	                //syntax for stock -> Stock($name, $symbol, $closingPrice, $quantity)
@@ -309,13 +309,16 @@ function uploadCSV($filePath, $userID) {
 	                    $isEmpty = FALSE;
 	                }
 	                $isFirstLine = FALSE;
+	                
 	            }
 	            fclose($csv_reader);
 	        }
 		}else{
+			
 			return false; //if file is not 
 		}
 		//if size of the array is equal to zerp, return false
+
 		$arraySize = sizeof($newAccountList);
 		if($arraySize == 0) {
 			//if the size of array is zero, then returns false
@@ -324,15 +327,14 @@ function uploadCSV($filePath, $userID) {
 		if($isEmpty == TRUE) {
 			return false;
 		}
-		//echo "Hello world!<br>";
-
+/*
 		foreach($array as $val) {
-    		print $newAccountList.$id;
-    		print $newAccountList.$user_id;
-    		print $newAccountList.$institution;
-    		print $newAccountList.$type;
+    		echo $newAccountList->id;
+    		echo $newAccountList->user_id;
+    		echo $newAccountList->institution;
+    		echo $newAccountList->type;
 		}
-
+*/
         return $newAccountList;
 
     }
