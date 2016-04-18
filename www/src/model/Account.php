@@ -1,10 +1,5 @@
 <?php
 
-<<<<<<< HEAD
-require_once __DIR__ . "/AccountDBManager.php";
-
-<?php
-
 /**
  * Account class.
  */

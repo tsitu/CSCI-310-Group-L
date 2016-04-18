@@ -1,12 +1,7 @@
 <?php
 
-<<<<<<< HEAD
-//require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/TransactionDBManager.php";
-require_once __DIR__ . "/TransactionDBManager.php";
 
-=======
 require_once "DBManager.php";
->>>>>>> dennis
 
 /**
  * Transaction model class.
@@ -54,5 +49,4 @@ class Transaction
 		$this->merchant = DBManager::decrypt($this->merchant);
 	}
 }
-
 

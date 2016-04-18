@@ -44,7 +44,7 @@ class FATest extends PHPUnit_Framework_TestCase
 
 		//institution/type/userid
 		//BankofAmerica/creditcard/userid
-		$ADBManager = AccountDBManager::getAccountDBManager();
+		$ADBManager = AccountManager::getAccountDBManager();
 
 		$before = getNumberOfRowsAccounts();
 		$ADBManager->addAccount("PHPTest Bank", "Credit Card", 500);
@@ -62,7 +62,7 @@ class FATest extends PHPUnit_Framework_TestCase
 	public function testDeleteAccount() {
 
 		
-		$ADBManager = AccountDBManager::getAccountDBManager();
+		$ADBManager = AccountManager::getAccountDBManager();
 		$before = getNumberOfRowsAccounts();
 		$info = $ADBManager->getAccountByInfo("PHPTest Bank", "Credit Card", 500);
 		$ADBManager->deleteAccount($info->id);
