@@ -92,7 +92,7 @@ foreach ($accounts as $aid => $a)
     </div>
     
     <!-- Side -->
-    <button class='show-side toggle-side fa fa-bars'></button>
+    <button id='show_side' class='show-side toggle-side fa fa-bars'></button>
     <div class='panel side-panel'>
         
         <div class='side-header'>
