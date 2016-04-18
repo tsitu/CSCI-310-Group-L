@@ -10,10 +10,15 @@
 var DATE_FORMAT = 'YYYY. M. D';
 var DAY_MS = 24 * 60 * 60 * 1000;
 
+var INACTIVITY_TIME = 2 * 60 * 1000; //2min
+
+
+/* VARS */
 var today = new Date();
 var tmAgo = new Date();
     tmAgo.setMonth(today.getMonth() - 3);
 
+var timeout = null;
 
 /**
  * Initialize functionality
@@ -23,6 +28,11 @@ $(document).ready(function()
     initGraph();
     initList();
     initUI();
+
+    //autologout
+    resetTimeout();
+    document.onkeypress = resetTimeout;
+    document.onmousemove = resetTimeout;
 });
 
 
@@ -33,6 +43,16 @@ $(document).ready(function()
 function logout()
 {
     window.location = 'src/scripts/logout.php';
+}
+
+/**
+ * Reset inactivity timeout logout.
+ * Start countdown from 2min again.
+ */
+function resetTimeout()
+{
+    clearTimeout(timeout);
+    timeout = setTimeout(logout, INACTIVITY_TIME);
 }
 
 /**
