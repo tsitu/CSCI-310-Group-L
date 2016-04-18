@@ -8,6 +8,7 @@ end
 
 Then(/^user should be able to see a graph$/) do
 	expect(page).to have_selector('#graph', visible:true)
+	page.should have_css('svg')
 end
 
 
