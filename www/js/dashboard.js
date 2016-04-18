@@ -115,21 +115,23 @@ function initGraph()
     var data = [];
     for (var i=0; i < initList.length; i++)
     {
-        var a = initList[i];
-        data.timestamp = 
+        var time = initList[i]["t"];
+        var balance = initList[i]["balance"];
+        data.push([time, balance]);
     }
-    
+    var accountName = initList[0]["institution"] + " " + initList[0]["type"];
+
     graph = document.getElementById('graph');
     highcharts = new Highcharts.Chart({
         chart: {
     		renderTo: graph
     	},
-//        title: {
-//            text: 'Account Graph'
-//        },
-//        subtitle: {
-//            text: accountName
-//        },
+       title: {
+           text: 'Account Graph'
+       },
+       subtitle: {
+           text: accountName
+       },
 
         xAxis: {
         	type: 'datetime',
@@ -178,12 +180,12 @@ function initGraph()
         },
 
         series: [{
-            name: 'Transaction Amount',
+            name: 'Balance',
             lineWidth: 4,
             marker: {
                 radius: 4
             },
-            data: modifiedTx
+            data: data
         }]
     });
 }
