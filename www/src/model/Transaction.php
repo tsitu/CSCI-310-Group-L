@@ -1,5 +1,6 @@
 <?php
 
+
 require_once "DBManager.php";
 
 /**
@@ -48,5 +49,4 @@ class Transaction
 		$this->merchant = DBManager::decrypt($this->merchant);
 	}
 }
-
 

@@ -164,8 +164,10 @@ class AccountManager
 		$stmt->execute();
 
 		$row = $stmt->fetch(PDO::FETCH_OBJ);
-		if (!$row)
+		
+		if (!$row){
 			return null;
+		}
 
 		//decrypt
 		$row->institution = DBManager::decrypt( $row->institution );
