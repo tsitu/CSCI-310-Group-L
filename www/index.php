@@ -42,6 +42,15 @@ $recent_transactions = [];
     <link rel='stylesheet' href='css/dialog.css'>
     <link rel='stylesheet' href='css/dash-layout (new).css'>
     <link rel='stylesheet' href='css/dash-style (new).css'>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
+    <script src='js/libraries/papaparse.min.js'></script>
+    <script src='js/libraries/moment.min.js'></script>
+    <script src='js/libraries/pikaday.js'></script>
+    
+    <script src='js/dashboard.js'></script>
+    <script src='js/utils.js'></script>
 </head>
 <body>
     
@@ -186,13 +195,6 @@ $recent_transactions = [];
     <div id='curtain'></div>
     
     
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
-    <script src='js/libraries/papaparse.min.js'></script>
-    <script src='js/libraries/moment.min.js'></script>
-    <script src='js/libraries/pikaday.js'></script>
     
-    <script src='js/dashboard.js'></script>
-    <script src='js/utils.js'></script>
 </body>
 </html>

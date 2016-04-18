@@ -281,6 +281,9 @@ function csvMessage(str, error = false)
  */
 function csvUpload(event)
 {
+
+   
+
     event.preventDefault();
     $('#csv-upload').html('Uploading...');
     
