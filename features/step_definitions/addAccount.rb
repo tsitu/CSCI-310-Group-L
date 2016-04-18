@@ -12,10 +12,10 @@ Given(/^user has an account csv file$/) do
 end 
 
 When(/^user adds it through browse$/) do 
-	page.find('#show_side').click()
-	page.find('#add-toggle').click()
-	page.execute_script("$('.dyn-crm-upload-btn-container').css('display','block')")
-	attach_file('csv-label', File.absolute_path('www/tests/new.csv'))
+	page.find('#show-side').click()
+	page.find('#toggle-upload').click()
+	#page.execute_script("$('.dyn-crm-upload-btn-container').css('display','block')")
+	attach_file('csv-file', File.absolute_path('www/tests/new.csv'))
 	page.execute_script("$('#csv-upload').click()")
 end 
 
