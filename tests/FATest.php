@@ -19,6 +19,7 @@ class FATest extends PHPUnit_Framework_TestCase
 		$returnValue = uploadCSV($filePath, "testing");
 		$this->assertEquals($returnValue,0);
 		//check if size of the data table has been changed.
+		echo "\r\nParsing Empty file Testing done\r\n";
 	
 	}
 	
@@ -28,6 +29,7 @@ class FATest extends PHPUnit_Framework_TestCase
 		$arraySize = sizeof($returnArray);
 	
 		$this->assertEquals($arraySize , 3);
+		echo "\r\nParsing Correct Format Testing done\r\n";
 
 	}
 	
@@ -35,11 +37,13 @@ class FATest extends PHPUnit_Framework_TestCase
 		$filePath = '/var/www/html/CSCI-310-Group-L/incorrectData.csv';
 		$type = uploadCSV($filePath, "testing");
 		$this->assertEquals($type, null);
+		echo "\r\nTest incorrect dataTesting done\r\n";
 	}
 	public function testIncorrectFormat() {
 		$filePath = '/var/www/html/CSCI-310-Group-L/wrongFormat.txt';
 		$type = uploadCSV($filePath, "testing");
 		$this->assertEquals($type, null);
+		echo "\r\nIncorrect format Testing done\r\n";
 	}
 	public function testAddAccount(){
 
@@ -60,6 +64,7 @@ class FATest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($info->institution, "PHPTest Bank\0\0\0\0");
 		$this->assertEquals($info->type,"Credit Card\0\0\0\0\0");
 		$this->assertEquals($info->user_id,500);
+		echo "\r\nAdd account Testing done\r\n";
 
 	} 
 	public function testDeleteAccount() {
@@ -77,7 +82,7 @@ class FATest extends PHPUnit_Framework_TestCase
 		$info = $ADBManager->getAccountByInfo("PHPTest Bank", "Credit Card", 1);
 		$this->assertEquals($before-1, $after);
 		$this->assertEquals($info, null);
-
+		echo "\r\nDelete account Testing done\r\n";
 	}
 
 }

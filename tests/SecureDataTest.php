@@ -20,9 +20,9 @@ class SecureDataTest extends PHPUnit_Framework_TestCase
 	}
 
 	public function testEncrypt(){
-
 		$this->encrypted = DBManager::encrypt('Testing');
 		$this->assertNotEquals($this->encrypted, "Testing");
+		echo "\r\nEncrypt Testing done\r\n";
 
 		
 	}
@@ -30,6 +30,7 @@ class SecureDataTest extends PHPUnit_Framework_TestCase
 
 		$decrypted = DBManager::decrypt($this->encrypted);
 		$this->assertNotEquals($this->encrypted, $decrypted);
+		echo "\r\nDecrypt Testing done\r\n";
 
 
 	}
