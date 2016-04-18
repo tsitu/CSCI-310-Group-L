@@ -203,8 +203,8 @@ class AccountManager
 			$a->user_id = (int) $a->user_id;
 			$a->balance = (double) $a->balance;
 
-			$a->type = DBManager::decrypt($a->type);
-			$a->institution = DBManager::decrypt($a->institution);
+			$a->type = rtrim(DBManager::decrypt($a->type));
+			$a->institution = rtrim(DBManager::decrypt($a->institution));
 		}
 		return $accounts;
 	}
@@ -236,8 +236,8 @@ class AccountManager
 		$a->user_id = (int) $a->user_id;
 		$a->balance = (double) $a->balance;
 
-		$a->type = DBManager::decrypt($a->type);
-		$a->institution = DBManager::decrypt($a->institution);
+		$a->type = rtrim(DBManager::decrypt($a->type));
+		$a->institution = rtrim(DBManager::decrypt($a->institution));
 
 		return $a;
 	}

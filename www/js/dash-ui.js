@@ -133,6 +133,7 @@ function renameClicked(event)
         type = typeField.getAttribute('placeholder');
 
     renameAccount(id, inst, type);
+    $(this).parents('.account-edit').siblings('.account-name').html(inst + ' - ' + type);
 }
 
 /**
@@ -144,6 +145,7 @@ function deleteClicked(event)
     
     //TODO: confirmation check
     deleteAccount( getAccountID(this) );
+    $(this).parents('.account-item').remove();
 }
 
 /**

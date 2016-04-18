@@ -40,9 +40,6 @@ function logout()
  */
 function renameAccount(id, inst, type)
 {
-    //change
-    $(this).parents('.account-edit').siblings('.account-name').html(inst + ' - ' + type);
-    
     $.ajax({
         type: 'POST',
         url: 'src/scripts/rename.php',
@@ -55,8 +52,6 @@ function renameAccount(id, inst, type)
  */
 function deleteAccount(id)
 {
-    $(this).parents('.account-item').remove();
-    
     $.ajax({
         type: 'POST',
         url: 'src/scripts/delete.php',
@@ -127,9 +122,9 @@ function newAccountItem(id, inst, type, amount)
     +   "<p class='account-name'>" + inst + " - " + type + "</p>"
     +   "<p class='account-amount'>" + amount + "</p>"
     +   "<div class='account-menu'>"
-    +       "<button class='account-option fa fa-line-chart'></button>"
-    +       "<button class='account-option fa fa-list-ul'></button>"
-    +       "<button class='account-option option-edit fa fa-cog'></button>"
+    +       "<button class='account-option toggle-graph fa fa-line-chart'></button>"
+    +       "<button class='account-option toggle-list fa fa-list-ul'></button>"
+    +       "<button class='account-option toggle-edit fa fa-cog'></button>"
     +   "</div>"
     +   "<div class='account-edit'>"
     +       "<form class='edit-form'>"

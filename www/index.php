@@ -26,8 +26,6 @@ $awb = $am->getAccountsWithBalance($user_id);
 $accounts = [];
 foreach ($awb as $a)
 {
-    $a->institution = rtrim($a->institution);
-    $a->type = rtrim($a->type);
     $a->name = $a->institution . ' - ' . $a->type;
     $accounts[$a->id] = $a;
 }
