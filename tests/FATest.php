@@ -57,7 +57,6 @@ class FATest extends PHPUnit_Framework_TestCase
 
 
 		$this->assertEquals($before+1,$after);
-		echo "\r\n".addslashes($info->institution)."\r\n"."PHPTest Bank\r\n";
 		$this->assertEquals($info->institution, "PHPTest Bank\0\0\0\0");
 		$this->assertEquals($info->type,"Credit Card\0\0\0\0\0");
 		$this->assertEquals($info->user_id,500);
