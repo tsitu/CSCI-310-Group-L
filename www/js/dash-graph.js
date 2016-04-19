@@ -34,7 +34,8 @@ function initGraph()
 		for (var j = 0; j < tlist.length; j++)
 		{
 			var d = tlist[j];
-			dlist.push([new Date(d.t.date).valueOf(), d.balance]);
+			var newdate = new Date(d.t.date.substring(0,4), d.t.date.substring(5,7), d.t.date.substring(8,10), d.t.date.substring(11,13), d.t.date.substring(14,16), d.t.date.substring(17,19));
+			dlist.push([newdate.getTime()/1000, d.balance]);
 		}
 
 		var series = {
