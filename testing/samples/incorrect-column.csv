@@ -1,0 +1,7 @@
+institution, type, time, merchant, amount, category
+Bank of America, Credit Card, Best Buy, -30, Electronics
+Bank of America, Credit Card,1 459542958, McDonalds, -10, Food
+Chase, Credit Card, 1459542967, Whole Foods, -30, Groceries
+Chase, Credit Card, 1459542999, Macy's, -100,
+Bank of America, Credit Card, 1459544200, Amazon, -30, Online
+Chase, Credit Card, 1459545000, Home Depot, -50, Tools
