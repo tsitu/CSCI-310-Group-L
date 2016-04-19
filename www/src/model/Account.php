@@ -3,21 +3,29 @@
 /**
  * Account class.
  */
-
 class Account
 {
 	public $id;
 	public $user_id;
-	public $institution;
+
+	public $name;
 	public $type;
+	public $institution;
 
-	function __construct($id, $institution, $type, $user_id) {
-		echo "<br>--running constructor<br>";
+	public $balance;
 
-		$this->id = $id;
-		$this->institution = $institution;
-		$this->type = $type;
-		$this->user_id = $user_id;
+	/**
+	 *
+	 */
+	function __construct($_id, $_user_id, $_institution, $_type, $_balance = 0)
+	{
+		$this->id = $_id;
+		$this->user_id = $_user_id;
+
+		$this->type = $_type;
+		$this->institution = $_institution;
+
+		$this->name = $_institution . ' - ' . $_type;
 	}
 
 	/**
@@ -27,6 +35,11 @@ class Account
 	{
 		$this->id = (int) $this->id;
 		$this->user_id = (int) $this->user_id;
+
+		$this->type = rtrim(DBManager::decrypt($this->type));
+		$this->institution = rtrim(DBManager::decrypt($this->institution));
+		$this->name = $this->institution . ' - ' . $this->type;
+
 		$this->balance = (double) $this->balance;
 	}
 }

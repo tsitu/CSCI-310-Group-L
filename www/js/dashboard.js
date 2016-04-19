@@ -94,7 +94,7 @@ function upload(file)
         complete: function(results)
         {
             var json = JSON.stringify(results.data);
-            //console.log(json);
+            console.log(json);
             
             $.ajax({
                 type: "POST",
