@@ -50,3 +50,7 @@ if($function == "getAccount") {
 if($function == "getTransactions") {
 	echo json_encode(getTransactions($userId, $accountId));
 }
+
+if($function == "uploadCSV") {
+	if(uploadCSV($filePath);
+}

@@ -1,26 +1,33 @@
 <?php
 
+/**
+ * Account class.
+ */
 
-class Account {
+class Account
+{
 	public $id;
+	public $user_id;
 	public $institution;
 	public $type;
 
-	function __construct($_id, $_institution, $_type) {
-		$this->id = $_id;
-		$this->institution = $_institution;
-		$this->type = $_type;
-	}
-	function getID() {
-		return $this->id;
-	}
-	function getInstitution(){
-		return $this->institution;
-	}
-	function getType() {
-		return $this->type;
+	function __construct($id, $institution, $type, $user_id) {
+		echo "<br>--running constructor<br>";
+
+		$this->id = $id;
+		$this->institution = $institution;
+		$this->type = $type;
+		$this->user_id = $user_id;
 	}
 
+	/**
+	 * Ensure numeric fields are the correct type since PDO::fetch() only generates strings
+	 */
+	public function fixTypes()
+	{
+		$this->id = (int) $this->id;
+		$this->user_id = (int) $this->user_id;
+		$this->balance = (double) $this->balance;
+	}
 }
-
 ?>

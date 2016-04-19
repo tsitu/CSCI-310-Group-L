@@ -1,201 +1,239 @@
 <?php
 
-require_once __DIR__ . '/src/inc/queries.php';
+require_once "src/model/AccountManager.php";
+require_once "src/model/TransactionManager.php";
 
 session_start();
 
 //redirect if not logged in
 if ( !isset($_SESSION['user_id']) )
 {
-    header('Location: /CSCI-310-Group-L/www/');
+    header('Location: /login');
     exit();
 }
 
-
-//data
-$uid = $_SESSION['user_id'];
+//session vars
+$user_id = $_SESSION['user_id'];
 $username = $_SESSION['username'];
+
+//managers
+$am = AccountManager::getInstance();
+$tm = TransactionManager::getInstance();
+
+
+//get accounts and map [id, account]
+$awb = $am->getAccountsWithBalance($user_id);
+$accounts = [];
+foreach ($awb as $a)
+{
+    $a->name = $a->institution . ' - ' . $a->type;
+    $accounts[$a->id] = $a;
+}
+
+//default to 3 months
+$now = new DateTime();
+$mon = clone $now;
+$mon->modify('-3 month');
+
+
+//get list of transactions for each account over 3 months
+//map [account id, ta. list] and also create all transaction list
+$initMap = [];
+$initList = [];
+
+$alist = [];
+foreach ($accounts as $aid => $a)
+{
+    $list = $tm->getListForAccountBetween($aid, $mon, $now);
+    
+    if (count($list) > 0)
+    {
+        $alist[] = $aid;
+        
+        $initMap[] = $list;
+        $initList = array_merge($initList, $list);
+    }
+}
 
 ?>
 
 <!DOCType html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    
     <meta charset="utf-8">
     <title>minance</title>
     
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel='stylesheet' href='css/libraries/pikaday.css'>
+    
     <link rel='stylesheet' href='css/global.css'>
     <link rel='stylesheet' href='css/dialog.css'>
-    <link rel='stylesheet' href='css/dash-layout.css'>
-    <link rel='stylesheet' href='css/dash-style.css'>
+    <link rel='stylesheet' href='css/dash-layout (new).css'>
+    <link rel='stylesheet' href='css/dash-style (new).css'>
 </head>
 <body>
     
-    <div class='top-bar wide'>
-        <h1 class='title app-title'>minance</h1>
+    <script>
+        var initMap = <?= json_encode($initMap) ?>;
+        var initList = <?= json_encode($initList) ?>;
+        var listActive = new Set(<?= json_encode($alist) ?>);
+        
+        console.log(listActive);
+        console.log(initMap);
+        console.log(initList);
+    </script>
+    
+    <!-- Top -->
+    <div class='top-bar hor-flex'>
+        <h1 class='title app-title'>mi<span class='shrink'>nance</span></h1>
 
-        <div class='bar-content'>
+        <div class='bar-content hor-flex'>
             <h2 class='title section-title'>Dashboard</h2>
 
-            <div id='user-menu' class='user-menu'>
+            <div class='user-menu hor-flex'>
                 <span class='label user-label'> <?= $username ?> </span>
-                <button id='logout' class="fa fa-sign-out logout"></button>
+                <button class="logout fa fa-sign-out"></button>
             </div>
         </div>
     </div>
     
-    <div class='content wide'>
+    <!-- Side -->
+    <button id='show-side' class='show-side toggle-side fa fa-bars'></button>
+    <div class='panel side-panel'>
         
-        <div id='account-module' class='panel side-panel'>
-            <ol id='account-list'>
-                <script type="text/javascript">
-                var accountInstitutions = [];
-                var accountTypes = [];
-                </script>
-                
-                <?php
-                $accountIDs = getAccountIds($uid);
-                foreach ($accountIDs as $aid)
-                {
-                    $account = getAccount($aid);
-                    $transactions = getTransactions($uid, $aid);
-                    
-                    $balance = number_format(Transaction::tabulateAmount($transactions), 2);
-                ?>
-
-                <script type="text/javascript">
-                var accountInstitution = "<?php echo $account->institution ?>";
-                var accountType = "<?php echo $account->type ?>";
-
-                accountInstitutions.push(accountInstitution);
-                accountTypes.push(accountType);
-                </script>
-                
-                <li id='account-<?= $aid ?>' class='account-item'>
-                    <p class='account-name'><?= $account->institution . ' - ' . $account->type ?></p>
-                    <p class='account-amount'>$<?= $balance ?></p>
-                    
-                    <div class='account-options'>
-                        <button class='account-menu account-chart fa fa-line-chart'></button>
-                        <button class='account-menu account-list fa fa-list-ul'></button>
-                        <button class='account-menu account-settings fa fa-cog'></button>
-                        <button class='account-menu account-remove fa fa-trash'></button>
-                    </div>
-                </li>
-
-                <script type="text/javascript">
-                var buttons = document.getElementsByClassName('account-remove');
-                var buttonIndex = 1;
-                for (var i=0; i<buttons.length; i++) {
-                    buttons[i].id = buttonIndex;
-                    buttonIndex++;
-                }
-                </script>
-                
-                <?php
-                }
-                ?>
-            </ol>
+        <div class='side-header'>
+            <button class='toggle-side side-option'>
+                <span class='fa fa-times'></span>
+                <p class='label'>Close</p>
+            </button>
+            <button id='side-logout' class='logout side-option'>
+                <span class='fa fa-sign-out'></span>
+                <p class='label'>Logout</p>
+            </button>
+        </div>
+        
+        <div id='account-module' class='account-module flex-glue'>
             
-            <button id='add-account'>Add Account</button>
-        </div>
-        
-        
-        <div class='panel main-panel'>
-            <!-- Overview -->
-            <div id='overview-module'>
+            <ul id='account-list' class='flex-glue'>
+            <?php
+            //account list
+    
+            $first = true;
+            foreach($accounts as $aid => $a)
+            {
+            ?>
 
-            </div>
+                <li id='account-<?= $a->id ?>' class='account-item' data-account-id='<?= $a->id ?>'>
+                    <p class='account-name'><?= $a->name ?></p>
+                    <p class='account-amount'><?= number_format($a->balance, 2) ?></p>
 
-            <!-- Graph -->
-            <div id='graph-module'>
-
-            </div>
-
-            <!-- Transaction -->
-            <div id='transaction-module' class='module'>
-                <div class='module-header'>
-                    <h3 class='module-title'>Transactions</h3>
+                    <div class='account-menu'>
+                        <button class='account-option toggle-graph fa fa-line-chart'></button>
+                        <button class='account-option toggle-list fa fa-list-ul active'></button>
+                        <button class='account-option toggle-edit fa fa-cog'></button>
+                    </div>
+                    <div class='account-edit'>
+                        <form class='edit-form'>
+                            <input name='new-institution' placeholder='<?= $a->institution ?>'
+                                   class='edit-option edit-field inst-field'>
+                            <input name='new-type' placeholder='<?= $a->type ?>'
+                                   class='edit-option edit-field type-field'>
+                            <button class='edit-option rename-button'>Rename</button>
+                            <button class='edit-option delete-button'>Delete Account</button>
+                        </form>
+                    </div>
+                </li>  
+            <?php
+            }
+            ?>
+            </ul>
+            
+            <div id='upload-module' class='upload-module mini-module'>
+                <div id='upload-header' class='upload-header mini-module-header'>
+                    <button id='toggle-upload' class='toggle-upload fa fa-plus'></button>
                 </div>
-
-                <table id='transaction-table' class=''>
-                    <tr class='transaction-fields'>
-                        <td class='col-5 transaction-col'>Name <i class='sorter'></i></td>
-                        <td class='col-1 transaction-col'>Date <i class='sorter fa fa-chevron-down'></i></td>
-                        <td class='col-2 transaction-col'>Amount <i class='sorter'></i></td>
-                        <td class='col-3 transaction-col'>Category <i class='sorter'></i></td>
-                        <td class='col-4 transaction-col'>Merchant <i class='sorter'></i></td>
-                    </tr>
-
-                    <?php
-                    $accountIDs = getAccountIds($uid);
+                <form id='upload-form' class='upload-form'>
+                    <p id='csv-msg' class='csv-msg'>No CSV</p>
                     
-                    $transactions = array();
-                    foreach ($accountIDs as $aid)
-                    {
-                        $account = getAccount($aid);
-                        $transactions = array_merge($transactions, getTransactions($uid, $aid));
-                    }
-                    
-                    foreach ($transactions as $t)
-                    {
-                        $sign = '';
-                        if ( $t->amount > 0 ) $sign = 'pos';
-                        if ( $t->amount < 0 ) $sign = 'neg';
-                        
-                        $amount = number_format(abs($t->amount), 2);
-
-                        $account = getAccount($t->accountId);
-                        $name = $account->institution . " - " . $account->type;
-                    ?>
-
-                    <tr class='transaction-data'>
-                        <td class='col-5 transaction-name'><?= $name ?></td>
-                        <td class='col-1 transaction-date'><?= date('M j, Y, g:i a', $t->timestamp) ?></td>
-                        <td class='col-2 transaction-amount <?= $sign ?>'>$<?= $amount ?></td>
-                        <td class='col-3 transaction-category'><?= $t->category ?></td>
-                        <td class='col-4 transaction-merchant'><?= $t->descriptor ?></td>
-                    </tr>
-                    <?php
-                    }
-                    ?>
-                </table>
+                    <input type='file' id='csv-file' name='csv-file'>
+                    <label for='csv-file' id='csv-choose' class='csv-choose upload-option file-label'>
+                        <span class='option-icon fa fa-upload'></span>
+                        <span id='csv-label'>Choose CSV</span>
+                    </label>
+                    <button id='csv-upload' class='csv-upload upload-option' disabled='disabled'>
+                        Upload
+                    </button>
+                </form>
             </div>
+            
         </div>
     </div>
     
-    <!-- Popup dialogs -->
-    <div id='dialog-background'></div>
-    
-    <div id='new-account-dialog' class='dialog'>
-        <div class='dialog-header'>
-            <h3 class='dialog-label'>New Account</h3>
-            <button class='dialog-cancel fa fa-close'></button>
-        </div>
-        <form class='new-account-form'>
-<!--            <input type='text' name='new-account-name' class='new-account-name' placeholder='Account Name'>-->
-            <input type='file' name='new-account-upload' class='new-account-upload' id='csv-file'>
-        </form>
+    <!-- Main Content -->
+    <div class='content'>
         
-        <button class='new-account-button'>Add</button>
-    </div>
-
-    <div id='remove-account-dialog' class='dialog'>
-        <div class='dialog-header'>
-            <h3 class='dialog-label'>Remove Account</h3>
-            <button class='dialog-cancel fa fa-close'></button>
+        <div id='graph-module' class='module graph-module'>
+            <div class='module-header'>
+                <h3 class='label module-label'>Graph</h3>
+            </div>
+            <div class='module-subheader'>
+                <button id='graph-beg' class='date-select'>4/8/2016</button>
+                ~
+                <button id='graph-end' class='date-select'>4/8/2016</button>
+            </div>
+            <div id='graph'></div>
         </div>
-        <p style="text-align: center">Are you sure?</p>
-        <button class='remove-account-confirm'>Confirm</button>
+        
+        <div id='transaction-module' class='module transactions-module'>
+            <div class='module-header'>
+                <h3 class='label module-label'>Transactions</h3>
+            </div>
+            <div class='module-subheader'>
+                <button id='list-beg' class='date-select'>4/8/2016</button>
+                ~
+                <button id='list-end' class='date-select'>4/8/2016</button>
+            </div>
+            
+            <ul id='transaction-list' class='table-list list'>
+                
+            <?php 
+            foreach ($initList as $t)
+            {
+                $a = $accounts[$t->account_id];
+                $name = $a->institution . ' - ' . $a->type;
+            ?>    
+                <li class='transaction-item'>
+                    <p class="account-id hidden"><?= $a->id ?></p>
+                    <p class="transaction-account"><?= $name ?></p>
+                    <p class="transaction-date"   ><?= date_format($t->t, "Y. n. j") ?></p>
+                    <p class="transaction-amount" ><?= number_format($t->amount, 2) ?></p>
+                    <p class="transaction-category"><?= $t->category ?></p>
+                    <p class="transaction-merchant"><?= $t->merchant ?></p>
+                </li>
+            <?php 
+            }
+            ?>
+            </ul>
+        </div>
     </div>
     
     
-    <!-- JS -->
+    <!-- Popup -->
+    <div id='curtain'></div>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-    <script src='js/lib/papaparse.min.js'></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    
+    <script src='js/libraries/papaparse.min.js'></script>
+    <script src='js/libraries/moment.min.js'></script>
+    <script src='js/libraries/pikaday.js'></script>
     
     <script src='js/dashboard.js'></script>
-    <script src='js/utils.js'></script>
+    <script src='js/dash-graph.js'></script>
+    <script src='js/dash-list.js'></script>
+    <script src='js/dash-ui.js'></script>
 </body>
 </html>

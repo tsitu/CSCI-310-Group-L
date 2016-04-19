@@ -1,5 +1,155 @@
 var transactions = [];
 
+function listAccount(accountId) {
+	var getTransactionsUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getTransactions&userId=3&accountId=" + accountId;
+	var getTransactions = httpGet(getTransactionsUrl);
+	var parsedTx = JSON.parse(getTransactions);
+
+	var getAccountUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccount&userId=3&accountId=" + accountId;
+	var getAccount = httpGet(getAccountUrl);
+	var parsedAccount = JSON.parse(getAccount);
+	var accountName = parsedAccount["institution"] + " " + parsedAccount["type"];
+
+	var table = document.getElementById("transaction-table");
+
+	var count = $('#transaction-table tr').length;
+	for (var i=1; i<count; i++) {
+		table.deleteRow(count-i);
+	}
+
+	for (var i=0; i<parsedTx.length; i++) {
+		var row = table.insertRow(table.rows.length);
+		row.className = "transaction-data";
+		var cell0 = row.insertCell(0);
+		cell0.className = "col-5 transaction-name";
+		cell0.innerHTML = accountName;
+		var cell1 = row.insertCell(1);
+		cell1.className = "col-1 transaction-date";
+		var date = new Date(parsedTx[i]["timestamp"] * 1000);
+		dateString = date.toString().substring(0,24);
+		cell1.innerHTML = dateString;
+		var cell2 = row.insertCell(2);
+		cell2.className = "col-2 transaction-amount";
+		if (parseInt(parsedTx[i]["amount"]) >= 0) {
+			cell2.innerHTML = "$" + parseInt(parsedTx[i]["amount"]).toFixed(2);
+			cell2.style.color = "#006400";
+		}
+		else {
+			cell2.innerHTML = "-$" + Math.abs(parseInt(parsedTx[i]["amount"])).toFixed(2);
+			cell2.style.color = "#FF0000";
+		}
+		var cell3 = row.insertCell(3);
+		cell3.className = "col-3 transaction-category";
+		cell3.innerHTML = parsedTx[i]["category"];
+		var cell4 = row.insertCell(4);
+		cell4.className = "col-4 transaction-merchant";
+		cell4.innerHTML = parsedTx[i]["descriptor"];
+	}
+}
+
+function graphAccount(accountId) {
+	var getTransactionsUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getTransactions&userId=3&accountId=" + accountId;
+	var getTransactions = httpGet(getTransactionsUrl);
+	var parsedTx = JSON.parse(getTransactions);
+
+	var modifiedTx = [];
+	for (var i=0; i<parsedTx.length; i++) {
+		var timestamp = parsedTx[i]["timestamp"];
+		var amount = parsedTx[i]["amount"];
+		modifiedTx.push([+timestamp, +amount]);
+	}
+
+	var getAccountUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccount&userId=3&accountId=" + accountId;
+	var getAccount = httpGet(getAccountUrl);
+	var parsedAccount = JSON.parse(getAccount);
+	var accountName = parsedAccount["institution"] + " " + parsedAccount["type"];
+
+    var chart = new Highcharts.Chart({
+
+    	chart: {
+    		renderTo: graph
+    	},
+
+        title: {
+            text: 'Account Graph'
+        },
+
+        subtitle: {
+            text: accountName
+        },
+
+        xAxis: {
+        	type: 'datetime',
+            tickInterval: 60 * 1000, // one minute
+            tickWidth: 0,
+            gridLineWidth: 1,
+            labels: {
+                align: 'left',
+                x: 3,
+                y: -3
+            }
+        },
+
+        yAxis: [{ // left y axis
+            title: {
+                text: null
+            },
+            labels: {
+                align: 'left',
+                x: 3,
+                y: 16,
+                format: '{value:.,0f}'
+            },
+            showFirstLabel: false
+        }, { // right y axis
+            linkedTo: 0,
+            gridLineWidth: 0,
+            opposite: true,
+            title: {
+                text: null
+            },
+            labels: {
+                align: 'right',
+                x: -3,
+                y: 16,
+                format: '{value:.,0f}'
+            },
+            showFirstLabel: false
+        }],
+
+        legend: {
+            align: 'left',
+            verticalAlign: 'top',
+            y: 20,
+            floating: true,
+            borderWidth: 0
+        },
+
+        tooltip: {
+            shared: true,
+            crosshairs: true
+        },
+
+        plotOptions: {
+            series: {
+                cursor: 'pointer',
+                marker: {
+                    lineWidth: 1
+                }
+            }
+        },
+
+        series: [{
+            name: 'Transaction Amount',
+            lineWidth: 4,
+            marker: {
+                radius: 4
+            },
+            data: modifiedTx
+        }]
+    });
+}
+
 function removeAccount(institution, type) {
 	var getAccountIdUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccountId&institution=" + institution + "&type=" + type;
 	var accountId = httpGet(getAccountIdUrl);
@@ -39,7 +189,7 @@ function parseCSV() {
 					var getAccountIdUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccountId&institution=" + accountInstitution + "&type=" + accountType;
 					var accountId = httpGet(getAccountIdUrl);
 
-					var insertTransactionUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=insertTransaction&userId=1&accountId=" + accountId + "&descriptor=" + txMerchant + "&amount=" + txAmount + "&category=" + txCategory + "&timestamp=" + txTime;
+					var insertTransactionUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=insertTransaction&userId=3&accountId=" + accountId + "&descriptor=" + txMerchant + "&amount=" + txAmount + "&category=" + txCategory + "&timestamp=" + txTime;
 					var insert = httpGet(insertTransactionUrl);
 					//console.log(insert);
 				}

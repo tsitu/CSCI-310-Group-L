@@ -1,3 +1,11 @@
+.show-side {
+    color: white;
+    background-color: #ffa75c;
+}
+
+.side-option { color: #b5b5b5; }
+.side-option:hover { color: black; }
+
 .new-account-button {
     color: white;
     background-color: #ffa75c;
@@ -26,15 +34,14 @@
 .account-item:last-child {
     border-bottom: none;
 }
-.account-menu { color: #6f6f6f; }
-.account-menu:hover { color: white; }
-.fa-cog:hover { background-color: #6f6f6f; }
 
+.fa-cog { color: #6f6f6f; }
+.fa-cog:hover { background-color: #6f6f6f; }
 .fa-line-chart, .pos { color: #1faa6f; }
 .fa-line-chart:hover, .fa-line-chart.active { background-color: #1faa6f; }
-
 .fa-list-ul, .neg { color: #f45170; }
 .fa-list-ul:hover, .fa-list-ul.active { background-color: #f45170; }
+.account-option:hover { color: white; }
 
 .fa-trash:hover { background-color: #B0171F; }
 
@@ -52,10 +59,6 @@
 }
 
 .user-label { border-right: 1px solid white; }
-.logout {
-    color: white;
-    background-color: transparent;
-}
 
 .module {
     background-color: white;
