@@ -141,6 +141,10 @@ class TransactionManager
 						]);
 
 		$list = $stmt->fetchAll(PDO::FETCH_OBJ);//FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Transaction', ['_id', '_user_id', '_account_id', '_t', '_amount', '_category', '_merchant', '_balance']);
+
+		if (!$list)
+			return [];
+
 		foreach ($list as $a)
 		{
 			$a->id = (int) $a->id;

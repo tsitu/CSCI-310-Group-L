@@ -109,7 +109,7 @@ function getAccountID(element)
     if (search.size() == 0)
         return -1;
     
-    return search[0].id.split('-')[1];
+    return search.attr('data-id');
 }
 
 /**

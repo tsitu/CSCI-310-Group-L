@@ -21,74 +21,15 @@ var highcharts = null;
 function initGraph()
 {
 	initGraphPickers();
+	initHighcharts();
+}
 
-	//graph
-	var graphDiv = document.getElementById('graph');
-
-	var data = [];
-	for (var i = 0; i < initMap.length; i++)
-	{
-		var tlist = initMap[i];
-
-		var dlist = [];
-		for (var j = 0; j < tlist.length; j++)
-		{
-			var d = tlist[j];
-			var newdate = new Date(d.t.date.substring(0,4), d.t.date.substring(5,7), d.t.date.substring(8,10), d.t.date.substring(11,13), d.t.date.substring(14,16), d.t.date.substring(17,19));
-			dlist.push([newdate.getTime()/1000, d.balance]);
-		}
-
-		var series = {
-			name: tlist[0].institution + ' - ' + tlist[0].type,
-			lineWidth: 4,
-			marker: { radius: 4 },
-			data: dlist
-		};
-
-		data.push(series);
-	}
-
-	highcharts = new Highcharts.Chart({
-		chart: { renderTo: graph },
-		title: { text: '' },
-		subtitle: { text: '' },
-
-		xAxis: {
-			type: 'datetime',
-			tickInterval: DAY_MS,
-			tickWidth: 0,
-			gridLineWidth: 1,
-			labels: {
-                align: 'left',
-                x: 3,
-                y: -3
-            }
-		},
-		yAxis: [{ // left y axis
-            title: { text: '' },
-            labels: {
-                align: 'left',
-                x: 3,
-                y: 16,
-                format: '{value:.,0f}'
-            },
-            showFirstLabel: false
-        }],
-        legend: {
-            align: 'left',
-            verticalAlign: 'top',
-            y: 20,
-            floating: true,
-            borderWidth: 0
-        },
-        plotOptions: {
-            series: {
-                cursor: 'pointer',
-                marker: { lineWidth: 1 }
-            }
-        },
-        series: data
-	});
+/**
+ *
+ */
+function initHighcharts()
+{
+	
 }
 
 /**
