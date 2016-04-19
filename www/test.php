@@ -19,12 +19,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/UserDBManager.php";
 // else echo "something wrong with AccountDBManager<br>";
 
 //User functions
-//$user_db = UserDBManager::getUserDBManager();
+$user_db = UserDBManager::getUserDBManager();
 //$user_db->addUser("test@gmail.com", "test");
 //$user_db->addUser("test2@gmail.com", "test2");
 
-//$id1 = $user_db->getUserId("test@gmail.com", "test");
+$id1 = $user_db->getUserId("test@gmail.com", "test");
 //$id2 = $user_db->getUserId("test2@gmail.com", "test2");
+
+echo $id1;
 
 //$user_db->deleteUser($id2);
 
@@ -37,8 +39,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/src/model/UserDBManager.php";
 
 
 
-$dbm = AccountDBManager::getAccountDBManager();
+// $dbm = AccountDBManager::getAccountDBManager();
 //$acc = $dbm->addAccount("bank", "card", 2266);
-$acc = $dbm->getAccountByInfo("bank", "card", 2266);
+// $acc = $dbm->getAccountByInfo("bank", "card", 2266);
 
-echo $acc->id . " is my id<br>";
+// echo $acc->id . " is my id<br>";
