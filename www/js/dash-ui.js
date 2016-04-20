@@ -78,15 +78,15 @@ function toggleUpload()
  */
 function toggleList()
 {
-    var id = +$(this).parents('.account-item').attr('data-account-id');
+    $(this).toggleClass('active');
+    var id = getAccountID(this);
 
-    if (listActive.has(id))
-        listActive.delete(id);
+    if (activeList.has(id))
+        activeList.delete(id);
     else
-        listActive.add(id);
+        activeList.add(id);
 
     listManager.filter(filterList);
-    $(this).toggleClass('active');
 }
 
 /**
@@ -94,7 +94,11 @@ function toggleList()
  */
 function toggleGraph()
 {
-    
+    $(this).toggleClass('active');
+    var series = highcharts.get( getAccountID(this) );
+
+    if (series)
+        series.setVisible( !series.visible );
 }
 
 
@@ -109,7 +113,7 @@ function getAccountID(element)
     if (search.size() == 0)
         return -1;
     
-    return search.attr('data-id');
+    return +search.attr('data-id');
 }
 
 /**

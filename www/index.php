@@ -102,7 +102,7 @@ foreach ($awb as $a)
                     <p class='account-amount'><?= number_format($a->balance, 2) ?></p>
 
                     <div class='account-menu'>
-                        <button class='account-option toggle-graph fa fa-line-chart'></button>
+                        <button class='account-option toggle-graph fa fa-line-chart active'></button>
                         <button class='account-option toggle-list fa fa-list-ul active'></button>
                         <button class='account-option toggle-edit fa fa-cog'></button>
                     </div>

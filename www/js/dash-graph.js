@@ -22,13 +22,25 @@ var hc_options = {
 		y: 30,
 		itemMarginBottom: 10
 	},
-	xAxis: {
-		title: { text: 'Date' },
-		type: 'datetime'
-	},
 	yAxis: {
 		title: { text: 'Balance' },
 		gridLineDashStyle: 'longdash'
+	},
+	xAxis: {
+		title: { text: 'Date' },
+		type: 'datetime',
+		dateTimeLabelFormats: {
+			day: '%b %e<br/>%Y'
+		}
+	},
+	tooltip: {
+		useHTML: true,
+		formatter: function()
+		{
+			return ''
+			+ Highcharts.dateFormat('%A <br/> %b %e, %Y', this.x) + '<br/><br/>'
+			+ 'Balance: <b>' + this.y + '</b>';
+		}
 	}
 };
 

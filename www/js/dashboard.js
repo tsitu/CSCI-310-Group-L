@@ -53,7 +53,7 @@ function logout()
 function resetTimeout()
 {
     clearTimeout(timeout);
-    timeout = setTimeout(logout, INACTIVITY_TIME);
+    //timeout = setTimeout(logout, INACTIVITY_TIME);
 }
 
 /**
