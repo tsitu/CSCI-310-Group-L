@@ -114,7 +114,7 @@ class TransactionManager
 		$stmt = $this->connection->prepare($str);
 		$stmt->execute([':beg' => $beg, ':end' => $end]);
 
-		$list = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Transaction');//, ['_id', '_user_id', '_account_id', '_t', '_amount', '_category', '_merchant', '_balance']);
+		$list = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Transaction');
 		foreach ($list as $a)
 			$a->fixTypes();
 
@@ -139,7 +139,7 @@ class TransactionManager
 						':end' => DBManager::sqlDatetime($end)
 						]);
 
-		$list = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Transaction');//, ['_id', '_user_id', '_account_id', '_t', '_amount', '_category', '_merchant', '_balance']);
+		$list = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Transaction');
 		if (!$list)
 			return [];
 

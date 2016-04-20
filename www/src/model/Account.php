@@ -15,20 +15,6 @@ class Account
 	public $balance;
 
 	/**
-	 *
-	 */
-	function __construct($_id, $_user_id, $_institution, $_type, $_balance = 0)
-	{
-		$this->id = $_id;
-		$this->user_id = $_user_id;
-
-		$this->type = $_type;
-		$this->institution = $_institution;
-
-		$this->name = $_institution . ' - ' . $_type;
-	}
-
-	/**
 	 * Ensure numeric fields are the correct type since PDO::fetch() only generates strings
 	 */
 	public function fixTypes()
