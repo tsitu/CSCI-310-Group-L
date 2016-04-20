@@ -32,17 +32,11 @@ $awb = $am->getAccountsWithBalance($user_id);
 foreach ($awb as $a)
 {
     $aid = $a->id;
+    $activeList[] = $aid;
+    $activeGraph[] = $aid;
+    
     $accounts[] = [$aid, $a];
-    
-    $list = $tm->getListForAccountBetween($aid, $beg, $end);
-    $transactions[] = [$aid, $list];
-    
-    //if there are transactions within last 
-    if (count($list) > 0)
-    {
-        $activeList[] = $aid;
-        $activeGraph[] = $aid;
-    }
+    $transactions[] = [$aid, $tm->getListForAccountBetween($aid, $beg, $end)];
 }
 
 ?>

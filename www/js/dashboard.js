@@ -7,18 +7,19 @@
 
 
 /* CONST */
+var INACTIVITY_TIME = 2 * 60 * 1000; //2min
+
 var DATE_FORMAT = 'YYYY. M. D';
 var DAY_MS = 24 * 60 * 60 * 1000;
 
-var INACTIVITY_TIME = 2 * 60 * 1000; //2min
-
-
-/* VARS */
 var today = new Date();
 var tmAgo = new Date();
     tmAgo.setMonth(today.getMonth() - 3);
 
+
+/* VARS */
 var timeout = null;
+
 
 /**
  * Initialize functionality

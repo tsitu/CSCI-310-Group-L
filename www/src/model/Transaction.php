@@ -11,26 +11,16 @@ class Transaction
 	public $id;			//unique id
 	public $user_id;	//user tied to this transaction
 	public $account_id;	//account tied to this transaction
-	public $t;		//datetime object of transaction time
+	public $time;		//datetime object of transaction time
+	public $timeStr;	//datetime object of transaction time
 	public $amount;		//double
 	public $category;	//"fast food", "loan"
 	public $merchant;	//"McDonalds", "Loan Payment", etc.
+
+	public $institution;
+	public $type;
 	public $balance;
 
-	/**
-	 * Create a new Transaction object from given fields.
-	 */
-	function __construct($_id, $_user_id, $_account_id, $_time, $_amount, $_category, $_merchant, $_balance)
-	{
-		$this->id = $_id;
-		$this->user_id = $_user_id;
-		$this->account_id = $_account_id;
-
-		$this->time = $_time;
-		$this->amount = $_amount;
-		$this->category = $_category;
-		$this->merchant = $_merchant;
-	}
 
 	/**
 	 * Ensure numeric fields are the correct type since PDO::fetch() only generates strings
@@ -39,9 +29,14 @@ class Transaction
 	{
 		$this->id = (int) $this->id;
 		$this->user_id = (int) $this->user_id;
+
 		$this->account_id = (int) $this->account_id;
+		$this->type = rtrim(DBManager::decrypt($this->type));
+		$this->institution = rtrim(DBManager::decrypt($this->institution));
 
 		$this->time = date_create($this->time);
+		$this->timeStr = $this->time->format('Y m d H i s');
+
 		$this->amount = (double) $this->amount;
 		$this->balance = (double) $this->balance;
 

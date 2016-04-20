@@ -100,7 +100,7 @@ class TransactionManager
 	public function getListForUserBetween($user_id, $beg, $end)
 	{
 		$str = "
-		SELECT ta.id, a.id as account_id, a.institution, a.type, ta.t, ta.merchant, ta.category, ta.amount, ta.balance 
+		SELECT ta.id, a.id as account_id, a.institution, a.type, ta.t as time, ta.merchant, ta.category, ta.amount, ta.balance 
 		FROM Transactions as ta JOIN Accounts as a
 		ON a.id = ta.account_id
 		WHERE (ta.t BETWEEN :beg AND :end) ORDER BY ta.t DESC;
@@ -114,8 +114,7 @@ class TransactionManager
 		$stmt = $this->connection->prepare($str);
 		$stmt->execute([':beg' => $beg, ':end' => $end]);
 
-		$list = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Transaction',
-								['_id', '_user_id', '_account_id', '_t', '_amount', '_category', '_merchant', '_balance']);
+		$list = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Transaction');//, ['_id', '_user_id', '_account_id', '_t', '_amount', '_category', '_merchant', '_balance']);
 		foreach ($list as $a)
 			$a->fixTypes();
 
@@ -128,7 +127,7 @@ class TransactionManager
 	public function getListForAccountBetween($account_id, $beg, $end)
 	{
 		$str = "
-		SELECT ta.id, a.user_id, a.id as account_id, a.institution, a.type, ta.t, ta.merchant, ta.category, ta.amount, ta.balance 
+		SELECT ta.id, a.user_id, a.id as account_id, a.institution, a.type, ta.t as time, ta.merchant, ta.category, ta.amount, ta.balance 
 		FROM Transactions as ta JOIN Accounts as a
 		ON a.id = ta.account_id
 		WHERE a.id = :id AND (ta.t BETWEEN :beg AND :end) ORDER BY ta.t DESC;
@@ -140,27 +139,12 @@ class TransactionManager
 						':end' => DBManager::sqlDatetime($end)
 						]);
 
-		$list = $stmt->fetchAll(PDO::FETCH_OBJ);//FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Transaction', ['_id', '_user_id', '_account_id', '_t', '_amount', '_category', '_merchant', '_balance']);
-
+		$list = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Transaction');//, ['_id', '_user_id', '_account_id', '_t', '_amount', '_category', '_merchant', '_balance']);
 		if (!$list)
 			return [];
 
 		foreach ($list as $a)
-		{
-			$a->id = (int) $a->id;
-			$a->user_id = (int) $a->user_id;
-			$a->account_id = (int) $a->account_id;
-
-			$a->t = date_create($a->t);
-			$a->amount = (double) $a->amount;
-			$a->balance = (double) $a->balance;
-
-			$a->type = rtrim(DBManager::decrypt($a->type));
-			$a->institution = rtrim(DBManager::decrypt($a->institution));
-
-			$a->category = rtrim(DBManager::decrypt($a->category));
-			$a->merchant = rtrim(DBManager::decrypt($a->merchant));
-		}
+			$a->fixTypes();
 
 		return $list;
 	}
