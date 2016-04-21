@@ -81,7 +81,7 @@ function deleteAccount(id, callback)
  * 		success - handler for request completes
  * 		error   - handler for request fails 
  */
-function upload(file, callback)
+function upload(file, beg, end, callback)
 {
     Papa.parse(file,
     {
@@ -104,7 +104,7 @@ function upload(file, callback)
             $.ajax('src/scripts/upload.php',
             {
                 type: 'POST',
-                data: {data: json},
+                data: {data: json, beg: beg, end: end},
                 dataType: "json",
                 error: function()
                 {

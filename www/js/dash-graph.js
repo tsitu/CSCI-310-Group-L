@@ -87,7 +87,7 @@ function initHighcharts()
 		{
 			var ta = list[i];
 			var part = ta.timeStr.split(' ');
-			var date = Date.UTC(part[0], part[1], part[2], part[3], part[4], part[5]);
+			var date = Date.UTC(part[0], part[1]-1, part[2], part[3], part[4], part[5]);
 
 			data.push([date, ta.balance]);
 		}
@@ -148,6 +148,31 @@ function removeFromGraph(id)
 	var series = highcharts.get(id);
 	if (series)
 		series.remove();
+}
+
+/**
+ * Add given [id, series] to the graph
+ */
+function addToGraph(id, name, list)
+{
+	if (highcharts.get(id))
+		return;
+
+	var data = [];
+	for (var i = list.length-1; i >= 0; --i)
+	{
+		var ta = list[i];
+		var part = ta.timeStr.split(' ');
+		var date = Date.UTC(part[0], part[1]-1, part[2], part[3], part[4], part[5]);
+
+		data.push([date, ta.balance]);
+	}
+
+	highcharts.addSeries({
+		id: id,
+		name: name,
+		data: data
+	});
 }
 
 

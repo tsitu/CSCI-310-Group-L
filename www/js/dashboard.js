@@ -256,30 +256,44 @@ function uploadClicked(event)
     event.preventDefault();
     $('#csv-upload').html('Uploading...');
 
+    //params
     var file = document.getElementById('csv-file').files[0];
-    upload(file, {
+    var beg = graphBegPicker.getDate().valueOf()/1000;
+    var end = graphEndPicker.getDate().valueOf()/1000;
+
+    upload(file, beg, end, {
         context: this,
         error: function()
         {
             //show error somewhere
             debug('[Error] failed to upload csv');
         },
-        success: function(accounts)
-        {
-            toggleUpload();
-
-            for (var a of accounts)
-            {
-                var item = document.getElementById('account-' + a.id);
-                var balance = a.balance.toFixed(2);
-
-                if (item)
-                    $(item).children('.account-amount').html(a.balance);
-                else
-                    $('#account-list').append( newAccountItem(a.id, a.institution, a.type, balance) );
-            }
-        }
+        success: uploadSucces
     });
+}
+
+/**
+ * Callback for upload csv success.
+ * 
+ */
+function uploadSucces(data)
+{
+    debug(data);
+
+    toggleUpload();
+
+    for (var a of data.accounts)
+    {
+        var item = document.getElementById('account-' + a.id);
+        var balance = a.balance.toFixed(2);
+
+        if (item)
+            $(item).children('.account-amount').html(a.balance);
+        else
+            $('#account-list').append( newAccountItem(a.id, a.institution, a.type, balance) );
+
+        addToGraph(a.id, a.name, data.transactions[a.id]);
+    }
 }
 
 
