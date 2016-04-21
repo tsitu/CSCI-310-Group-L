@@ -10,26 +10,33 @@ var graphColors = [];
 var hc_options = {
 	title: { text: null },
 	chart: {
-		zoomType: '' //disable zooming
+		zoomType: '',
+		events: {
+			selection: zoomed
+		}
 	},
 	//colors: graphColors,
 	legend: {
 		useHTML: true,
-		layout: 'vertical',
-		align: 'right',
+		floating: false,
+		layout: 'horizontal',
+		align: 'left',
 		verticalAlign: 'top',
 
 		y: 30,
 		itemMarginBottom: 10
 	},
 	yAxis: {
+		id: 'y',
 		title: { text: 'Balance' },
-		gridLineDashStyle: 'longdash'
+		gridLineDashStyle: 'longdash',
+		min: 0
 	},
 	xAxis: {
+		id: 'x',
 		title: { text: 'Date' },
 		type: 'datetime',
-		dateTimeLabelFormats: {
+		dateTimeLabelFormats: { 
 			day: '%b %e<br/>%Y'
 		}
 	},
@@ -61,10 +68,12 @@ var highcharts = null;
  */
 function initGraph()
 {
-	initGraphPickers();
 	initHighcharts();
+	initGraphPickers();
 }
 
+
+/* --- HIGHCHARTS --- */
 /**
  *
  */
@@ -92,10 +101,59 @@ function initHighcharts()
 
 	hc_options.series = series;
 	highcharts = Highcharts.chart('graph', hc_options);
+
+	console.log(highcharts.series)
 }
 
 /**
- *
+ * Called when user zooms in the chart.
+ * Change the picker dates accordingly.
+ */
+function zoomed(event)
+{
+	if (!event.xAxis)
+		return;
+
+	var range = event.xAxis[0];
+
+	graphBegPicker.setDate(new Date(range.min));
+	graphEndPicker.setDate(new Date(range.max));
+}
+
+/**
+ * Set the min value of the graph's x-axis (datetime) to the given unix timestamp.
+ */
+function setGraphMin(min)
+{
+	var xAxis = highcharts.get('x');
+	var range = xAxis.getExtremes();
+	xAxis.setExtremes(min, range.max);
+}
+
+/**
+ * Set the max value of the graph's x-axis (datetime) to the given unix timestamp.
+ */
+function setGraphMax(max)
+{
+	var xAxis = highcharts.get('x');
+	var range = xAxis.getExtremes();
+	xAxis.setExtremes(range.min, max);
+}
+
+/**
+ * Remove data points associated with given account id.
+ */
+function removeSeries(id)
+{
+	var series = highcharts.get(id);
+	if (series)
+		series.remove();
+}
+
+
+/* --- PIKADAY --- */
+/**
+ * Initialize Pikaday pickers for the graph
  */
 function initGraphPickers()
 {
@@ -104,12 +162,12 @@ function initGraphPickers()
 
 	graphBegPicker = new Pikaday({
 		field: graphBegField,
-		onSelect: graphBegChanged
+		onSelect: graphPickerBegChanged
 	});
 
 	graphEndPicker = new Pikaday({
 		field: graphEndField,
-		onSelect: graphEndChanged
+		onSelect: graphPickerEndChanged
 	});
 
 	graphBegPicker.setDate(tmAgo);
@@ -117,32 +175,35 @@ function initGraphPickers()
 }
 
 /**
- * Called when beg date for list is changed
+ * Callback for graph's beg picker date change
  */
-function graphBegChanged(date)
+function graphPickerBegChanged(date)
 {
 	graphBegDate = date;
+	setGraphMin(date.valueOf());
 
 	graphEndPicker.setMinDate(date);
 	graphBegPicker.setStartRange(date);
 	graphEndPicker.setStartRange(date);
 
-	graphBegField.innerHTML = graphBegPicker.toString(DATE_FORMAT);
+	graphBegField.innerHTML = date.getUTCFullYear() + '. ' + (date.getUTCMonth() + 1) + '. ' + date.getUTCDate();
 }
 
 /**
- * Called when end date for graph is changed
+ * Callback for graph's end picker date change
  */
-function graphEndChanged(date)
+function graphPickerEndChanged(date)
 {
 	graphEndDate = date;
+	setGraphMax(date.valueOf());
 
 	graphBegPicker.setMaxDate(date);
 	graphBegPicker.setEndRange(date);
 	graphEndPicker.setEndRange(date);
 
-	graphEndField.innerHTML = graphEndPicker.toString(DATE_FORMAT);
+	graphEndField.innerHTML = date.getUTCFullYear() + '. ' + (date.getUTCMonth() + 1) + '. '  + date.getUTCDate();
 }
+
 
 
 

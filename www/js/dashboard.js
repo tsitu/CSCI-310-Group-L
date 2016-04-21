@@ -139,7 +139,7 @@ function uploadSuccess(accounts)
 function newAccountItem(id, inst, type, amount)
 {
     var str = ""
-    + "<li id='account-" + id + "' class='account-item'>" 
+    + "<li id='account-" + id + "' class='account-item' data-id='" + id + "'>" 
     +   "<p class='account-name'>" + inst + " - " + type + "</p>"
     +   "<p class='account-amount'>" + amount + "</p>"
     +   "<div class='account-menu'>"
