@@ -7,6 +7,8 @@
 
 
 /* CONST */
+var DEBUG = true;
+
 var INACTIVITY_TIME = 2 * 60 * 1000; //2min
 
 var DATE_FORMAT = 'YYYY. M. D';
@@ -26,25 +28,39 @@ var timeout = null;
  */
 $(document).ready(function()
 {
-    initGraph();
     initList();
-    initUI();
+    initGraph();
 
-    //autologout
+    bindEvents();
     resetTimeout();
-    document.onkeypress = resetTimeout;
-    document.onmousemove = resetTimeout;
 });
 
 
-/* --- FUNCTIONS ---*/
 /**
- * Logout user
+ * Bind handlers to all necessary UI events
  */
-function logout()
+function bindEvents()
 {
-    window.location = 'src/scripts/logout.php';
+    //toggles
+    $(document).on('click', '#curtain', toggleSide);
+    $(document).on('click', '.toggle-side', toggleSide);
+    $(document).on('click', '.toggle-edit', toggleEdit);
+    $(document).on('click', '.toggle-list', toggleList);
+    $(document).on('click', '.toggle-graph', toggleGraph);
+    $(document).on('click', '.toggle-upload', toggleUpload);
+    
+    //buttons
+    $(document).on('click', '.logout', logout);
+    $(document).on('click', '.rename-butotn', renameClicked);
+    $(document).on('click', '.delete-button', deleteClicked);
+    $(document).on('change', '#csv-file', changeClicked);
+    $(document).on('click', '#csv-upload', uploadClicked);
+
+    //auto logout
+    document.onkeypress = resetTimeout;
+    document.onmousemove = resetTimeout;
 }
+
 
 /**
  * Reset inactivity timeout logout.
@@ -57,80 +73,266 @@ function resetTimeout()
 }
 
 /**
- * Rename account associated with clicked edit form.
+ * Output given message if debugging is on
  */
-function renameAccount(id, inst, type)
+function debug(msg)
 {
-    $.ajax({
-        type: 'POST',
-        url: 'src/scripts/rename.php',
-        data: {id: id, inst: inst, type: type}
-    });
+    if (DEBUG)
+        console.log(msg);
+}
+
+
+/* --- TOGGLES --- */
+/**
+ * Show/hide curtain backdrop by toggling class 'show'
+ */
+function toggleCurtain()
+{
+    $('#curtain').toggleClass('show');
 }
 
 /**
- * Delete account associated with clicked delete form
+ * Show/hide side panel by toggling class 'show'
  */
-function deleteAccount(id)
+function toggleSide()
 {
-    $.ajax({
-        type: 'POST',
-        url: 'src/scripts/delete.php',
-        data: {id: id}
-    });
+    toggleCurtain();
+    $('.side-panel').toggleClass('show');
 }
 
 /**
- * Upload the given file
+ * Show/hide edit options for accounts
  */
-function upload(file)
+function toggleEdit()
 {
-    Papa.parse(file, {
-        newline: '\n',
-        delimiter: ', ',
-        header: true,
-        fastMode: true,
-        dynamicTyping: true,
-        skipEmptyLines: true,
-        complete: function(results)
+    var module = $(this).parent().siblings('.account-edit');
+    if (!module.hasClass('show'))
+        module.children('form')[0].reset();
+    
+    module.toggleClass('show');
+}
+
+/**
+ * Show/hide all transactions associated with clicked account
+ */
+function toggleList()
+{
+    $(this).toggleClass('active');
+    var id = getAccountID(this);
+
+    if (activeList.has(id))
+        activeList.delete(id);
+    else
+        activeList.add(id);
+
+    listManager.filter(filterList);
+}
+
+/**
+ * Show/hide graph balnce lines associated with clicked account
+ */
+function toggleGraph()
+{
+    $(this).toggleClass('active');
+    var series = highcharts.get( getAccountID(this) );
+
+    if (series)
+        series.setVisible( !series.visible );
+}
+
+/**
+ * Show/hide add account from module by toggling class 'show' and 'active'
+ */
+function toggleUpload()
+{    
+    var form = $('#upload-form');
+    if (!form.hasClass('show'))
+        csvReset();
+    
+    form.toggleClass('show');
+    $('.upload-toggle').toggleClass('active');
+    $('.upload-header').toggleClass('active');
+}
+
+
+
+/* --- ACTIONS --- */
+/**
+ * Called when user clicks 'Rename' from account edit
+ */
+function renameClicked(event)
+{
+    event.preventDefault();
+    
+    var id = getAccountID(this);
+    if (!id || id <= 0)
+        return;
+    
+    var instField = $(this).siblings('.inst-field')[0];
+    var typeField = $(this).siblings('.type-field')[0];
+    
+    var inst = instField.value;
+    var type = typeField.value;
+    
+    if (inst.length === 0)
+        inst = instField.getAttribute('placeholder');
+    if (type.length === 0)
+        type = typeField.getAttribute('placeholder');
+
+    renameAccount(id, inst, type,
+    {
+        context: this,
+        success: function(data)
         {
-            var json = JSON.stringify(results.data);
-            console.log(json);
-            
-            $.ajax({
-                type: "POST",
-                url: "src/scripts/upload.php",
-                data: {data: json},
-                dataType: "json",
-                success: uploadSuccess
-            });
+            debug('[Log] successfully renamed account with id: ' + id);
+            $(this).parents('.account-edit').siblings('.account-name').html(inst + ' - ' + type);
         },
-        error: function(xhr, status, error)
+        error: function()
         {
-            console.log(xhr.responseText);
+            //show error somewhere
+            debug('[Error] failed to rename account with id: ' + id);
         }
     });
 }
 
 /**
- * Callback for CSV upload post 
+ * Called when user clicks 'Delete Account' from account edit
  */
-function uploadSuccess(accounts)
+function deleteClicked(event)
 {
-    toggleUpload();
-
-    //console.log('upload callback: ' + accounts);
+    event.preventDefault();
     
-    for (var i = 0; i < accounts.length; i++)
+    var id = getAccountID(this);
+    if (!id || id <= 0)
+        return;
+
+    deleteAccount(id,
     {
-        var a = accounts[i];
-        
-        var item = document.getElementById('account-' + a.id);
-        if (item)
-            $(item).children('.account-amount').html(a.balance.toFixed(2));
-        else
-            $('#account-list').append(newAccountItem(a.id, a.institution, a.type, a.balance.toFixed(2)));
+        context: this,
+        success: function(data)
+        {
+            debug('[Log] successfully deleted account with id: ' + id);
+
+            removeFromGraph(id);
+            $(this).parents('.account-item').remove();
+        },
+        error: function()
+        {
+            //show error somewhere
+            debug('[Error] failed to delete account with id: ' + id);
+        }
+    });
+}
+
+/**
+ * Called when CSV file changes.
+ */
+function changeClicked()
+{    
+    var input = document.getElementById('csv-file');
+    if (input.files.length > 1)
+    {
+        csvError('Upload one CSV');
+        return;
     }
+    
+    var file = input.files[0];
+    if (file === undefined || !file.name.match(/\.(csv)$/))
+    {
+        csvError('Invalid file type');
+        return;
+    }
+    
+    csvMessage(file.name);
+    $('#csv-label').html("Change");
+    $('#csv-upload').attr('disabled', false);
+}
+
+/**
+ * Called when user clicks 'Upload' for a CSV file
+ */
+function uploadClicked(event)
+{
+    event.preventDefault();
+    $('#csv-upload').html('Uploading...');
+
+    var file = document.getElementById('csv-file').files[0];
+    upload(file, {
+        context: this,
+        error: function()
+        {
+            //show error somewhere
+            debug('[Error] failed to upload csv');
+        },
+        success: function(accounts)
+        {
+            toggleUpload();
+
+            for (var a of accounts)
+            {
+                var item = document.getElementById('account-' + a.id);
+                var balance = a.balance.toFixed(2);
+
+                if (item)
+                    $(item).children('.account-amount').html(a.balance);
+                else
+                    $('#account-list').append( newAccountItem(a.id, a.institution, a.type, balance) );
+            }
+        }
+    });
+}
+
+
+/* --- HELPERS --- */
+/**
+ * Returns an account id given an element inside a 'li.account-item'
+ */
+function getAccountID(element)
+{
+    var search = $(element).parents('li.account-item');
+    if (search.size() == 0)
+        return -1;
+    
+    return +search.attr('data-id');
+}
+
+/**
+ * Reset the add account form
+ */
+function csvReset()
+{
+    var input = $('#csv-file');
+    input.wrap('<form>').closest('form')[0].reset();
+    input.unwrap();
+    
+    $('#csv-label').html("Choose CSV");
+    $('#csv-upload').html("Upload");
+    csvMessage("No CSV");
+    
+    $('#csv-upload').attr('disabled', true);
+}
+
+/**
+ * Show csv error by setting error message and disabling upload button.
+ */
+function csvError(str)
+{
+    csvMessage(str, true);
+    $('#csv-upload').attr('disabled', true);
+}
+
+/**
+ * Set csv message, and toggle 'error' class according to param.
+ */
+function csvMessage(str, error = false)
+{
+    var msg = $('#csv-msg');
+    msg.html(str);
+    
+    if (error)
+        msg.addClass('error');
+    else
+        msg.removeClass('error');
 }
 
 /**

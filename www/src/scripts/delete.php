@@ -6,3 +6,5 @@ $id = $_POST['id'];
 
 $am = AccountManager::getInstance();
 $am->deleteAccount($id);
+
+echo 'test';

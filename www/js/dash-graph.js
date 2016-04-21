@@ -143,7 +143,7 @@ function setGraphMax(max)
 /**
  * Remove data points associated with given account id.
  */
-function removeSeries(id)
+function removeFromGraph(id)
 {
 	var series = highcharts.get(id);
 	if (series)

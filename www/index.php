@@ -97,7 +97,7 @@ foreach ($awb as $a)
                 $a = $pair[1];
             ?>
 
-                <li class='account-item' data-id='<?= $a->id ?>'>
+                <li id='account-<?= $a->id ?>' class='account-item' data-id='<?= $a->id ?>'>
                     <p class='account-name'><?= $a->name ?></p>
                     <p class='account-amount'><?= number_format($a->balance, 2) ?></p>
 
@@ -224,8 +224,8 @@ foreach ($awb as $a)
     <script src='js/libraries/pikaday.js'></script>
     
     <script src='js/dashboard.js'></script>
-    <script src='js/dash-graph.js'></script>
+    <script src='js/dash-user.js'></script>
     <script src='js/dash-list.js'></script>
-    <script src='js/dash-ui.js'></script>
+    <script src='js/dash-graph.js'></script>
 </body>
 </html>
