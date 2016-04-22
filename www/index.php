@@ -179,7 +179,7 @@ foreach ($awb as $a)
             ?>    
                 <li class='transaction-item' data-id='<?= $aid ?>' data-account-id='<?= $aid ?>'>
                     <p class="transaction-account"><?= $a->name ?></p>
-                    <p class="transaction-date"   ><?= date_format($t->t, "Y. n. j") ?></p>
+                    <p class="transaction-date"   ><?= date_format($t->time, "Y. n. j") ?></p>
                     <p class="transaction-amount" ><?= number_format($t->amount, 2) ?></p>
                     <p class="transaction-category"><?= $t->category ?></p>
                     <p class="transaction-merchant"><?= $t->merchant ?></p>
