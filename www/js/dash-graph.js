@@ -86,10 +86,7 @@ function initHighcharts()
 		for (var i = list.length-1; i >= 0; --i)
 		{
 			var ta = list[i];
-			var part = ta.timeStr.split(' ');
-			var date = Date.UTC(part[0], part[1]-1, part[2], part[3], part[4], part[5]);
-
-			data.push([date, ta.balance]);
+			data.push([ta.unixtime * 1000, ta.balance]);
 		}
 
 		series.push({

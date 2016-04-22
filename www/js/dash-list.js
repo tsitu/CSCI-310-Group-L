@@ -14,14 +14,23 @@ var listEndPicker = null;
 
 var listManager = null;
 
-var listItem = "<li class='transaction-item'>" +
-                    "<p class='account-id hidden'></p>" +
+var listItem = "<li class='transaction-item' data-id='' data-account-id=''>" +
                     "<p class='transaction-account'></p>" +
                     "<p class='transaction-date'   ></p>" +
                     "<p class='transaction-amount' ></p>" +
                     "<p class='transaction-category'></p>" +
                     "<p class='transaction-merchant'></p>" +
                 "</li>";
+
+var fields = [
+	'transaction-account',
+	'transaction-date',
+	'transaction-amount',
+	'transaction-category',
+	'transaction-merchant',
+
+	{ data: ['id', 'account-id'] }
+];
 
 /**
  * Initialize transaction list
@@ -31,7 +40,7 @@ function initList()
 	initListPickers();
 
 	listManager = new List('transaction-module', {
-		valueNames: ['account-id', 'transaction-account', 'transaction-date', 'transaction-amount', 'transaction-category', 'transaction-merchant'],
+		valueNames: fields,
 		item: listItem
 	});
 

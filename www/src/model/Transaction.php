@@ -12,7 +12,7 @@ class Transaction
 	public $user_id;	//user tied to this transaction
 	public $account_id;	//account tied to this transaction
 	public $time;		//datetime object of transaction time
-	public $timeStr;	//datetime object of transaction time
+	public $unixtime;	//datetime object of transaction time
 	public $amount;		//double
 	public $category;	//"fast food", "loan"
 	public $merchant;	//"McDonalds", "Loan Payment", etc.
@@ -35,7 +35,7 @@ class Transaction
 		$this->institution = rtrim(DBManager::decrypt($this->institution));
 
 		$this->time = date_create($this->time);
-		$this->timeStr = $this->time->format('Y m d H i s');
+		$this->unixtime = $this->time->getTimestamp();
 
 		$this->amount = (double) $this->amount;
 		$this->balance = (double) $this->balance;

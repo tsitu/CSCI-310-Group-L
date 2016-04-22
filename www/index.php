@@ -177,9 +177,7 @@ foreach ($awb as $a)
                 foreach($list as $t)
                 {
             ?>    
-                <li class='transaction-item'
-                    data-id='<?= $aid ?>'
-                    data-account-id='<?= $aid ?>'>
+                <li class='transaction-item' data-id='<?= $aid ?>' data-account-id='<?= $aid ?>'>
                     <p class="transaction-account"><?= $a->name ?></p>
                     <p class="transaction-date"   ><?= date_format($t->t, "Y. n. j") ?></p>
                     <p class="transaction-amount" ><?= number_format($t->amount, 2) ?></p>
