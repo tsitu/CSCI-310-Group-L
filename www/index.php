@@ -26,14 +26,12 @@ $tm = TransactionManager::getInstance();
 $accounts = [];
 $transactions = [];
 $activeList = [];
-$activeGraph = [];
 
 $awb = $am->getAccountsWithBalance($user_id);
 foreach ($awb as $a)
 {
     $aid = $a->id;
     $activeList[] = $aid;
-    $activeGraph[] = $aid;
     
     $accounts[] = [$aid, $a];
     $transactions[] = [$aid, $tm->getListForAccountBetween($aid, $beg, $end)];
@@ -207,12 +205,10 @@ foreach ($awb as $a)
         var accounts = new Map(<?= json_encode($accounts) ?>);
         var transactions = new Map(<?= json_encode($transactions) ?>);
         var activeList = new Set(<?= json_encode($activeList) ?>);
-        var activeGraph = new Set(<?= json_encode($activeGraph) ?>);
         
         console.log(accounts);
         console.log(transactions);
         console.log(activeList);
-        console.log(activeGraph);
     </script>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>

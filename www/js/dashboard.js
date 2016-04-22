@@ -278,8 +278,6 @@ function uploadClicked(event)
  */
 function uploadSucces(data)
 {
-    debug(data);
-
     toggleUpload();
 
     for (var a of data.accounts)
