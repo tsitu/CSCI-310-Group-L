@@ -161,6 +161,22 @@ foreach ($awb as $a)
                 <h3 class='label module-label'>Transactions</h3>
             </div>
             <div class='module-subheader'>
+                <div class='dropdown-menu'>
+                    <button class='dropdown-main'>
+                        Date
+                        <span class='fa fa-caret-down'></span>
+                    </button>
+                    <ul class='dropdown-list'>
+                        <li class='dropdown-item'>Date</li>
+                        <li class='dropdown-item'>Amount</li>
+                        <li class='dropdown-item'>Account</li>
+                        <li class='dropdown-item'>Category</li>
+                        <li class='dropdown-item'>Merchant</li>
+                    </ul>
+                </div>
+                
+                <div class='flex-glue'></div>
+                
                 <button id='list-beg' class='date-select'>4/8/2016</button>
                 ~
                 <button id='list-end' class='date-select'>4/8/2016</button>

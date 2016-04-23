@@ -48,6 +48,7 @@ function bindEvents()
     $(document).on('click', '.toggle-list', toggleList);
     $(document).on('click', '.toggle-graph', toggleGraph);
     $(document).on('click', '.toggle-upload', toggleUpload);
+    $(document).on('click', '.dropdown-main', toggleDropdown);
     
     //buttons
     $(document).on('click', '.logout', logout);
@@ -98,6 +99,15 @@ function toggleSide()
 {
     toggleCurtain();
     $('.side-panel').toggleClass('show');
+}
+
+/**
+ * Show/hide dropdown menu
+ */
+function toggleDropdown()
+{
+    var list = $(this).siblings('.dropdown-list');
+    list.toggleClass('show');
 }
 
 /**
