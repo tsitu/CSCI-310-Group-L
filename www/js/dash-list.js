@@ -5,8 +5,6 @@
  */
 'use strict';
 
-var listBegDate = tmAgo;
-var listEndDate = today;
 var listBegField = null;
 var listEndField = null;
 var listBegPicker = null;
@@ -32,6 +30,10 @@ var fields = [
 	{ data: ['id', 'account-id'] }
 ];
 
+var sortedBy = 'transaction-date';
+var sortOrder = 'desc';
+
+
 /**
  * Initialize transaction list
  */
@@ -44,17 +46,8 @@ function initList()
 		item: listItem
 	});
 
-	listManager.sort('transaction-date', {order: 'desc'});
+	listManager.sort(sortedBy, {order: sortOrder});
 	listManager.filter(filterList);
-}
-
-
-/**
- * 
- */
-function filterList(item)
-{
-	return activeList.has( +item.values()['account-id'] );
 }
 
 
@@ -86,8 +79,6 @@ function initListPickers()
  */
 function listBegChanged(date)
 {
-	listBegDate = date;
-
 	listEndPicker.setMinDate(date);
 	listBegPicker.setStartRange(date);
 	listEndPicker.setStartRange(date);
@@ -100,8 +91,6 @@ function listBegChanged(date)
  */
 function listEndChanged(date)
 {
-	listEndDate = date;
-
 	listBegPicker.setMaxDate(date);
 	listBegPicker.setEndRange(date);
 	listEndPicker.setEndRange(date);
@@ -111,7 +100,34 @@ function listEndChanged(date)
 
 
 /* --- LIST --- */
+/**
+ * 
+ */
+function filterList(item)
+{
+	return activeList.has( +item.values()['account-id'] );
+}
 
+
+/**
+ * Return true for asc, false for desc.
+ */
+function sortList(col)
+{
+	if (sortedBy === col)
+		sortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
+	else
+	{
+		sortedBy = col;
+
+		//for date & amount, default to desc
+		if (['transaction-date', 'trasaction-amount'].includes(col))
+			sortOrder = 'desc';
+	}
+
+	listManager.sort(sortedBy, {order: sortOrder});
+	return sortOrder === 'asc';
+}
 
 
 

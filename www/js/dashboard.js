@@ -57,6 +57,8 @@ function bindEvents()
     $(document).on('change', '#csv-file', changeClicked);
     $(document).on('click', '#csv-upload', uploadClicked);
 
+    $(document).on('click', '.dd-sort .dropitem', sortClicked);
+
     //auto logout
     document.onkeypress = resetTimeout;
     document.onmousemove = resetTimeout;
@@ -302,6 +304,30 @@ function uploadSucces(data)
 
         addToGraph(a.id, a.name, data.transactions[a.id]);
     }
+}
+
+/**
+ * Called when user clicks a 
+ */
+function sortClicked(event)
+{
+    event.stopPropagation();
+
+    var item = $(this);
+    var name = item.html();
+    var sort = item.attr('data-sort');
+
+    //sort & get new direction
+    var order = sortList(sort);
+    var dir = order ? 'up' : 'down';
+
+    //change dropmain
+    var main = item.parents('.dd-sort').children('.dropmain');
+    main.children('.sort-label').html(name);
+    main.children('.sort-icon').removeClass().addClass('sort-icon fa fa-chevron-' + dir);
+
+    //close list
+    item.parent().removeClass('show');
 }
 
 
