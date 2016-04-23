@@ -161,17 +161,17 @@ foreach ($awb as $a)
                 <h3 class='label module-label'>Transactions</h3>
             </div>
             <div class='module-subheader'>
-                <div class='dropdown-menu'>
-                    <button class='dropdown-main'>
-                        Date
-                        <span class='fa fa-caret-down'></span>
+                <div class='dropdown dd-sort' data-sort='date' data-order='desc'>
+                    <button class='dropmain'>
+                        <span class='sort-label'>Date</span>
+                        <span class='fa fa-chevron-down sort-icon'></span>
                     </button>
-                    <ul class='dropdown-list'>
-                        <li class='dropdown-item'>Date</li>
-                        <li class='dropdown-item'>Amount</li>
-                        <li class='dropdown-item'>Account</li>
-                        <li class='dropdown-item'>Category</li>
-                        <li class='dropdown-item'>Merchant</li>
+                    <ul class='droplist'>
+                        <li class='dropitem'>Date</li>
+                        <li class='dropitem'>Amount</li>
+                        <li class='dropitem'>Account</li>
+                        <li class='dropitem'>Category</li>
+                        <li class='dropitem'>Merchant</li>
                     </ul>
                 </div>
                 

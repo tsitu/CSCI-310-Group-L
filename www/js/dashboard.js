@@ -43,12 +43,12 @@ function bindEvents()
 {
     //toggles
     $(document).on('click', '#curtain', toggleSide);
+    $(document).on('click', '.dropdown', toggleDropdown);
     $(document).on('click', '.toggle-side', toggleSide);
     $(document).on('click', '.toggle-edit', toggleEdit);
     $(document).on('click', '.toggle-list', toggleList);
     $(document).on('click', '.toggle-graph', toggleGraph);
     $(document).on('click', '.toggle-upload', toggleUpload);
-    $(document).on('click', '.dropdown-main', toggleDropdown);
     
     //buttons
     $(document).on('click', '.logout', logout);
@@ -106,7 +106,7 @@ function toggleSide()
  */
 function toggleDropdown()
 {
-    var list = $(this).siblings('.dropdown-list');
+    var list = $(this).children('.droplist');
     list.toggleClass('show');
 }
 

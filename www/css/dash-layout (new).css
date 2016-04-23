@@ -15,7 +15,6 @@
 
 
 /* FLEXBOX */
-.dropdown-menu, .dropdown-list,
 .side-header, 
 .account-module, .account-menu,
 .edit-form,
@@ -32,28 +31,17 @@
     flex-flow: row nowrap; 
 }
 
-.dropdown-list,
 .edit-form,
 .account-module
 { 
     flex-flow: column nowrap;
 }
 
-.dropdown-menu
-{
-    flex-flow: row wrap;
-}
-
 .account-menu,
-.upload-header
-{
-    justify-content: flex-end;
-}
-
-.dropdown-menu, .dropdown-list,
+.upload-header,
 .module-subheader
 {
-    justify-content: flex-start;
+    justify-content: flex-end;
 }
 
 
@@ -216,26 +204,39 @@
 
 
 /* - DROPDOWN */
-.dropdown-menu {
-    width: 150px;
-}
-.dropdown-menu, .dropdown-main {
+.dropdown {
     height: 100%;
+    display: flex;
+    align-items: center;
+    
+    position: relative;
 }
-.dropdown-main {
-    width: 80px;
+.dropmain {
+    cursor: pointer;
 }
-.dropdown-list {
+.droplist {
     z-index: 20;
-    width: 100%;
-    background-color: white;
+    display: none;
+    
+    top: 100%;
+    left: 0px;
+    position: absolute;
 }
-.dropdown-item {
-    height: 0px;
-    line-height: 40px;
-    overflow: hidden;
+.droplist.show { display: block; }
+
+.dd-sort .dropmain {
+    height: 40px;
+    font-size: 14px;
+    padding: 5px 10px;
 }
-.dropdown-list.show > .dropdown-item { height: 40px; }
+.dd-sort .sort-icon {
+    display: inline-block;
+    font-size: 12px;
+}
+.dd-sort .dropitem {
+    width: 180px;
+    padding: 15px 20px;
+}
 
 
 /* --- CONTENT --- */

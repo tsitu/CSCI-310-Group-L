@@ -47,6 +47,30 @@
 }
 
 
+/* DROPDOWN */
+.droplist {
+    background-color: white;
+/*    box-shadow: 0px 8px 16px -12px #727272;*/
+}
+.dropitem {
+    cursor: pointer;
+}
+
+.dd-sort .dropmain {
+    color: #eb954b;
+    border-radius: 3px;
+}
+.dd-sort .droplist {
+    border: 1px solid #d3d3d3;
+}
+.dd-sort .dropitem {
+    border-bottom: 1px solid #d3d3d3;
+}
+.dd-sort .dropitem:hover {
+    border-left: 3px solid #ffa75c;
+}
+
+
 /* MAIN & MODULES */
 .module-header { 
     background-color: #f5f5f5;
@@ -55,7 +79,7 @@
 .module-subheader { border-bottom: 1px solid #e6e6e6; }
 
 .date-select {
-    color: #ffa75c;
+    color: #eb954b;
     text-decoration: underline;
 }
 
