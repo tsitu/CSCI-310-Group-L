@@ -5,20 +5,15 @@
  */
 'use strict';
 
-var listBegField = null;
-var listEndField = null;
-var listBegPicker = null;
-var listEndPicker = null;
-
-var listManager = null;
-
-var listItem = "<li class='transaction-item' data-id='' data-account-id=''>" +
-                    "<p class='transaction-account'></p>" +
-                    "<p class='transaction-date'   ></p>" +
-                    "<p class='transaction-amount' ></p>" +
-                    "<p class='transaction-category'></p>" +
-                    "<p class='transaction-merchant'></p>" +
-                "</li>";
+/* CONST */
+var listItem =
+"<li class='transaction-item' data-id='' data-account-id=''>" +
+    "<p class='transaction-account'></p>" +
+    "<p class='transaction-date'   ></p>" +
+    "<p class='transaction-amount' ></p>" +
+    "<p class='transaction-category'></p>" +
+    "<p class='transaction-merchant'></p>" +
+"</li>";
 
 var fields = [
 	'transaction-account',
@@ -27,8 +22,20 @@ var fields = [
 	'transaction-category',
 	'transaction-merchant',
 
-	{ data: ['id', 'account-id'] }
+	{ data: ['id', 'account-id', 'unixtime'] }
 ];
+
+
+
+/* VARS */
+var listManager = null;
+var listBegField = null;
+var listEndField = null;
+var listBegPicker = null;
+var listEndPicker = null;
+
+var listBegTime = tmAgo.valueOf();
+var listEndTime = today.valueOf();
 
 var sortedBy = 'transaction-date';
 var sortOrder = 'desc';
@@ -39,15 +46,14 @@ var sortOrder = 'desc';
  */
 function initList()
 {
-	initListPickers();
-
 	listManager = new List('transaction-module', {
-		valueNames: fields,
-		item: listItem
+		item: listItem,
+		valueNames: fields
 	});
 
 	listManager.sort(sortedBy, {order: sortOrder});
-	listManager.filter(filterList);
+
+	initListPickers();
 }
 
 
@@ -79,11 +85,17 @@ function initListPickers()
  */
 function listBegChanged(date)
 {
+	listBegTime = date.valueOf();
+
 	listEndPicker.setMinDate(date);
 	listBegPicker.setStartRange(date);
 	listEndPicker.setStartRange(date);
 
 	listBegField.innerHTML = listBegPicker.toString(DATE_FORMAT);
+
+	//change range and filter
+	listBegTime = date.valueOf();
+	listManager.filter(filterList);
 }
 
 /**
@@ -96,6 +108,10 @@ function listEndChanged(date)
 	listEndPicker.setEndRange(date);
 
 	listEndField.innerHTML = listEndPicker.toString(DATE_FORMAT);
+
+	//change range and filter
+	listEndTime = date.valueOf();
+	listManager.filter(filterList);
 }
 
 
@@ -105,7 +121,12 @@ function listEndChanged(date)
  */
 function filterList(item)
 {
-	return activeList.has( +item.values()['account-id'] );
+	var shown = activeList.has( +item.values()['account-id'] );
+
+	var time = item.values().unixtime;
+	var range = listBegTime <= time && time <= listEndTime;
+
+	return shown & range;
 }
 
 

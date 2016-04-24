@@ -193,7 +193,11 @@ foreach ($awb as $a)
                 foreach($list as $t)
                 {
             ?>    
-                <li class='transaction-item' data-id='<?= $aid ?>' data-account-id='<?= $aid ?>'>
+                <li class='transaction-item' 
+                        data-id='<?= $t->id ?>' 
+                        data-account-id='<?= $aid ?>'
+                        data-unixtime='<?= $t->unixtime * 1000 ?>'
+                    >
                     <p class="transaction-account"><?= $a->name ?></p>
                     <p class="transaction-date"   ><?= date_format($t->time, "Y. n. j") ?></p>
                     <p class="transaction-amount" ><?= number_format($t->amount, 2) ?></p>
