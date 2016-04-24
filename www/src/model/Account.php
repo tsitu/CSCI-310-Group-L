@@ -8,12 +8,11 @@ class Account
 	public $id;
 	public $user_id;
 
-	public $name;
 	public $type;
 	public $institution;
-	public $balance
+	public $balance;
 
-	function __construct($id, $institution, $type, $user_id, $balance = 0) {
+	function __construct($id, $institution, $type, $user_id) {
 		$this->id = $id;
 		$this->institution = $institution;
 		$this->type = $type;
