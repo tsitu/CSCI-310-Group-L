@@ -289,8 +289,8 @@
 }
 
 
-/* MEDIA: min-width 37.5em */
-@media screen and (min-width: )
+/* MEDIA: Tablet */
+@media screen and (max-width: 992px)
 {
     
 }

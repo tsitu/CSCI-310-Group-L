@@ -35,6 +35,7 @@ function initList()
 		item: listItem
 	});
 
+	listManager.sort('transaction-date', {order: 'desc'});
 	listManager.filter(filterList);
 }
 
@@ -44,7 +45,7 @@ function initList()
  */
 function filterList(item)
 {
-	return listActive.has( +item.values()['account-id'] );
+	return activeList.has( +item.values()['account-id'] );
 }
 
 

@@ -61,10 +61,11 @@ class AccountManager
 	 * @param $institution  - string of account's institution (ex. Bank of America)
 	 * @param $type 		- string of account type (ex. Credit, Debit)
 	 * @param $user_id 		- user_id of user this account belongs to
+	 * @return id of the account if added, 0 otherwise.
 	 */
 	public function addAccount($inst, $type, $user_id)
 	{
-		$str = "INSERT IGNORE INTO Accounts (institution, type, user_id) VALUES (:institution, :type, :user_id)";
+		$str = "INSERT IGNORE INTO Accounts (institution, type, user_id) VALUES (:institution, :type, :user_id);";
 
 		//encrypt
 		$inst = DBManager::encrypt($inst);
@@ -125,19 +126,14 @@ class AccountManager
 		$stmt->bindParam(':user_id', $user_id);
 		$stmt->execute();
 
-		$accounts = $stmt->fetchAll(PDO::FETCH_CLASS);
+		$accounts = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account', ['_id', '_user_id', '_institution', '_type']);
 		if (!$accounts)
 			return [];
 
 		$list = [];
 		foreach ($accounts as $a)
-		{
-			//decrypt
-			$a->institution = DBManager::decrypt( $a->institution );
-			$a->type 		= DBManager::decrypt( $a->type );
+			$a->fixTypes();
 
-			$list[] = new Account($row->id, $row->institution, $row->type, $row->user_id);
-		}
 		return $list;
 	}
 
@@ -163,17 +159,12 @@ class AccountManager
 		$stmt->bindParam(':inst', $inst);
 		$stmt->execute();
 
-		$row = $stmt->fetch(PDO::FETCH_OBJ);
-		
-		if (!$row){
+		$account = $stmt->fetch(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account', ['_id', '_user_id', '_institution', '_type']);
+		if (!$account)
 			return null;
-		}
 
-		//decrypt
-		$row->institution = DBManager::decrypt( $row->institution );
-		$row->type = DBManager::decrypt( $row->type );
-
-		return new Account($row->id, $row->institution, $row->type, $row->user_id);
+		$account->fixTypes();
+		return $account;
 	}
 
 	/**
@@ -195,19 +186,13 @@ class AccountManager
 		$stmt = $this->connection->prepare($str);
 		$stmt->execute([$user_id]);
 
-		$accounts = $stmt->fetchAll(PDO::FETCH_OBJ);
+		$accounts = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account');
 		if (!$accounts)
 			return [];
 
 		foreach ($accounts as $a)
-		{
-			$a->id = (int) $a->id;
-			$a->user_id = (int) $a->user_id;
-			$a->balance = (double) $a->balance;
+			$a->fixTypes();
 
-			$a->type = rtrim(DBManager::decrypt($a->type));
-			$a->institution = rtrim(DBManager::decrypt($a->institution));
-		}
 		return $accounts;
 	}
 
@@ -229,18 +214,11 @@ class AccountManager
 		$stmt = $this->connection->prepare($str);
 		$stmt->execute([$user_id, $institution, $type]);
 
-		$a = $stmt->fetch(PDO::FETCH_OBJ);
+		$accounts = $stmt->fetch(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account');
 		if (!$a)
 			return null;
 		
-		//decrypt
-		$a->id = (int) $a->id;
-		$a->user_id = (int) $a->user_id;
-		$a->balance = (double) $a->balance;
-
-		$a->type = rtrim(DBManager::decrypt($a->type));
-		$a->institution = rtrim(DBManager::decrypt($a->institution));
-
+		$a->fixTypes();
 		return $a;
 	}
 }

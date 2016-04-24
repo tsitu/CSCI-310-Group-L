@@ -17,42 +17,26 @@ $user_id = $_SESSION['user_id'];
 $username = $_SESSION['username'];
 
 //managers
+$beg = new DateTime('-3 months');
+$end = new DateTime();
+
 $am = AccountManager::getInstance();
 $tm = TransactionManager::getInstance();
 
-
-//get accounts and map [id, account]
-$awb = $am->getAccountsWithBalance($user_id);
 $accounts = [];
+$transactions = [];
+$activeList = [];
+$activeGraph = [];
+
+$awb = $am->getAccountsWithBalance($user_id);
 foreach ($awb as $a)
 {
-    $a->name = $a->institution . ' - ' . $a->type;
-    $accounts[$a->id] = $a;
-}
-
-//default to 3 months
-$now = new DateTime();
-$mon = clone $now;
-$mon->modify('-3 month');
-
-
-//get list of transactions for each account over 3 months
-//map [account id, ta. list] and also create all transaction list
-$initMap = [];
-$initList = [];
-
-$alist = [];
-foreach ($accounts as $aid => $a)
-{
-    $list = $tm->getListForAccountBetween($aid, $mon, $now);
+    $aid = $a->id;
+    $activeList[] = $aid;
+    $activeGraph[] = $aid;
     
-    if (count($list) > 0)
-    {
-        $alist[] = $aid;
-        
-        $initMap[] = $list;
-        $initList = array_merge($initList, $list);
-    }
+    $accounts[] = [$aid, $a];
+    $transactions[] = [$aid, $tm->getListForAccountBetween($aid, $beg, $end)];
 }
 
 ?>
@@ -74,17 +58,6 @@ foreach ($accounts as $aid => $a)
     <link rel='stylesheet' href='css/dash-style (new).css'>
 </head>
 <body>
-    
-    <script>
-        var initMap = <?= json_encode($initMap) ?>;
-        var initList = <?= json_encode($initList) ?>;
-        var listActive = new Set(<?= json_encode($alist) ?>);
-        
-        console.log(listActive);
-        console.log(initMap);
-        console.log(initList);
-    </script>
-    
     <!-- Top -->
     <div class='top-bar hor-flex'>
         <h1 class='title app-title'>mi<span class='shrink'>nance</span></h1>
@@ -119,18 +92,17 @@ foreach ($accounts as $aid => $a)
             <ul id='account-list' class='flex-glue'>
             <?php
             //account list
-    
-            $first = true;
-            foreach($accounts as $aid => $a)
+            foreach($accounts as $pair)
             {
+                $a = $pair[1];
             ?>
 
-                <li id='account-<?= $a->id ?>' class='account-item' data-account-id='<?= $a->id ?>'>
+                <li id='account-<?= $a->id ?>' class='account-item' data-id='<?= $a->id ?>'>
                     <p class='account-name'><?= $a->name ?></p>
                     <p class='account-amount'><?= number_format($a->balance, 2) ?></p>
 
                     <div class='account-menu'>
-                        <button class='account-option toggle-graph fa fa-line-chart'></button>
+                        <button class='account-option toggle-graph fa fa-line-chart active'></button>
                         <button class='account-option toggle-list fa fa-list-ul active'></button>
                         <button class='account-option toggle-edit fa fa-cog'></button>
                     </div>
@@ -199,20 +171,25 @@ foreach ($accounts as $aid => $a)
             <ul id='transaction-list' class='table-list list'>
                 
             <?php 
-            foreach ($initList as $t)
+            foreach ($transactions as $pair)
             {
-                $a = $accounts[$t->account_id];
-                $name = $a->institution . ' - ' . $a->type;
+                $aid = $pair[0];
+                $list = $pair[1];
+                
+                foreach($list as $t)
+                {
             ?>    
-                <li class='transaction-item'>
-                    <p class="account-id hidden"><?= $a->id ?></p>
-                    <p class="transaction-account"><?= $name ?></p>
+                <li class='transaction-item'
+                    data-id='<?= $aid ?>'
+                    data-account-id='<?= $aid ?>'>
+                    <p class="transaction-account"><?= $a->name ?></p>
                     <p class="transaction-date"   ><?= date_format($t->t, "Y. n. j") ?></p>
                     <p class="transaction-amount" ><?= number_format($t->amount, 2) ?></p>
                     <p class="transaction-category"><?= $t->category ?></p>
                     <p class="transaction-merchant"><?= $t->merchant ?></p>
                 </li>
             <?php 
+                }
             }
             ?>
             </ul>
@@ -223,6 +200,21 @@ foreach ($accounts as $aid => $a)
     <!-- Popup -->
     <div id='curtain'></div>
     
+    
+    
+    <!-- JS -->
+    <script>
+        var accounts = new Map(<?= json_encode($accounts) ?>);
+        var transactions = new Map(<?= json_encode($transactions) ?>);
+        var activeList = new Set(<?= json_encode($activeList) ?>);
+        var activeGraph = new Set(<?= json_encode($activeGraph) ?>);
+        
+        console.log(accounts);
+        console.log(transactions);
+        console.log(activeList);
+        console.log(activeGraph);
+    </script>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -232,8 +224,8 @@ foreach ($accounts as $aid => $a)
     <script src='js/libraries/pikaday.js'></script>
     
     <script src='js/dashboard.js'></script>
-    <script src='js/dash-graph.js'></script>
+    <script src='js/dash-user.js'></script>
     <script src='js/dash-list.js'></script>
-    <script src='js/dash-ui.js'></script>
+    <script src='js/dash-graph.js'></script>
 </body>
 </html>

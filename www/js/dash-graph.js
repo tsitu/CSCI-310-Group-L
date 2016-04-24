@@ -5,6 +5,54 @@
  */
 'use strict';
 
+/* CONSTS */
+var graphColors = [];
+var hc_options = {
+	title: { text: null },
+	chart: {
+		zoomType: '',
+		events: {
+			selection: zoomed
+		}
+	},
+	//colors: graphColors,
+	legend: {
+		useHTML: true,
+		floating: false,
+		layout: 'horizontal',
+		align: 'left',
+		verticalAlign: 'top',
+
+		y: 30,
+		itemMarginBottom: 10
+	},
+	yAxis: {
+		id: 'y',
+		title: { text: 'Balance' },
+		gridLineDashStyle: 'longdash',
+		min: 0
+	},
+	xAxis: {
+		id: 'x',
+		title: { text: 'Date' },
+		type: 'datetime',
+		dateTimeLabelFormats: { 
+			day: '%b %e<br/>%Y'
+		}
+	},
+	tooltip: {
+		useHTML: true,
+		formatter: function()
+		{
+			return ''
+			+ Highcharts.dateFormat('%A <br/> %b %e, %Y', this.x) + '<br/><br/>'
+			+ 'Balance: <b>' + this.y + '</b>';
+		}
+	}
+};
+
+
+/* VARS */
 var graphBegDate = tmAgo;
 var graphEndDate = today;
 var graphBegField = null;
@@ -20,79 +68,117 @@ var highcharts = null;
  */
 function initGraph()
 {
+	initHighcharts();
 	initGraphPickers();
+}
 
-	//graph
-	var graphDiv = document.getElementById('graph');
 
-	var data = [];
-	for (var i = 0; i < initMap.length; i++)
+/* --- HIGHCHARTS --- */
+/**
+ *
+ */
+function initHighcharts()
+{
+	var series = [];
+	for (var [id, list] of transactions.entries())
 	{
-		var tlist = initMap[i];
-
-		var dlist = [];
-		for (var j = 0; j < tlist.length; j++)
+		var data = [];
+		for (var i = list.length-1; i >= 0; --i)
 		{
-			var d = tlist[j];
-			var newdate = new Date(d.t.date.substring(0,4), d.t.date.substring(5,7), d.t.date.substring(8,10), d.t.date.substring(11,13), d.t.date.substring(14,16), d.t.date.substring(17,19));
-			dlist.push([newdate.getTime()/1000, d.balance]);
+			var ta = list[i];
+			var part = ta.timeStr.split(' ');
+			var date = Date.UTC(part[0], part[1]-1, part[2], part[3], part[4], part[5]);
+
+			data.push([date, ta.balance]);
 		}
 
-		var series = {
-			name: tlist[0].institution + ' - ' + tlist[0].type,
-			lineWidth: 4,
-			marker: { radius: 4 },
-			data: dlist
-		};
-
-		data.push(series);
+		series.push({
+			id: id,
+			name: accounts.get(id).name,
+			data: data
+		});
 	}
 
-	highcharts = new Highcharts.Chart({
-		chart: { renderTo: graph },
-		title: { text: '' },
-		subtitle: { text: '' },
+	hc_options.series = series;
+	highcharts = Highcharts.chart('graph', hc_options);
 
-		xAxis: {
-			type: 'datetime',
-			tickInterval: DAY_MS,
-			tickWidth: 0,
-			gridLineWidth: 1,
-			labels: {
-                align: 'left',
-                x: 3,
-                y: -3
-            }
-		},
-		yAxis: [{ // left y axis
-            title: { text: '' },
-            labels: {
-                align: 'left',
-                x: 3,
-                y: 16,
-                format: '{value:.,0f}'
-            },
-            showFirstLabel: false
-        }],
-        legend: {
-            align: 'left',
-            verticalAlign: 'top',
-            y: 20,
-            floating: true,
-            borderWidth: 0
-        },
-        plotOptions: {
-            series: {
-                cursor: 'pointer',
-                marker: { lineWidth: 1 }
-            }
-        },
-        series: data
-	});
+	console.log(highcharts.series)
 }
 
 /**
- *
+ * Called when user zooms in the chart.
+ * Change the picker dates accordingly.
+ */
+function zoomed(event)
+{
+	if (!event.xAxis)
+		return;
+
+	var range = event.xAxis[0];
+
+	graphBegPicker.setDate(new Date(range.min));
+	graphEndPicker.setDate(new Date(range.max));
+}
+
+/**
+ * Set the min value of the graph's x-axis (datetime) to the given unix timestamp.
+ */
+function setGraphMin(min)
+{
+	var xAxis = highcharts.get('x');
+	var range = xAxis.getExtremes();
+	xAxis.setExtremes(min, range.max);
+}
+
+/**
+ * Set the max value of the graph's x-axis (datetime) to the given unix timestamp.
+ */
+function setGraphMax(max)
+{
+	var xAxis = highcharts.get('x');
+	var range = xAxis.getExtremes();
+	xAxis.setExtremes(range.min, max);
+}
+
+/**
+ * Remove data points associated with given account id.
+ */
+function removeFromGraph(id)
+{
+	var series = highcharts.get(id);
+	if (series)
+		series.remove();
+}
+
+/**
+ * Add given [id, series] to the graph
+ */
+function addToGraph(id, name, list)
+{
+	if (highcharts.get(id))
+		return;
+
+	var data = [];
+	for (var i = list.length-1; i >= 0; --i)
+	{
+		var ta = list[i];
+		var part = ta.timeStr.split(' ');
+		var date = Date.UTC(part[0], part[1]-1, part[2], part[3], part[4], part[5]);
+
+		data.push([date, ta.balance]);
+	}
+
+	highcharts.addSeries({
+		id: id,
+		name: name,
+		data: data
+	});
+}
+
+
+/* --- PIKADAY --- */
+/**
+ * Initialize Pikaday pickers for the graph
  */
 function initGraphPickers()
 {
@@ -101,12 +187,12 @@ function initGraphPickers()
 
 	graphBegPicker = new Pikaday({
 		field: graphBegField,
-		onSelect: graphBegChanged
+		onSelect: graphPickerBegChanged
 	});
 
 	graphEndPicker = new Pikaday({
 		field: graphEndField,
-		onSelect: graphEndChanged
+		onSelect: graphPickerEndChanged
 	});
 
 	graphBegPicker.setDate(tmAgo);
@@ -114,32 +200,35 @@ function initGraphPickers()
 }
 
 /**
- * Called when beg date for list is changed
+ * Callback for graph's beg picker date change
  */
-function graphBegChanged(date)
+function graphPickerBegChanged(date)
 {
 	graphBegDate = date;
+	setGraphMin(date.valueOf());
 
 	graphEndPicker.setMinDate(date);
 	graphBegPicker.setStartRange(date);
 	graphEndPicker.setStartRange(date);
 
-	graphBegField.innerHTML = graphBegPicker.toString(DATE_FORMAT);
+	graphBegField.innerHTML = date.getUTCFullYear() + '. ' + (date.getUTCMonth() + 1) + '. ' + date.getUTCDate();
 }
 
 /**
- * Called when end date for graph is changed
+ * Callback for graph's end picker date change
  */
-function graphEndChanged(date)
+function graphPickerEndChanged(date)
 {
 	graphEndDate = date;
+	setGraphMax(date.valueOf());
 
 	graphBegPicker.setMaxDate(date);
 	graphBegPicker.setEndRange(date);
 	graphEndPicker.setEndRange(date);
 
-	graphEndField.innerHTML = graphEndPicker.toString(DATE_FORMAT);
+	graphEndField.innerHTML = date.getUTCFullYear() + '. ' + (date.getUTCMonth() + 1) + '. '  + date.getUTCDate();
 }
+
 
 
 
