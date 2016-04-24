@@ -1,4 +1,6 @@
 /* TOP BAR */
+.wide { width: 100%; }
+
 .top-bar {
     height: 70px;
     display: flex;
@@ -96,7 +98,7 @@
     -moz-border-radius: 18px;
     -webkit-border-radius: 18px;
 }
-#add-account {
+.show-add {
     width: inherit;
     height: 70px;
     bottom: 0px;
@@ -106,6 +108,10 @@
     font-weight: 300px;
 }
 
+#graph-module {
+    min-width: 800px;
+    min-height: 500px;
+}
 
 .module {
     padding: 20px 20px;
@@ -173,7 +179,7 @@
 
 
 /* ADD DIALOG */
-.new-account-form > input {
+.add-input {
     display: block;
     width: 90%;
     height: 30px;
@@ -216,4 +222,4 @@
     -moz-transition: all 0.2s linear;
     -webkit-transition: all 0.2s linear;
 }
-.remove-account-confirm { height: 50px; }
+.remove-account-confirm:hover { height: 50px; }
