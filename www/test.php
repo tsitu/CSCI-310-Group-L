@@ -1,6 +1,7 @@
 <?php
-require_once "src/model/BudgetManager.php";
+require_once "src/scripts/timeout.php";
 
+require_once "src/model/BudgetManager.php";
 
 echo "Starting budget test...delete me when done...<br>";
 
@@ -27,3 +28,6 @@ $budget = $b->getBudgetByInfo(2, 2, 2012);
 
 echo "Should be $5.99: <br>";
 echo $budget->budget;
+
+echo " ===== <br>";
+echo "Stay here for a minute to be redirected to logout.php";
