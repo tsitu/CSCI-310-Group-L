@@ -114,7 +114,6 @@ function getAccountIds($userId) {
 
 	//Return lastId
 	return $mysqli->insert_id;
-
 }
 
 //Get an account object from an accountId.
@@ -221,21 +220,21 @@ global $mysqli;
 		if($stmt->num_rows == 1) {
 			$stmt->bind_result($id);
 			$stmt->fetch();
+			return $id;
 		} else {
 			return null;
 		}
 
-		return $id;
+		
 	} else {
 		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
 	}
-
 }
 function getNumberOfRowsTransactions(){
 
 	global $mysqli;
     //prepare
-	if( ($stmt = $mysqli->prepare("SELECT id FROM transactions") )) {
+	if( ($stmt = $mysqli->prepare("SELECT id FROM Transactions") )) {
 
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
@@ -253,7 +252,7 @@ function getNumberOfRowsAccounts(){
 
 	global $mysqli;
     //prepare
-	if( ($stmt = $mysqli->prepare("SELECT id FROM accounts") )) {
+	if( ($stmt = $mysqli->prepare("SELECT id FROM Accounts") )) {
 
 		//execute
 		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
@@ -268,6 +267,76 @@ function getNumberOfRowsAccounts(){
 	}
 }
 
+  // upload a CSV to be a new portfolio
+function uploadCSV($filePath, $userID) {
+		//it create 2D array 
+        //structure of csv
+		//accountInstitution,accountType,txTime,txMerchant,txAmount,txCategory
+		//Bank of America,Credit Card,1459542957,Best Buy,-30,Electronics
+		$ac = "asd";
+        $csv_reader;     //csv file
+        $newAccountList = array();
+        $index = 0; //for new stock list
+        $isFirstLine = TRUE;
+        $isEmpty = TRUE;
+        //getting csv and put that into array
+   
+		$info = pathinfo($filePath);
+		if($info['extension'] == "csv") {
+			if(($csv_reader = fopen($filePath, 'r')) !== FALSE) {
+	            //read line by line
+	            //data is array that contains all elements in a row.
 
+	            while(($data = fgetcsv($csv_reader, 1000, ',')) !== FALSE)  {
+	                $numElementInRow = count($data); //number of element in a row
+	                if($numElementInRow != 6) {
+	                	return false;
+	                }
+	                $accountInstitution = $data[0];
+	                $accountType = $data[1];
+	                $txTime = $data[2];
+	                $txMerchant = $data[3];
+	                $txAmount = $data[4];
+	                $txCategory = $data[5];
+
+	                //error checking if ticker is in the API
+	                //if not, just don't add it and don't add up to the new balance
+	                //syntax for stock -> Stock($name, $symbol, $closingPrice, $quantity)
+	                if($isFirstLine == FALSE) { //ignore first line since first row is not actaul data.
+	                    $account = new Account(1 , $accountInstitution, $accountType, $userID);
+	                    $newAccountList[$index] = $account;
+	                    $index++;
+	                    $isEmpty = FALSE;
+	                }
+	                $isFirstLine = FALSE;
+	                
+	            }
+	            fclose($csv_reader);
+	        }
+		}else{
+			
+			return false; //if file is not 
+		}
+		//if size of the array is equal to zerp, return false
+
+		$arraySize = sizeof($newAccountList);
+		if($arraySize == 0) {
+			//if the size of array is zero, then returns false
+			return false;
+		}
+		if($isEmpty == TRUE) {
+			return false;
+		}
+/*
+		foreach($array as $val) {
+    		echo $newAccountList->id;
+    		echo $newAccountList->user_id;
+    		echo $newAccountList->institution;
+    		echo $newAccountList->type;
+		}
+*/
+        return $newAccountList;
+
+    }
 
 ?>

@@ -1,20 +1,5 @@
-#dialog-background {
-    z-index: 50;
-    display: none;
-    
-    top: 0px;
-    left: 0px;
-    position: fixed;
-    
-    width: 100vw;
-    height: 100vh;
-    
-    opacity: 0.6;
-    background-color: black;
-}
-#dialog-background.active { display: block; }
-
-.dialog.active { display: block; }
+.dialog { display: none; }
+.dialog.show { display: block; }
 .dialog {
     z-index: 100;
     display: none;
