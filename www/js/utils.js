@@ -1,11 +1,7 @@
 var transactions = [];
 
-function listAccount(accountId) {
-	var getTransactionsUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getTransactions&userId=3&accountId=" + accountId;
-	var getTransactions = httpGet(getTransactionsUrl);
-	var parsedTx = JSON.parse(getTransactions);
-
-	var getAccountUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccount&userId=3&accountId=" + accountId;
+function listAccountRemove(accountId) {
+	var getAccountUrl = "http://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccount&userId=3&accountId=" + accountId;
 	var getAccount = httpGet(getAccountUrl);
 	var parsedAccount = JSON.parse(getAccount);
 	var accountName = parsedAccount["institution"] + " " + parsedAccount["type"];
@@ -13,9 +9,29 @@ function listAccount(accountId) {
 	var table = document.getElementById("transaction-table");
 
 	var count = $('#transaction-table tr').length;
+	var rowsToDelete = [];
 	for (var i=1; i<count; i++) {
-		table.deleteRow(count-i);
+		if (table.rows[i].cells[0].innerHTML == accountName) {
+			rowsToDelete.push(i);
+		}
 	}
+
+	for (var i=0; i<rowsToDelete.length; i++) {
+		table.deleteRow(rowsToDelete[i]-i);
+	}
+}
+
+function listAccount(accountId) {
+	var getTransactionsUrl = "http://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getTransactions&userId=3&accountId=" + accountId;
+	var getTransactions = httpGet(getTransactionsUrl);
+	var parsedTx = JSON.parse(getTransactions);
+
+	var getAccountUrl = "http://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccount&userId=3&accountId=" + accountId;
+	var getAccount = httpGet(getAccountUrl);
+	var parsedAccount = JSON.parse(getAccount);
+	var accountName = parsedAccount["institution"] + " " + parsedAccount["type"];
+
+	var table = document.getElementById("transaction-table");
 
 	for (var i=0; i<parsedTx.length; i++) {
 		var row = table.insertRow(table.rows.length);
@@ -48,7 +64,7 @@ function listAccount(accountId) {
 }
 
 function graphAccount(accountId) {
-	var getTransactionsUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getTransactions&userId=3&accountId=" + accountId;
+	var getTransactionsUrl = "http://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getTransactions&userId=3&accountId=" + accountId;
 	var getTransactions = httpGet(getTransactionsUrl);
 	var parsedTx = JSON.parse(getTransactions);
 
@@ -59,7 +75,7 @@ function graphAccount(accountId) {
 		modifiedTx.push([+timestamp, +amount]);
 	}
 
-	var getAccountUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccount&userId=3&accountId=" + accountId;
+	var getAccountUrl = "http://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccount&userId=3&accountId=" + accountId;
 	var getAccount = httpGet(getAccountUrl);
 	var parsedAccount = JSON.parse(getAccount);
 	var accountName = parsedAccount["institution"] + " " + parsedAccount["type"];
@@ -151,11 +167,11 @@ function graphAccount(accountId) {
 }
 
 function removeAccount(institution, type) {
-	var getAccountIdUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccountId&institution=" + institution + "&type=" + type;
+	var getAccountIdUrl = "http://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccountId&institution=" + institution + "&type=" + type;
 	var accountId = httpGet(getAccountIdUrl);
 	//console.log(accountId);
 
-	var removeAccountUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=removeAccount&userId=1&accountId=" + accountId;
+	var removeAccountUrl = "http://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=removeAccount&userId=1&accountId=" + accountId;
 	var remove = httpGet(removeAccountUrl);
 	//console.log(remove);
 
@@ -186,10 +202,10 @@ function parseCSV() {
 					var txMerchant = data[i]["txMerchant"];
 					var txTime = data[i]["txTime"];
 
-					var getAccountIdUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccountId&institution=" + accountInstitution + "&type=" + accountType;
+					var getAccountIdUrl = "http://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=getAccountId&institution=" + accountInstitution + "&type=" + accountType;
 					var accountId = httpGet(getAccountIdUrl);
 
-					var insertTransactionUrl = "https://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=insertTransaction&userId=3&accountId=" + accountId + "&descriptor=" + txMerchant + "&amount=" + txAmount + "&category=" + txCategory + "&timestamp=" + txTime;
+					var insertTransactionUrl = "http://localhost/CSCI-310-Group-L/www/src/scripts/admin.php?function=insertTransaction&userId=3&accountId=" + accountId + "&descriptor=" + txMerchant + "&amount=" + txAmount + "&category=" + txCategory + "&timestamp=" + txTime;
 					var insert = httpGet(insertTransactionUrl);
 					//console.log(insert);
 				}
