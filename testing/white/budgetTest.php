@@ -22,6 +22,14 @@ class budgetTest extends PHPUnit_Framework_TestCase
 			$after_rowNumber = getNumberOfRowsBudget();
 			$this->assertEquals($before_rowNumber+1, $after_rowNumber);
 
+	}
+	public function testValidUserId() {
+
+	}
+	public function testValidMonth() {
+
+	}
+	public function testValidbudget() {
 
 	}
 	public function testDeleteBudget() {
@@ -30,6 +38,9 @@ class budgetTest extends PHPUnit_Framework_TestCase
 			$after_rowNumber = getNumberOfRowsBudget();
 			$this->assertEquals($before_rowNumber-1, $after_rowNumber);
 
+	}
+	public function testValidIdInDeleteBudget() {
+		
 	}
 	public function testGetBudgetByInfo(){
 
