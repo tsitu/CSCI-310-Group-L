@@ -28,17 +28,17 @@ var hc_options = {
 	},
 	yAxis: {
 		id: 'y',
-		title: { text: 'Balance' },
+		title: { text: null },
 		gridLineDashStyle: 'longdash',
 		min: 0
 	},
 	xAxis: {
 		id: 'x',
-		title: { text: 'Date' },
 		type: 'datetime',
 		dateTimeLabelFormats: { 
 			day: '%b %e<br/>%Y'
-		}
+		},
+		tickInterval: 7 * DAY_MS
 	},
 	tooltip: {
 		useHTML: true,
@@ -75,7 +75,7 @@ function initGraph()
 
 /* --- HIGHCHARTS --- */
 /**
- *
+ * Initialize Highcharts graph.
  */
 function initHighcharts()
 {
@@ -86,10 +86,7 @@ function initHighcharts()
 		for (var i = list.length-1; i >= 0; --i)
 		{
 			var ta = list[i];
-			var part = ta.timeStr.split(' ');
-			var date = Date.UTC(part[0], part[1]-1, part[2], part[3], part[4], part[5]);
-
-			data.push([date, ta.balance]);
+			data.push([ta.unixtime * 1000, ta.balance]);
 		}
 
 		series.push({

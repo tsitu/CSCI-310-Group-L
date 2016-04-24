@@ -26,14 +26,12 @@ $tm = TransactionManager::getInstance();
 $accounts = [];
 $transactions = [];
 $activeList = [];
-$activeGraph = [];
 
 $awb = $am->getAccountsWithBalance($user_id);
 foreach ($awb as $a)
 {
     $aid = $a->id;
     $activeList[] = $aid;
-    $activeGraph[] = $aid;
     
     $accounts[] = [$aid, $a];
     $transactions[] = [$aid, $tm->getListForAccountBetween($aid, $beg, $end)];
@@ -163,6 +161,22 @@ foreach ($awb as $a)
                 <h3 class='label module-label'>Transactions</h3>
             </div>
             <div class='module-subheader'>
+                <div class='dropdown dd-sort'>
+                    <button class='dropmain'>
+                        <span class='sort-label'>Date</span>
+                        <span class='fa fa-chevron-down sort-icon'></span>
+                    </button>
+                    <ul class='droplist'>
+                        <li class='dropitem' data-sort='transaction-date'>Date</li>
+                        <li class='dropitem' data-sort='transaction-amount'>Amount</li>
+                        <li class='dropitem' data-sort='transaction-account'>Account</li>
+                        <li class='dropitem' data-sort='transaction-category'>Category</li>
+                        <li class='dropitem' data-sort='transaction-merchant'>Merchant</li>
+                    </ul>
+                </div>
+                
+                <div class='flex-glue'></div>
+                
                 <button id='list-beg' class='date-select'>4/8/2016</button>
                 ~
                 <button id='list-end' class='date-select'>4/8/2016</button>
@@ -179,11 +193,14 @@ foreach ($awb as $a)
                 foreach($list as $t)
                 {
             ?>    
-                <li class='transaction-item'
-                    data-id='<?= $aid ?>'
-                    data-account-id='<?= $aid ?>'>
+                <li class='transaction-item' 
+                        data-id='<?= $t->id ?>' 
+                        data-account-id='<?= $aid ?>'
+                        data-unixtime='<?= $t->unixtime * 1000 ?>'
+                        data-amount='<?= $t->amount ?>'
+                    >
                     <p class="transaction-account"><?= $a->name ?></p>
-                    <p class="transaction-date"   ><?= date_format($t->t, "Y. n. j") ?></p>
+                    <p class="transaction-date"   ><?= date_format($t->time, "Y. n. j") ?></p>
                     <p class="transaction-amount" ><?= number_format($t->amount, 2) ?></p>
                     <p class="transaction-category"><?= $t->category ?></p>
                     <p class="transaction-merchant"><?= $t->merchant ?></p>
@@ -207,12 +224,10 @@ foreach ($awb as $a)
         var accounts = new Map(<?= json_encode($accounts) ?>);
         var transactions = new Map(<?= json_encode($transactions) ?>);
         var activeList = new Set(<?= json_encode($activeList) ?>);
-        var activeGraph = new Set(<?= json_encode($activeGraph) ?>);
         
         console.log(accounts);
         console.log(transactions);
         console.log(activeList);
-        console.log(activeGraph);
     </script>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>

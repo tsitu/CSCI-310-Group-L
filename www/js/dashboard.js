@@ -43,6 +43,7 @@ function bindEvents()
 {
     //toggles
     $(document).on('click', '#curtain', toggleSide);
+    $(document).on('click', '.dropdown', toggleDropdown);
     $(document).on('click', '.toggle-side', toggleSide);
     $(document).on('click', '.toggle-edit', toggleEdit);
     $(document).on('click', '.toggle-list', toggleList);
@@ -55,6 +56,8 @@ function bindEvents()
     $(document).on('click', '.delete-button', deleteClicked);
     $(document).on('change', '#csv-file', changeClicked);
     $(document).on('click', '#csv-upload', uploadClicked);
+
+    $(document).on('click', '.dd-sort .dropitem', sortClicked);
 
     //auto logout
     document.onkeypress = resetTimeout;
@@ -98,6 +101,15 @@ function toggleSide()
 {
     toggleCurtain();
     $('.side-panel').toggleClass('show');
+}
+
+/**
+ * Show/hide dropdown menu
+ */
+function toggleDropdown()
+{
+    var list = $(this).children('.droplist');
+    list.toggleClass('show');
 }
 
 /**
@@ -278,8 +290,6 @@ function uploadClicked(event)
  */
 function uploadSucces(data)
 {
-    debug(data);
-
     toggleUpload();
 
     for (var a of data.accounts)
@@ -294,6 +304,30 @@ function uploadSucces(data)
 
         addToGraph(a.id, a.name, data.transactions[a.id]);
     }
+}
+
+/**
+ * Called when user clicks a 
+ */
+function sortClicked(event)
+{
+    event.stopPropagation();
+
+    var item = $(this);
+    var name = item.html();
+    var sort = item.attr('data-sort');
+
+    //sort & get new direction
+    var order = sortList(sort);
+    var dir = order ? 'up' : 'down';
+
+    //change dropmain
+    var main = item.parents('.dd-sort').children('.dropmain');
+    main.children('.sort-label').html(name);
+    main.children('.sort-icon').removeClass().addClass('sort-icon fa fa-chevron-' + dir);
+
+    //close list
+    item.parent().removeClass('show');
 }
 
 
