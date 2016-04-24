@@ -3,11 +3,16 @@
 require_once "../model/AccountManager.php";
 require_once "../model/TransactionManager.php";
 
+//session
 session_start();
-
-$data = json_decode($_POST['data']);
 $user_id = $_SESSION['user_id'];
 
+//params
+$data = json_decode($_POST['data']);
+$beg = date_create('@' . $_POST['beg']);
+$end = date_create('@' . $_POST['end']);
+
+//sort by date
 function comp($a, $b)
 {
 	$at = $a->time;
@@ -21,17 +26,22 @@ usort($data, "comp");
 $am = AccountManager::getInstance();
 $tm = TransactionManager::getInstance();
 
-$result = [];
 foreach ($data as $t)
 {
-	$aid = $am->addAccount($t->institution, $t->type, $user_id);
-	$tid = $tm->addTransaction($user_id, $t);
-
-	if ($aid > 0 || $tid > 0)
-	{
-		$account = $am->getAccountWithBalance($user_id, $t->institution, $t->type);
-		$result[$account->id] = $account;
-	}
+	$am->addAccount($t->institution, $t->type, $user_id);
+	$tm->addTransaction($user_id, $t);
 }
 
-echo json_encode(array_values($result));
+
+//response
+$response = new stdClass;
+$response->accounts = $am->getAccountsWithBalance($user_id);
+
+$response->transactions = [];
+foreach ($response->accounts as $a)
+	$response->transactions[$a->id] = $tm->getListForAccountBetween($a->id, $beg, $end);
+
+$response->beg = $beg;
+$response->end = $end;
+
+echo json_encode($response);

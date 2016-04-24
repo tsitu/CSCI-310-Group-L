@@ -1,4 +1,4 @@
-institution, type, time, descriptor, category, amount
+institution, type, time, merchant, category, amount
 Chase, Credit, 2016-02-01 14:00:00, Self, Deposit, 200.00
 Chase, Credit, 2016-02-02 18:00:00, Chipotle, Food, -7.30
 Chase, Credit, 2016-02-06 10:00:00, OfficeMax - Note, Supply, -10.60

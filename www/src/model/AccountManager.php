@@ -61,14 +61,20 @@ class AccountManager
 	 * @param $institution  - string of account's institution (ex. Bank of America)
 	 * @param $type 		- string of account type (ex. Credit, Debit)
 	 * @param $user_id 		- user_id of user this account belongs to
+	 * @return id of the account if added, 0 otherwise.
 	 */
-	public function addAccount($institution, $type, $user_id) {
-		$stmt = $this->connection->prepare("INSERT IGNORE INTO Accounts (institution, type, user_id) VALUES (:institution, :type, :user_id)");
+	public function addAccount($inst, $type, $user_id)
+	{
+		$str = "INSERT IGNORE INTO Accounts (institution, type, user_id) VALUES (:institution, :type, :user_id);";
 
-		$stmt->bindParam(':institution', $institution);
-		$stmt->bindParam(':type', $type);
+		//encrypt
+		$inst = DBManager::encrypt($inst);
+		$type = DBManager::encrypt($type);
+
+		$stmt = $this->connection->prepare($str);
 		$stmt->bindParam(':user_id', $user_id);
-
+		$stmt->bindParam(':institution', $inst);
+		$stmt->bindParam(':type', $type);
 		$stmt->execute();
 
 		return $this->connection->lastInsertId();
@@ -79,24 +85,30 @@ class AccountManager
 	 *
 	 * @param $id - unique id of account to delete.
 	 */
-	public function deleteAccount($id) {
-		$stmt = $this->connection->prepare("DELETE FROM Accounts WHERE id = :id");
+	public function deleteAccount($id)
+	{
+		$str = "DELETE FROM Accounts WHERE id = :id";
+
+		$stmt = $this->connection->prepare($str);
 		$stmt->bindParam(':id', $id);
-		$stmt->execute();	//safe from SQL injection
+		$stmt->execute();
 	}
 
-	//Updates institution and type of account matching $id.
 	/**
-	 * 
+	 * Updates institution and type of account matching $id.
+	 *
+	 * @param $id
+	 * @param $
 	 */
-	public function updateAccount($id, $new_institution, $new_type) {
-		$stmt = $this->connection->prepare("UPDATE Accounts SET institution=:institution, type=:type WHERE id=:id");
+	public function updateAccount($id, $newInst, $newType)
+	{
+		$str = "UPDATE Accounts SET institution = :inst, type = :type WHERE id = :id";
 
-		$stmt->bindParam(':type', $new_type);
-		$stmt->bindParam(':institution', $new_institution);
+		$stmt = $this->connection->prepare($str);
+		$stmt->bindParam(':inst', $newInst);
+		$stmt->bindParam(':type', $newType);
 		$stmt->bindParam(':id', $id);
-
-		$stmt->execute();	//safe from SQL injection
+		$stmt->execute();
 	}
 
 	//Returns an array containing all accounts owned by user_id.
@@ -106,17 +118,23 @@ class AccountManager
 	 * @param $user_id - unique id of user to get accounts for
 	 * @return array of accounts owned by user
 	 */
-	public function getAllAccounts($user_id) {
-		$stmt = $this->connection->prepare("SELECT * FROM Accounts WHERE user_id=:user_id");
+	public function getAllAccounts($user_id)
+	{
+		$str = "SELECT id, user_id, institution, type, FROM Accounts WHERE user_id = :user_id";
+
+		$stmt = $this->connection->prepare($str);
 		$stmt->bindParam(':user_id', $user_id);
 		$stmt->execute();
 
-		$ret = array();
-		while($row = $stmt->fetch()) {
-			$ret[] = new Account($row['id'], $row['institution'], $row['type'], $row['user_id']);
-		}
+		$accounts = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account', ['_id', '_user_id', '_institution', '_type']);
+		if (!$accounts)
+			return [];
 
-		return $ret;
+		$list = [];
+		foreach ($accounts as $a)
+			$a->fixTypes();
+
+		return $list;
 	}
 
 	/**
@@ -127,23 +145,30 @@ class AccountManager
 	 * @param $user_id 		- user_id of user this account belongs to
 	 * @return new `Account` instance if found, null otherwise
 	 */
-	public function getAccountByInfo($institution, $type, $user_id) {
-		$stmt = $this->connection->prepare("SELECT * FROM Accounts WHERE user_id=:user_id AND type=:type AND institution=:institution");
+	public function getAccountByInfo($user_id, $inst, $type)
+	{
+		$str = "SELECT id, user_id, institution, type FROM Accounts WHERE user_id = :user_id AND type = :type AND institution = :inst";
 
+		//encrypt
+		$inst = DBManager::encrypt($inst);
+		$type = DBManager::encrypt($type);
+
+		$stmt = $this->connection->prepare($str);
 		$stmt->bindParam(':user_id', $user_id);
 		$stmt->bindParam(':type', $type);
-		$stmt->bindParam(':institution', $institution);
-
+		$stmt->bindParam(':inst', $inst);
 		$stmt->execute();
-		$row = $stmt->fetch();
-		if (!$row)
+
+		$account = $stmt->fetch(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account', ['_id', '_user_id', '_institution', '_type']);
+		if (!$account)
 			return null;
 
-		return new Account($row['id'], $row['institution'], $row['type'], $row['user_id']);
+		$account->fixTypes();
+		return $account;
 	}
 
 	/**
-	 *
+	 * Get all accounts with balances owned by specified user
 	 */
 	public function getAccountsWithBalance($user_id)
 	{
@@ -161,20 +186,19 @@ class AccountManager
 		$stmt = $this->connection->prepare($str);
 		$stmt->execute([$user_id]);
 
-		$accounts = $stmt->fetchAll(PDO::FETCH_OBJ);
+		$accounts = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account');
 		if (!$accounts)
 			return [];
 
 		foreach ($accounts as $a)
-		{
-			$a->id = (int) $a->id;
-			$a->user_id = (int) $a->user_id;
-			$a->balance = (double) $a->balance;
-		}
+			$a->fixTypes();
 
 		return $accounts;
 	}
 
+	/**
+	 * Get a single account (institution, type) with current balance owned by specified user 
+	 */
 	public function getAccountWithBalance($user_id, $institution, $type)
 	{
 		$str = "
@@ -190,15 +214,11 @@ class AccountManager
 		$stmt = $this->connection->prepare($str);
 		$stmt->execute([$user_id, $institution, $type]);
 
-		$a = $stmt->fetch(PDO::FETCH_OBJ);
+		$accounts = $stmt->fetch(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account');
 		if (!$a)
 			return null;
 		
-		//decrypt
-		$a->id = (int) $a->id;
-		$a->user_id = (int) $a->user_id;
-		$a->balance = (double) $a->balance;
-
+		$a->fixTypes();
 		return $a;
 	}
 }

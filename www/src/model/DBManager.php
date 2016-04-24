@@ -3,9 +3,9 @@
 /* CONST */
 const HOST_NAME = "sql3.freemysqlhosting.net";
 const HOST_IP 	= "54.215.148.52";
-const USERNAME  = "sql3114710";
-const PASSWORD  = "3zaKKK36kN";
-const DB 		= "sql3114710";
+const USERNAME  = "sql3112429";
+const PASSWORD  = "NqxhS6d8yQ";
+const DB 		= "sql3112429";
 const PORT 		= "3306";
 
 /**
@@ -109,5 +109,11 @@ class DBManager
 		$plaintext = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $ciphertext, MCRYPT_MODE_CBC, $iv);
 
 		return $plaintext;
+	}
+
+	
+	public static function sqlDatetime($datetime)
+	{
+		return $datetime->format("Y-m-d H:i:s");
 	}
 }

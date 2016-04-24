@@ -1,4 +1,52 @@
-/* --- Popup --- */
+/* MEDIA: Mobile Portrait */
+.top-bar { display: none; }
+
+
+/* TRANSITION */
+.dropdown-list, .dropdown-item,
+.side-panel,
+.account-option, .account-edit, 
+.toggle-upload, .upload-header, .upload-form, .upload-option
+{
+    transition: all 0.2s linear;
+    -moz-transition: all 0.2s linear;
+    -webkit-transition: all 0.2s linear;
+}
+
+
+/* FLEXBOX */
+.side-header, 
+.account-module, .account-menu,
+.edit-form,
+.upload-header,
+.module-subheader
+{
+    display: flex;
+}
+
+.side-header, 
+.account-menu,
+.upload-header
+{ 
+    flex-flow: row nowrap; 
+}
+
+.edit-form,
+.account-module
+{ 
+    flex-flow: column nowrap;
+}
+
+.account-menu,
+.upload-header,
+.module-subheader
+{
+    justify-content: flex-end;
+}
+
+
+
+/* --- SIDE --- */
 #curtain {
     z-index: 50;
     display: none;
@@ -15,22 +63,9 @@
 }
 #curtain.show { display: block; }
 
-
-/* MEDIA: Mobile Portrait */
-.top-bar { display: none; }
-
-.side-panel,
-.account-edit,
-#add-toggle, #add-header, #add-form, .add-option
-{
-    transition: all 0.2s linear;
-    -ms-transition: all 0.2s linear;
-    -moz-transition: all 0.2s linear;
-    -webkit-transition: all 0.2s linear;
-}
-
 .side-panel, .show-side { position: fixed; }
 .show-side {
+    z-index: 100;
     top: 10px;
     left: 10px;
     
@@ -56,37 +91,6 @@
 }
 .side-panel.show { left: 0px; }
 
-
-/* --- FLEXBOX --- */
-.side-header, 
-.account-menu, #account-module, 
-.edit-form,
-.add-header,
-.module-subheader
-{
-    display: flex;
-}
-
-.side-header, 
-.account-menu,
-.add-header
-{ 
-    flex-flow: row nowrap; 
-}
-
-.edit-form,
-#account-module
-{ 
-    flex-flow: column nowrap;
-}
-
-.account-menu,
-.add-header,
-.module-subheader
-{
-    justify-content: flex-end;
-}
-
 .side-header {
     padding-right: 5px;
     justify-content: space-between;
@@ -97,6 +101,8 @@
 }
 .side-option > .fa { font-size: 20px; }
 
+
+/* ------ ACCOUNTS ------ */
 .account-item { padding: 10px 10px; }
 .account-item:first-child { padding-top: 0px; }
 .account-name {
@@ -123,6 +129,10 @@
     -moz-border-radius: 18px;
     -webkit-border-radius: 18px;
 }
+.account-option:hover {
+    top: -2px;
+    position: relative;
+}
 .account-edit {
     height: 0px;
     overflow: hidden;
@@ -143,40 +153,40 @@
     padding-left: 10px;
     margin-bottom: 10px;
 }
-.confirm-edit {
+.rename-button {
     height: 50px;
     padding: 10px;
 }
-.edit-option.delete-button {
+.delete-button {
     font-size: 12px;
     height: 30px;
 }
 
-.add-header {
+.upload-header {
     width: 100%;
     height: 50px; 
 }
-.add-header.active { width: 50px; }
-.add-toggle {
+.upload-header.active { width: 50px; }
+.toggle-upload {
     width: 50px;
     height: 100%;
     
     font-size: 20px;
 }
-.add-toggle.active {    
+.toggle-upload.active {    
     transform: rotate(45deg);
     -mz-transform: rotate(45deg);
     -moz-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
 } 
-.add-form { height: 0px; }
-.add-form.show { height: 140px; }
+.upload-form { height: 0px; }
+.upload-form.show { height: 140px; }
 .csv-msg {
     height: 30px;
     font-size: 18px;
     text-align: center;
 }
-.add-option {
+.upload-option {
     display: block;
     width: 60%;
     height: 40px;
@@ -189,12 +199,47 @@
     top: 0px;
     position: relative;
 }
-.add-option:hover { top: -3px; }
+.upload-option:hover { top: -3px; }
 .csv-upload[disabled='disabled'] { top: 0px; }
 
 
+/* - DROPDOWN */
+.dropdown {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    
+    position: relative;
+}
+.dropmain {
+    cursor: pointer;
+}
+.droplist {
+    z-index: 20;
+    display: none;
+    
+    top: 100%;
+    left: 0px;
+    position: absolute;
+}
+.droplist.show { display: block; }
 
-/* - CONTENT - */
+.dd-sort .dropmain {
+    height: 40px;
+    font-size: 14px;
+    padding: 5px 10px;
+}
+.dd-sort .sort-icon {
+    display: inline-block;
+    font-size: 12px;
+}
+.dd-sort .dropitem {
+    width: 180px;
+    padding: 15px 20px;
+}
+
+
+/* --- CONTENT --- */
 .content { 
     padding: 70px 10px 10px 10px;   
 }
@@ -216,9 +261,13 @@
     font-size: 18px;
     font-weight: 400;
 }
-.module-subheader { align-items: center; }
+.module-subheader { 
+    height: 50px;
+    align-items: center;
+}
 
-/* --- GRAPH --- */
+
+/* ------ GRAPH ------ */
 .date-select {
     width: 80px;
     height: 32px;
@@ -227,11 +276,11 @@
 }
 
 #graph {
-    height: 100px;
+    height: 300px;
 }
 
 
-/* --- TRANSACTION --- */
+/* ------ TRANSACTION ------ */
 .transaction-item {
     position: relative;
     height: 100px;
@@ -245,8 +294,8 @@
     font-size: 15px;
 } 
 .transaction-category,
-.transaction-descriptor { left: 8px; }
-.transaction-descriptor {
+.transaction-merchant { left: 8px; }
+.transaction-merchant {
     bottom: 30px;
     height: 30px;
     line-height: 30px;
@@ -284,8 +333,8 @@
 }
 
 
-/* MEDIA: min-width 37.5em */
-@media screen and (min-width: )
+/* MEDIA: Tablet */
+@media screen and (max-width: 992px)
 {
     
 }

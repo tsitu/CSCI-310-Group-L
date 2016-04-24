@@ -12,10 +12,10 @@
 .fa-list-ul, .neg { color: #f45170; }
 .fa-line-chart, .pos { color: #1faa6f; }
 
-.account-option:hover, .account-option.active { color: white; }
-.fa-cog:hover, .fa-cog.active { background-color: #6f6f6f; }
-.fa-list-ul:hover, .fa-list-ul.active { background-color: #f45170; }
-.fa-line-chart:hover, .fa-line-chart.active { background-color: #1faa6f; }
+.account-option.active { color: white; }
+.fa-cog.active { background-color: #6f6f6f; }
+.fa-list-ul.active { background-color: #f45170; }
+.fa-line-chart.active { background-color: #1faa6f; }
 
 .edit-form {
     box-shadow: inset 0px 6px 8px -10px black,
@@ -23,14 +23,14 @@
 }
 .edit-field { border-left: 2px solid #7e7e7e; }
 .edit-field:focus { border-left: 2px solid #ffa75c; }
-.confirm-edit {
+.rename-button {
     color: white;
     background-color: #44cc92;
 }
 .delete-button { color: #d84646; }
 
-.add-toggle { color: #b5b5b5; }
-.add-toggle:hover { color: #ffa75c; }
+.toggle-upload { color: #b5b5b5; }
+.toggle-upload:hover { color: #ffa75c; }
 .csv-msg { color: #7e7e7e; }
 .csv-msg.error { color: #ff5353; }
 .csv-choose {
@@ -47,6 +47,30 @@
 }
 
 
+/* DROPDOWN */
+.droplist {
+    background-color: white;
+/*    box-shadow: 0px 8px 16px -12px #727272;*/
+}
+.dropitem {
+    cursor: pointer;
+}
+
+.dd-sort .dropmain {
+    color: #eb954b;
+    border-radius: 3px;
+}
+.dd-sort .droplist {
+    border: 1px solid #d3d3d3;
+}
+.dd-sort .dropitem {
+    border-bottom: 1px solid #d3d3d3;
+}
+.dd-sort .dropitem:hover {
+    border-left: 3px solid #ffa75c;
+}
+
+
 /* MAIN & MODULES */
 .module-header { 
     background-color: #f5f5f5;
@@ -55,7 +79,7 @@
 .module-subheader { border-bottom: 1px solid #e6e6e6; }
 
 .date-select {
-    color: #ffa75c;
+    color: #eb954b;
     text-decoration: underline;
 }
 

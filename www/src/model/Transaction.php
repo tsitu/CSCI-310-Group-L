@@ -1,5 +1,8 @@
 <?php
 
+
+require_once "DBManager.php";
+
 /**
  * Transaction model class.
  */
@@ -9,27 +12,15 @@ class Transaction
 	public $user_id;	//user tied to this transaction
 	public $account_id;	//account tied to this transaction
 	public $time;		//datetime object of transaction time
+	public $unixtime;	//datetime object of transaction time
 	public $amount;		//double
 	public $category;	//"fast food", "loan"
-	public $descriptor;	//"McDonalds", "Loan Payment", etc.
+	public $merchant;	//"McDonalds", "Loan Payment", etc.
 
-	private $myDBConnector;
+	public $institution;
+	public $type;
+	public $balance;
 
-	/**
-	 * Create a new Transaction object from given fields.
-	 */
-	function __construct($_id, $_user_id, $_account_id, $_time, $_amount, $_category, $_descriptor)
-	{
-		$this->id = $_id;
-		$this->user_id = $_user_id;
-		$this->account_id = $_account_id;
-		$this->time = $_time;
-		$this->amount = $_amount;
-		$this->category = $_category;
-		$this->descriptor = $_descriptor;
-
-		$this->myDBConnector = new TransactionDBManager();
-	}
 
 	/**
 	 * Ensure numeric fields are the correct type since PDO::fetch() only generates strings
@@ -38,11 +29,19 @@ class Transaction
 	{
 		$this->id = (int) $this->id;
 		$this->user_id = (int) $this->user_id;
+
 		$this->account_id = (int) $this->account_id;
+		$this->type = rtrim(DBManager::decrypt($this->type));
+		$this->institution = rtrim(DBManager::decrypt($this->institution));
 
 		$this->time = date_create($this->time);
+		$this->unixtime = $this->time->getTimestamp();
+
 		$this->amount = (double) $this->amount;
+		$this->balance = (double) $this->balance;
+
+		$this->category = rtrim(DBManager::decrypt($this->category));
+		$this->merchant = rtrim(DBManager::decrypt($this->merchant));
 	}
 }
-
 

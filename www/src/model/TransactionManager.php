@@ -55,17 +55,17 @@ class TransactionManager
 
 	/* --- QUERIES --- */
 	/**
-	 *
+	 * Add the given transaction object to specified $user
 	 */
 	public function addTransaction($user_id, $t)
 	{
 		$str = "
-		INSERT IGNORE INTO Transactions(user_id, account_id, t, descriptor, category, amount, balance)
+		INSERT IGNORE INTO Transactions(user_id, account_id, t, merchant, category, amount, balance)
 		SELECT
 			:user_id, 
 			Accounts.id, 
 			:time,
-			:descriptor,
+			:merchant,
 			:category,
 		    :amount,
 			:amount2 + IFNULL((SELECT balance FROM Transactions WHERE account_id = Accounts.id ORDER BY t DESC LIMIT 1), 0)
@@ -73,6 +73,11 @@ class TransactionManager
 		WHERE (institution, type) = (:institution, :type);
 		";
 
+		//encrypt
+		$t->institution = DBManager::encrypt($t->institution);
+		$t->type = DBManager::encrypt($t->type);
+		$t->category = DBManager::encrypt($t->category);
+		$t->merchant = DBManager::encrypt($t->merchant);
 		$a = $t->amount;
 
 		$stmt = $this->connection->prepare($str);
@@ -80,13 +85,68 @@ class TransactionManager
 						':institution' => $t->institution, 
 						':type' => $t->type, 
 						':time' => $t->time,
-						':descriptor' => $t->descriptor,
+						':merchant' => $t->merchant,
 						':category' => $t->category, 
 						':amount' => $a,
 						':amount2' => $a
 						]);
 
 		return $this->connection->lastInsertId();
+	}
+
+	/**
+	 * Get transaction list for specified user between [`$beg`, `$end`] datetime objects
+	 */
+	public function getListForUserBetween($user_id, $beg, $end)
+	{
+		$str = "
+		SELECT ta.id, a.id as account_id, a.institution, a.type, ta.t as time, ta.merchant, ta.category, ta.amount, ta.balance 
+		FROM Transactions as ta JOIN Accounts as a
+		ON a.id = ta.account_id
+		WHERE (ta.t BETWEEN :beg AND :end) ORDER BY ta.t DESC;
+		";
+
+
+		//format
+		$beg = DBManager::sqlDatetime($beg);
+		$end = DBManager::sqlDatetime($end);
+
+		$stmt = $this->connection->prepare($str);
+		$stmt->execute([':beg' => $beg, ':end' => $end]);
+
+		$list = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Transaction');
+		foreach ($list as $a)
+			$a->fixTypes();
+
+		return $list;
+	}
+
+	/**
+	 * Get transaction list for specified account between [`$beg`, `$end`] datetime objects
+	 */
+	public function getListForAccountBetween($account_id, $beg, $end)
+	{
+		$str = "
+		SELECT ta.id, a.user_id, a.id as account_id, a.institution, a.type, ta.t as time, ta.merchant, ta.category, ta.amount, ta.balance 
+		FROM Transactions as ta JOIN Accounts as a
+		ON a.id = ta.account_id
+		WHERE a.id = :id AND (ta.t BETWEEN :beg AND :end) ORDER BY ta.t DESC;
+		";
+
+		$stmt = $this->connection->prepare($str);
+		$stmt->execute([':id' => $account_id, 
+						':beg' => DBManager::sqlDatetime($beg),
+						':end' => DBManager::sqlDatetime($end)
+						]);
+
+		$list = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Transaction');
+		if (!$list)
+			return [];
+
+		foreach ($list as $a)
+			$a->fixTypes();
+
+		return $list;
 	}
 }
 
