@@ -197,6 +197,7 @@ foreach ($awb as $a)
                         data-id='<?= $t->id ?>' 
                         data-account-id='<?= $aid ?>'
                         data-unixtime='<?= $t->unixtime * 1000 ?>'
+                        data-amount='<?= $t->amount ?>'
                     >
                     <p class="transaction-account"><?= $a->name ?></p>
                     <p class="transaction-date"   ><?= date_format($t->time, "Y. n. j") ?></p>

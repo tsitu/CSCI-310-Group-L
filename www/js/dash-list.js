@@ -22,7 +22,7 @@ var fields = [
 	'transaction-category',
 	'transaction-merchant',
 
-	{ data: ['id', 'account-id', 'unixtime'] }
+	{ data: ['id', 'account-id', 'unixtime', 'amount'] }
 ];
 
 
@@ -51,7 +51,9 @@ function initList()
 		valueNames: fields
 	});
 
-	listManager.sort(sortedBy, {order: sortOrder});
+	listManager.sort(sortedBy, {
+		order: sortOrder
+	});
 
 	initListPickers();
 }
@@ -146,7 +148,11 @@ function sortList(col)
 			sortOrder = 'desc';
 	}
 
-	listManager.sort(sortedBy, {order: sortOrder});
+	if (sortedBy === 'transaction-amount')
+		listManager.sort('amount', {order: sortOrder});
+	else
+		listManager.sort(sortedBy, {order: sortOrder});
+
 	return sortOrder === 'asc';
 }
 
