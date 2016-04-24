@@ -1,30 +1,46 @@
 <?php
 
-//require_once "Account.php";
-require_once "Transaction.php";
-
-
 /* CONST */
 const HOST_NAME = "sql3.freemysqlhosting.net";
 const HOST_IP 	= "54.215.148.52";
-const USERNAME  = "sql3114710";
-const PASSWORD  = "3zaKKK36kN";
-const DB 		= "sql3114710";
+const USERNAME  = "sql3112429";
+const PASSWORD  = "NqxhS6d8yQ";
+const DB 		= "sql3112429";
 const PORT 		= "3306";
 
 /**
- * Database manager class.
- * When initialized, connects to the MySQL server specified by constants.
- * Provides query methods that return data as php objects.
+ * Single DBConnection class maintains one PDO connection to DB specified by constants.
+ * All data managers should use `DBConnection::getConnection()` for working with DB.
  */
-//Singleton design
 class DBManager
 {
-	private static $db;
+	private static $instance;
 
+	private $connection;
+
+
+	/* --- INIT --- */
+	/**
+	 * Return the lazy-loaded PDO connection to the DB.
+	 *
+	 * @return PDO connection to DB
+	 */
+	public static function getConnection()
+	{
+		if(null === static::$instance)
+			static::$instance = new static();
+
+		//var_dump(static::$db);
+		return static::$instance->connection;
+	}
+
+	/**
+	 * Protected constructor prevents new instances.
+	 * Connect to the host db specified by constants and configure.
+	 */
 	protected function __construct()
 	{
-		$dsn = "mysql:host=54.215.148.52;dbname=sql3114710";
+		$dsn = "mysql:host=" . HOST_IP . ";dbname=" . DB;
 		$this->connection = new PDO($dsn, USERNAME, PASSWORD);
 
 		//throw exceptions
@@ -33,15 +49,30 @@ class DBManager
 		$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
-	public static function getConnection() {
-		if(null === static::$db) {
-			static::$db = new static();
-		} 
+	/**
+	 * Private clone to prevent two instances
+	 */
+	private function __clone()
+	{
 
-		//var_dump(static::$db);
-		return static::$db->connection;
 	}
 
+	/**
+	 * Private wakeup to prevent unserializing
+	 */
+	private function __wakeup()
+	{
+
+	}
+
+
+	/* --- ENCRYPTION --- */
+	/**
+	 * Returns encrypted string of given plain text
+	 *
+	 * @param $plaintext - string to encrypt
+	 * @return encrypted `$plaintext`
+	 */
 	public static function encrypt($plaintext) {
 		//hexadecimal key
 		$key = pack('H*', "ccc04b7e103a0cd8b54763051cef08bc55abe029fdebae5e1d417e2ffb2a0ccc");
@@ -58,6 +89,12 @@ class DBManager
 		return $ciphertext;
 	}
 
+	/**
+	 * Returns plain text of given encrypted string
+	 *
+	 * @param $ciphertext - encrypted string to decrypt
+	 * @return decrypted `$cipertext`
+	 */
 	public static function decrypt($ciphertext) {
 		//hexadecimal key
 		$key = pack('H*', "ccc04b7e103a0cd8b54763051cef08bc55abe029fdebae5e1d417e2ffb2a0ccc");
@@ -75,5 +112,8 @@ class DBManager
 	}
 
 	
-	
+	public static function sqlDatetime($datetime)
+	{
+		return $datetime->format("Y-m-d H:i:s");
+	}
 }

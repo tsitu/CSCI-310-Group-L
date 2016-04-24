@@ -1,0 +1,4 @@
+accountInstitution,accountType,txTime,txMerchant,txAmount,txCategory
+Hello Bank,Credit Card,1459542957,Best Buy,-30,Electronics
+Hello Chase,Credit Card,1459542958,McDonalds,-10,Food
+Bank of Hello,Credit Card,1459542967,Whole Foods,-30,Groceries

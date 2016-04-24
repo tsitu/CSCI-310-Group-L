@@ -1,4 +1,52 @@
-/* --- Popup --- */
+/* MEDIA: Mobile Portrait */
+.top-bar { display: none; }
+
+
+/* TRANSITION */
+.dropdown-list, .dropdown-item,
+.side-panel,
+.account-option, .account-edit, 
+.toggle-upload, .upload-header, .upload-form, .upload-option
+{
+    transition: all 0.2s linear;
+    -moz-transition: all 0.2s linear;
+    -webkit-transition: all 0.2s linear;
+}
+
+
+/* FLEXBOX */
+.side-header, 
+.account-module, .account-menu,
+.edit-form,
+.upload-header,
+.module-subheader
+{
+    display: flex;
+}
+
+.side-header, 
+.account-menu,
+.upload-header
+{ 
+    flex-flow: row nowrap; 
+}
+
+.edit-form,
+.account-module
+{ 
+    flex-flow: column nowrap;
+}
+
+.account-menu,
+.upload-header,
+.module-subheader
+{
+    justify-content: flex-end;
+}
+
+
+
+/* --- SIDE --- */
 #curtain {
     z-index: 50;
     display: none;
@@ -15,12 +63,9 @@
 }
 #curtain.show { display: block; }
 
-
-/* MEDIA: Mobile Portrait */
-.top-bar { display: none; }
-
 .side-panel, .show-side { position: fixed; }
 .show-side {
+    z-index: 100;
     top: 10px;
     left: 10px;
     
@@ -43,18 +88,9 @@
     
     display: flex;
     flex-flow: column nowrap;
-    
-    transition: all 0.3s linear;
-    -ms-transition: all 0.3s linear;
-    -moz-transition: all 0.3s linear;
-    -webkit-transition: all 0.3s linear;
 }
 .side-panel.show { left: 0px; }
 
-.side-header, .account-menu {
-    display: flex;
-    flex-flow: row nowrap;
-}
 .side-header {
     padding-right: 5px;
     justify-content: space-between;
@@ -65,6 +101,8 @@
 }
 .side-option > .fa { font-size: 20px; }
 
+
+/* ------ ACCOUNTS ------ */
 .account-item { padding: 10px 10px; }
 .account-item:first-child { padding-top: 0px; }
 .account-name {
@@ -80,10 +118,7 @@
     font-size: 20px;
     font-weight: 400;
 }
-.account-menu {
-    margin-top: 5px;
-    justify-content: flex-end;
-}
+.account-menu { margin: 5px 0px 10px 0px; }
 .account-option {
     width: 36px;
     height: 36px;
@@ -94,20 +129,119 @@
     -moz-border-radius: 18px;
     -webkit-border-radius: 18px;
 }
-
-.show-add {
-    width: 100%;
-    height: 60px;
+.account-option:hover {
+    top: -2px;
+    position: relative;
+}
+.account-edit {
+    height: 0px;
+    overflow: hidden;
+}
+.account-edit.show { height: 200px; }
+.edit-form { 
+    padding: 10px 0px; 
+    align-items: center;
+}
+.edit-option {
+    width: 90%;
+    margin: 0px auto;
     
+    font-size: 16px;
+}
+.edit-field {
+    height: 40px;
+    padding-left: 10px;
+    margin-bottom: 10px;
+}
+.rename-button {
+    height: 50px;
+    padding: 10px;
+}
+.delete-button {
+    font-size: 12px;
+    height: 30px;
+}
+
+.upload-header {
+    width: 100%;
+    height: 50px; 
+}
+.upload-header.active { width: 50px; }
+.toggle-upload {
+    width: 50px;
+    height: 100%;
+    
+    font-size: 20px;
+}
+.toggle-upload.active {    
+    transform: rotate(45deg);
+    -mz-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+} 
+.upload-form { height: 0px; }
+.upload-form.show { height: 140px; }
+.csv-msg {
+    height: 30px;
     font-size: 18px;
-    font-weight: 300px;
+    text-align: center;
+}
+.upload-option {
+    display: block;
+    width: 60%;
+    height: 40px;
+    margin: 0px auto 10px auto;
+    padding: 10px;
+    
+    font-size: 16px;
+    text-align: center;
+    
+    top: 0px;
+    position: relative;
+}
+.upload-option:hover { top: -3px; }
+.csv-upload[disabled='disabled'] { top: 0px; }
+
+
+/* - DROPDOWN */
+.dropdown {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    
+    position: relative;
+}
+.dropmain {
+    cursor: pointer;
+}
+.droplist {
+    z-index: 20;
+    display: none;
+    
+    top: 100%;
+    left: 0px;
+    position: absolute;
+}
+.droplist.show { display: block; }
+
+.dd-sort .dropmain {
+    height: 40px;
+    font-size: 14px;
+    padding: 5px 10px;
+}
+.dd-sort .sort-icon {
+    display: inline-block;
+    font-size: 12px;
+}
+.dd-sort .dropitem {
+    width: 180px;
+    padding: 15px 20px;
 }
 
 
-/* - CONTENT - */
+/* --- CONTENT --- */
 .content { 
-    padding: 70px 10px 10px 10px;
-    
+    padding: 70px 10px 10px 10px;   
 }
 
 .module {
@@ -127,24 +261,26 @@
     font-size: 18px;
     font-weight: 400;
 }
+.module-subheader { 
+    height: 50px;
+    align-items: center;
+}
 
-/* --- GRAPH --- */
+
+/* ------ GRAPH ------ */
 .date-select {
-    width: 100px;
+    width: 80px;
     height: 32px;
     
-    padding: 0px 10px;
-    border-radius: 4px;
-    
-    font-size: 0.8em;
+    font-size: 12px;
 }
 
 #graph {
-    height: 100px;
+    height: 300px;
 }
 
 
-/* --- TRANSACTION --- */
+/* ------ TRANSACTION ------ */
 .transaction-item {
     position: relative;
     height: 100px;
@@ -158,8 +294,8 @@
     font-size: 15px;
 } 
 .transaction-category,
-.transaction-descriptor { left: 8px; }
-.transaction-descriptor {
+.transaction-merchant { left: 8px; }
+.transaction-merchant {
     bottom: 30px;
     height: 30px;
     line-height: 30px;
@@ -197,8 +333,8 @@
 }
 
 
-/* MEDIA: min-width 37.5em */
-@media screen and (min-width: )
+/* MEDIA: Tablet */
+@media screen and (max-width: 992px)
 {
     
 }
