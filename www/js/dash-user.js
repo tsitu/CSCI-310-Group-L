@@ -85,7 +85,7 @@ function upload(file, beg, end, callback)
 {
     Papa.parse(file,
     {
-        newline: '\n',
+        newline: '',
         delimiter: ', ',
         header: true,
         fastMode: true,
