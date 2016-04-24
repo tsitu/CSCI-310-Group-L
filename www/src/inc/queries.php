@@ -5,12 +5,12 @@ require_once __DIR__ . "/../model/Account.php";
 require_once __DIR__ . "/../model/Transaction.php";
 
 
-//Removes all transactions tied to $userId "AND" $accountId
+//Removes all Transactions tied to $userId "AND" $accountId
 //"Remove Account" function on UI.
 function removeAccount($userId, $accountId) {
 	global $mysqli;
 	//prepare
-	if( ($stmt = $mysqli->prepare("DELETE FROM transactions WHERE userId=? AND accountId=?")))
+	if( ($stmt = $mysqli->prepare("DELETE FROM Transactions WHERE userId=? AND accountId=?")))
 	{
 		//bind
 		if(! $stmt->bind_param("ii", $userId, $accountId) )
@@ -33,7 +33,7 @@ function getAccountId($institution, $type) {
 	$stmt1 = $mysqli->prepare("
 	-- One select
 	SELECT id
-	FROM accounts
+	FROM Accounts
 	WHERE institution=? AND type=?");
 
 	if(! $stmt1->bind_param("ss", $institution, $type) )
@@ -48,7 +48,7 @@ function getAccountId($institution, $type) {
 	if ($id == 0) {
 		$stmt2 = $mysqli->prepare("
 		-- Optionally one insert
-		INSERT INTO accounts (institution, type)
+		INSERT INTO Accounts (institution, type)
 		VALUES (?,?)");
 
 		if(! $stmt2->bind_param("ss", $institution, $type) )
@@ -69,7 +69,7 @@ function getAccountIds($userId) {
 	global $mysqli;
 
 	//prepare
-	if( ($stmt = $mysqli->prepare("SELECT DISTINCT accountId FROM transactions WHERE userId=?") )) {
+	if( ($stmt = $mysqli->prepare("SELECT DISTINCT accountId FROM Transactions WHERE user_id=?") )) {
 
 		//bind
 		if(! $stmt->bind_param("i", $userId) )
@@ -94,7 +94,7 @@ function getAccountIds($userId) {
 	}
 
 	//Insert query
-	if( ($stmt = $mysqli->prepare("INSERT INTO accounts (institution, type) VALUES (?,?)")))
+	if( ($stmt = $mysqli->prepare("INSERT INTO Accounts (institution, type) VALUES (?,?)")))
 	{
 		//escape special characters
 		$institution = htmlentities($institution);
@@ -121,7 +121,7 @@ function getAccount($accountId) {
 	
 	global $mysqli;
 	//prepare
-	if( ($stmt = $mysqli->prepare("SELECT id, institution, type FROM accounts WHERE id=?") )) {
+	if( ($stmt = $mysqli->prepare("SELECT id, institution, type FROM Accounts WHERE id=?") )) {
 
 		//bind
 		if(! $stmt->bind_param("i", $accountId) )
@@ -148,7 +148,7 @@ function insertTransaction($userId, $accountId, $descriptor, $amount, $category,
 	global $mysqli;
 
 	//prepare
-	if( ($stmt = $mysqli->prepare("INSERT INTO transactions (userId, accountId, descriptor, amount, category, `timestamp`) VALUES (?,?,?,?,?,?)")))
+	if( ($stmt = $mysqli->prepare("INSERT INTO Transactions (userId, accountId, descriptor, amount, category, `timestamp`) VALUES (?,?,?,?,?,?)")))
 	{
 
 		//escape special characters
@@ -168,14 +168,14 @@ function insertTransaction($userId, $accountId, $descriptor, $amount, $category,
 	}
 }
 
-//Gets all transactions tied to $userId "AND" $accountId.
-//Returns an array of transactions.
+//Gets all Transactions tied to $userId "AND" $accountId.
+//Returns an array of Transactions.
 function getTransactions($userId, $accountId) {
 	global $mysqli;
 	$ret = array();	//what is to be returned.
 
 	//prepare
-	if( ($stmt = $mysqli->prepare("SELECT id, userId, accountId, descriptor, amount, category, `timestamp` FROM transactions WHERE userId=? AND accountId=?") )) {
+	if( ($stmt = $mysqli->prepare("SELECT id, userId, accountId, descriptor, amount, category, `timestamp` FROM Transactions WHERE userId=? AND accountId=?") )) {
 
 		//bind
 		if(! $stmt->bind_param("ii", $userId, $accountId) )
@@ -201,7 +201,7 @@ function getTransactions($userId, $accountId) {
 function login($email, $password) {
 global $mysqli;
 	//prepare
-	if( ($stmt = $mysqli->prepare("SELECT id FROM users WHERE email=? AND password=?") )) {
+	if( ($stmt = $mysqli->prepare("SELECT id FROM Users WHERE email=? AND password=?") )) {
 
 		//convert special characters
 		$email = htmlentities($email);
