@@ -59,7 +59,43 @@ foreach ($awb as $a)
 <body>
     
     <aside id='side' class='side'>
+        <h1 class='logo'>minance</h1>
         
+        <ul id='account-list' class='account-list flex-glue'>
+        <?php
+        //account list
+        foreach($accounts as $pair)
+        {
+            $a = $pair[1];
+
+            for ($i = 0; $i < 5; $i++)
+            {
+        ?>
+            <li id='account-<?= $a->id ?>' class='account-item' data-id='<?= $a->id ?>'>
+                <p class='account-name'><?= $a->name ?></p>
+                <p class='account-amount'><?= number_format($a->balance, 2) ?></p>
+
+                <div class='account-menu'>
+                    <button class='account-option toggle-graph icon ion-arrow-graph-up-right active'></button>
+                    <button class='account-option toggle-list icon ion-ios-list active'></button>
+                    <button class='account-option toggle-edit icon ion-ios-gear'></button>
+                </div>
+                <div class='account-edit'>
+                    <form class='edit-form'>
+                        <input name='new-institution' placeholder='<?= $a->institution ?>'
+                               class='edit-option edit-field inst-field'>
+                        <input name='new-type' placeholder='<?= $a->type ?>'
+                               class='edit-option edit-field type-field'>
+                        <button class='edit-option rename-button hoverable'>Rename</button>
+                        <button class='edit-option delete-button hoverable'>Delete Account</button>
+                    </form>
+                </div>
+            </li>  
+        <?php
+            }
+        }
+        ?>
+        </ul>
     </aside>
     
     <main>
@@ -67,7 +103,7 @@ foreach ($awb as $a)
             <button class='toggle-side fa fa-bars'></button>
             
             <div class='flex-glue'></div>
-            <div class='dropdown dd-user'>
+            <div class='dropdown right dd-user'>
                 <button class='toggle-drop profile fa fa-user'></button>
                 <ul class='droplist'>
                     <li class='dropitem logout'>Logout</li>
@@ -94,7 +130,7 @@ foreach ($awb as $a)
                     <h3 class='label module-label'>Transactions</h3>
                 </div>
                 <div class='module-subheader'>
-                    <div class='dropdown dd-sort'>
+                    <div class='dropdown left dd-sort'>
                         <button class='toggle-drop'>
                             <span class='sort-label'>Date</span>
                             <span class='fa fa-chevron-down sort-icon'></span>

@@ -18,9 +18,13 @@ body {
 .toggle-graph, .pos { color: #1faa6f; }
 
 .account-option.active { color: white; }
-.toggle-edit.active { background-color: #6f6f6f; }
-.toggle-list.active { background-color: #f45170; }
 .toggle-graph.active { background-color: #1faa6f; }
+.toggle-list.active { background-color: #f45170; }
+.toggle-edit.active { 
+    color: #6f6f6f;
+    background-color: white;
+    box-shadow: 2px 4px 8px 0px rgba(0, 0, 0, 0.2);
+}
 
 .edit-form {
     box-shadow: 

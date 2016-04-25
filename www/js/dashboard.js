@@ -23,6 +23,7 @@ var tmAgo = new Date();
 var timeout = null;
 
 var side = null;
+var list = null;
 var active = null;
 
 /**
@@ -45,6 +46,7 @@ function bindEvents()
 {
     //frequent DOM elements
     side = $('#side');
+    list = $('.account-list');
 
     //toggles
     $(document).click(hideActive);
@@ -68,6 +70,8 @@ function bindEvents()
     //auto logout
     document.onkeypress = resetTimeout;
     document.onmousemove = resetTimeout;
+
+    fixSideScroll();
 }
 
 
@@ -90,6 +94,45 @@ function debug(msg)
         console.log(msg);
 }
 
+/**
+ * Fix the side pane scrolling on mobile
+ */
+function fixSideScroll()
+{
+    side.on('touchstart', function(e)
+    {
+        e.preventDefault();
+    });
+
+    list.on('touchstart', function(e)
+    {
+        e.stopPropagation();
+
+        var scroll = this.scrollTop;
+        var height = this.offsetHeight;
+        var content = this.scrollHeight;
+
+        if (content <= height)
+        {
+            debug('no scroll');
+            e.preventDefault();
+            return;
+        }
+
+        if (scroll <= 0)
+        {
+            debug('adjust top');
+            list.scrollTop(1);
+        }
+        
+        if (scroll + height >= content)
+        {
+            debug('adjust bot');
+            list.scrollTop(content - height - 1);
+        }
+    });
+}
+
 
 /* --- TOGGLES --- */
 /**
@@ -105,14 +148,6 @@ function toggleCurtain(e)
  */
 function hideActive(e)
 {
-    // if(!$(event.target).closest('#menucontainer').length && !$(event.target).is('#menucontainer'))
-    // {
-    //     if($('#menucontainer').is(":visible"))
-    //     {
-    //         $('#menucontainer').hide();
-    //     }
-    // }
-
     if (!active)
         return;
 
@@ -166,11 +201,13 @@ function toggleDrop(e)
  */
 function toggleEdit()
 {
-    var module = $(this).parent().siblings('.account-edit');
+    var button = $(this);
+    var module = button.parent().siblings('.account-edit');
     if (!module.hasClass('show'))
         module.children('form')[0].reset();
     
     module.toggleClass('show');
+    button.toggleClass('active');
 }
 
 /**

@@ -80,7 +80,9 @@ button:hover, .file-label {
          8px  0px 8px -8px rgba(0, 0, 0, 0.2),
          0px  8px 8px -8px rgba(0, 0, 0, 0.2);
 }
-.dropdown.show > .droplist { display: block; }
+.dropdown.left  > .droplist { left: 0px; }
+.dropdown.right > .droplist { right: 0px; }
+.dropdown.show  > .droplist { display: block; }
 
 
 

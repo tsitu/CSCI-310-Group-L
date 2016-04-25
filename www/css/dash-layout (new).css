@@ -48,7 +48,6 @@
 
 
 /* --- SIDE --- */
-.test1 { height: 10px; }
 #curtain, .side {
     height: 100%;
     position: fixed;
@@ -73,12 +72,12 @@
     
     display: flex;
     flex-flow: column nowrap;
-    overflow-y: scroll;
 }
 .side.show { left: 0px; }
 
 .logo {
     height: 80px;
+    min-height: 80px;
     line-height: 80px;
     
     font-size: 40px;
@@ -87,7 +86,7 @@
 }
 
 .account-list {
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 .account-item { padding: 10px 10px; }
 .account-item:first-child { padding-top: 0px; }
@@ -113,7 +112,6 @@
     
     font-size: 20px;
 }
-.account-option:hover { box-shadow: 2px 4px 8px 0px rgba(0, 0, 0, 0.2); }
 .account-edit {
     height: 0px;
     overflow: hidden;
@@ -177,27 +175,6 @@
     top: 0px;
     position: relative;
 }
-.upload-option:hover { top: -3px; }
-.csv-upload[disabled='disabled'] { top: 0px; }
-
-
-/* DROPDOWN */
-.dd-sort .toggle-drop {
-    height: 40px;
-    font-size: 14px;
-    padding: 5px 10px;
-}
-.dd-sort .droplist {
-    left: 0px;
-}
-.dd-sort .sort-icon {
-    display: inline-block;
-    font-size: 12px;
-}
-.dd-sort .dropitem {
-    width: 180px;
-    padding: 15px 20px;
-}
 
 
 /* --- MAIN --- */
@@ -224,16 +201,12 @@ main {
     width: 50px;
     font-size: 20px;
 }
-.dd-user > .droplist { right: 0px; }
 .dd-user .dropitem {
     width: 120px;    
     padding: 0px 10px;
 }
 
-.content { 
-/*    height: 100%;*/
-    padding: 10px;
-}
+.content { padding: 10px; }
 .module { margin-bottom: 20px; }
 .module-header {
     height: 50px;
@@ -262,6 +235,20 @@ main {
 
 
 /* ------ TRANSACTION ------ */
+.dd-sort .toggle-drop {
+    height: 40px;
+    font-size: 14px;
+    padding: 5px 10px;
+}
+.dd-sort .sort-icon {
+    display: inline-block;
+    font-size: 12px;
+}
+.dd-sort .dropitem {
+    width: 180px;
+    padding: 15px 20px;
+}
+
 .transaction-item {
     position: relative;
     height: 100px;
