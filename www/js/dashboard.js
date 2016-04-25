@@ -104,7 +104,7 @@ function debug(msg)
  */
 function fixSideScroll()
 {
-    $('body').on('touchmove', function(e)
+    main.on('touchmove', function(e)
     {
         if (active === side)
             e.preventDefault();
