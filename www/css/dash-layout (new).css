@@ -268,19 +268,7 @@ main {
 /* MEDIA: Mobile Landscape */
 @media screen and (max-width: 720px) and (orientation: landscape)
 {
-    .side {
-        width: 340px;
-        left: -340px;
-        
-        display: flex;
-        flex-flow: row nowrap;
-    }
-    .side-header {
-        width: 60px;
-        height: 100%;
-        flex-flow: column nowrap;
-    }
-    #account-list { width: 280px; }
+
 }
 
 

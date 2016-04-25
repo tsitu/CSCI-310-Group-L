@@ -109,13 +109,13 @@ function fixSideScroll()
     main.on('touchmove', function(e)
     {
         if (active === side)
-            e.preDefault();
+            e.preventDefault();
     });
 
     side.on('touchmove', function(e)
     {
         e.stopPropagation();
-        e.preDefault();
+        e.preventDefault();
     });
 
     list.on('touchmove', function(e)
@@ -134,8 +134,7 @@ function fixSideScroll()
 
         if (content <= height)
         {
-            debug('no scroll');
-            e.preDefault();
+            e.preventDefault();
             return;
         }
 
@@ -276,7 +275,7 @@ function toggleUpload()
  */
 function renameClicked(e)
 {
-    e.preDefault();
+    e.preventDefault();
     
     var id = getAccountID(this);
     if (!id || id <= 0)
@@ -365,7 +364,7 @@ function changeClicked()
  */
 function uploadClicked(e)
 {
-    e.preDefault();
+    e.preventDefault();
     $('#csv-upload').html('Uploading...');
 
     //params
