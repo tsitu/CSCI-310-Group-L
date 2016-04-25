@@ -4,7 +4,7 @@
 if(session_id() == "" || !isset($_SESSION))
 	session_start();
 
-if($_SESSION['timeout'] < time())	//1 minute
+if($_SESSION['timeout'] < time())	//expiry time has past the current time
 {
 	header("Location: /src/scripts/logout.php"); //redirect to logout.php
 	exit();
