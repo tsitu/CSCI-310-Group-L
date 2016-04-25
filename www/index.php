@@ -67,12 +67,9 @@ foreach ($awb as $a)
         foreach($accounts as $pair)
         {
             $a = $pair[1];
-
-            for ($i = 0; $i < 5; $i++)
-            {
         ?>
             <li id='account-<?= $a->id ?>' class='account-item' data-id='<?= $a->id ?>'>
-                <p class='account-name'><?= $a->name ?></p>
+                <p class='account-name clip-text'><?= $a->name ?></p>
                 <p class='account-amount'><?= number_format($a->balance, 2) ?></p>
 
                 <div class='account-menu'>
@@ -92,10 +89,27 @@ foreach ($awb as $a)
                 </div>
             </li>  
         <?php
-            }
         }
         ?>
         </ul>
+        
+       <div id='upload-module' class='upload-module mini-module'>
+            <div id='upload-header' class='upload-header mini-module-header'>
+                <button id='toggle-upload' class='toggle-upload icon ion-plus'></button>
+            </div>
+            <form id='upload-form' class='upload-form'>
+                <p id='csv-msg' class='csv-msg'>No CSV</p>
+
+                <input type='file' id='csv-file' name='csv-file'>
+                <label for='csv-file' id='csv-choose' class='csv-choose upload-option file-label'>
+                    <span class='option-icon fa fa-upload'></span>
+                    <span id='csv-label'>Choose CSV</span>
+                </label>
+                <button id='csv-upload' class='csv-upload upload-option' disabled='disabled'>
+                    Upload
+                </button>
+            </form>
+        </div>
     </aside>
     
     <main>
@@ -104,7 +118,7 @@ foreach ($awb as $a)
             
             <div class='flex-glue'></div>
             <div class='dropdown right dd-user'>
-                <button class='toggle-drop profile fa fa-user'></button>
+                <button class='toggle-drop profile icon ion-person'></button>
                 <ul class='droplist'>
                     <li class='dropitem logout'>Logout</li>
                 </ul>
@@ -133,7 +147,7 @@ foreach ($awb as $a)
                     <div class='dropdown left dd-sort'>
                         <button class='toggle-drop'>
                             <span class='sort-label'>Date</span>
-                            <span class='fa fa-chevron-down sort-icon'></span>
+                            <span class='sort-icon icon ion-ios-arrow-down'></span>
                         </button>
                         <ul class='droplist'>
                             <li class='dropitem' data-sort='transaction-date'>Date</li>

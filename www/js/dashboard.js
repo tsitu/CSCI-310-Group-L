@@ -37,6 +37,8 @@ $(document).ready(function()
 
     bindEvents();
     //resetTimeout();
+
+    $('.toggle-side').click();
 });
 
 
@@ -100,20 +102,20 @@ function debug(msg)
  * Fix the side pane scrolling on mobile.
  * Disable scrolling on body if side is active.
  * Limit scrolling to the account list and stop propagtion to underlying side div.
- * Prevent default scrolling on side elements (logo & upload form) not within account list.
+ * Pre default scrolling on side elements (logo & upload form) not within account list.
  */
 function fixSideScroll()
 {
     main.on('touchmove', function(e)
     {
         if (active === side)
-            e.preventDefault();
+            e.preDefault();
     });
 
     side.on('touchmove', function(e)
     {
         e.stopPropagation();
-        e.preventDefault();
+        e.preDefault();
     });
 
     list.on('touchmove', function(e)
@@ -133,7 +135,7 @@ function fixSideScroll()
         if (content <= height)
         {
             debug('no scroll');
-            e.preventDefault();
+            e.preDefault();
             return;
         }
 
@@ -201,8 +203,6 @@ function showSide(e)
 function toggleDrop(e)
 {
     e.stopPropagation();
-
-    debug('drop');
     hideActive(e);
 
     var parent = $(this).parent();
@@ -264,7 +264,7 @@ function toggleUpload()
         csvReset();
     
     form.toggleClass('show');
-    $('.upload-toggle').toggleClass('active');
+    $('.toggle-upload').toggleClass('active');
     $('.upload-header').toggleClass('active');
 }
 
@@ -274,9 +274,9 @@ function toggleUpload()
 /**
  * Called when user clicks 'Rename' from account edit
  */
-function renameClicked(event)
+function renameClicked(e)
 {
-    event.preventDefault();
+    e.preDefault();
     
     var id = getAccountID(this);
     if (!id || id <= 0)
@@ -312,10 +312,8 @@ function renameClicked(event)
 /**
  * Called when user clicks 'Delete Account' from account edit
  */
-function deleteClicked(event)
+function deleteClicked(e)
 {
-    // event.preventDefault();
-    
     var id = getAccountID(this);
     if (!id || id <= 0)
         return;
@@ -365,9 +363,9 @@ function changeClicked()
 /**
  * Called when user clicks 'Upload' for a CSV file
  */
-function uploadClicked(event)
+function uploadClicked(e)
 {
-    event.preventDefault();
+    e.preDefault();
     $('#csv-upload').html('Uploading...');
 
     //params
@@ -411,9 +409,9 @@ function uploadSucces(data)
 /**
  * Called when user clicks a 
  */
-function sortClicked(event)
+function sortClicked(e)
 {
-    event.stopPropagation();
+    e.stopPropagation();
 
     var item = $(this);
     var name = item.html();
@@ -424,12 +422,12 @@ function sortClicked(event)
     var dir = order ? 'up' : 'down';
 
     //change dropmain
-    var main = item.parents('.dd-sort').children('.dropmain');
+    var main = item.parents('.dd-sort').children('.toggle-drop');
     main.children('.sort-label').html(name);
-    main.children('.sort-icon').removeClass().addClass('sort-icon fa fa-chevron-' + dir);
+    main.children('.sort-icon').removeClass().addClass('sort-icon icon ion-ios-arrow-' + dir);
 
     //close list
-    item.parents('.dropdown').removeClass('active');
+    item.parents('.dropdown').removeClass('show');
 }
 
 

@@ -39,8 +39,11 @@ body {
 }
 .delete-button { color: #d84646; }
 
-.toggle-upload { color: #b5b5b5; }
-.toggle-upload:hover { color: #ffa75c; }
+.toggle-upload {
+    color: white;
+    background-color: #ffa75c; 
+    box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.2);
+}
 .csv-msg { color: #7e7e7e; }
 .csv-msg.error { color: #ff5353; }
 .csv-choose {

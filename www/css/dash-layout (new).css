@@ -48,27 +48,13 @@
 
 
 /* --- SIDE --- */
-#curtain, .side {
-    height: 100%;
-    position: fixed;
-}
-#curtain {
-    z-index: 100;
-    display: none;
-    
-    top: 0px;
-    left: 0px;
-    position: fixed;
-    
-    width: 100%;
-}
-#curtain.show { display: block; }
-
 .side {
     z-index: 200;
-    left: -280px;
-    
     width: 280px;
+    height: 100%;
+    
+    left: -280px;
+    position: fixed;
     
     display: flex;
     flex-flow: column nowrap;
@@ -85,19 +71,15 @@
     text-align: center;
 }
 
-.account-list {
-    overflow-y: auto;
-}
+.account-list { overflow-y: auto; }
 .account-item { padding: 10px 10px; }
-.account-item:first-child { padding-top: 0px; }
 .account-name {
+    width: 100%;
     height: 35px;
     line-height: 35px;
     
     font-size: 18px;
     font-weight: 500;
-    overflow: hidden;
-    white-space: nowrap;
 }
 .account-amount {
     font-size: 20px;
@@ -140,21 +122,22 @@
 
 .upload-header {
     width: 100%;
-    height: 50px; 
+    height: 44px;
+    min-height: 44px;
 }
 .upload-header.active { width: 50px; }
 .toggle-upload {
-    width: 50px;
-    height: 100%;
+    width: 44px;
+    height: 44px;
+    border-radius: 22px;
+    
+    right: 5px;
+    bottom: 5px;
+    position: relative;
     
     font-size: 20px;
 }
-.toggle-upload.active {    
-    transform: rotate(45deg);
-    -mz-transform: rotate(45deg);
-    -moz-transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-} 
+.toggle-upload.active { transform: rotate(45deg); } 
 .upload-form { height: 0px; overflow: hidden; }
 .upload-form.show { height: 140px; }
 .csv-msg {

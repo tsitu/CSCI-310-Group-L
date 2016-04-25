@@ -45,12 +45,21 @@ input[type='file'] {
 
 button { background-color: transparent; }
 
-button:hover, .file-label { 
+button:hover, 
+.file-label,
+.dropitem
+{ 
     cursor: pointer;
 }
 
-
 .hidden { display: none; }
+.clip-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
 .flex-glue { flex-grow: 100; }
 .disable-scroll { overflow: hidden; }
 .momentum-scroll {
