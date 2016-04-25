@@ -53,7 +53,7 @@ button:hover, .file-label {
 .hidden { display: none; }
 .flex-glue { flex-grow: 100; }
 .disable-scroll { overflow: hidden; }
-.overflow-scroll {
+.momentum-scroll {
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
 }

@@ -61,7 +61,7 @@ foreach ($awb as $a)
     <aside id='side' class='side'>
         <h1 class='logo'>minance</h1>
         
-        <ul id='account-list' class='account-list flex-glue'>
+        <ul id='account-list' class='account-list flex-glue momentum-scroll'>
         <?php
         //account list
         foreach($accounts as $pair)

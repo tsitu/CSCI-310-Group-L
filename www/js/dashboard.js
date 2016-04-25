@@ -120,6 +120,11 @@ function fixSideScroll()
     {
         e.stopImmediatePropagation();
         e.stopPropagation();
+    });
+    list.on('touchstart', function(e)
+    {
+        e.stopImmediatePropagation();
+        e.stopPropagation();
 
         var scroll = this.scrollTop;
         var height = this.offsetHeight;
