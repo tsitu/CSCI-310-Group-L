@@ -97,3 +97,15 @@ body {
     border-bottom: 1px solid #b4b4b4; 
 }
 .transaction-account, .transaction-date { color: #7b7b7b; }
+
+
+
+
+
+/* MEDIA: Desktop */
+@media screen and (min-width: 993px)
+{
+    .transaction-item > *{ 
+        color: #333333;
+    }
+}

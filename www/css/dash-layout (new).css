@@ -52,6 +52,7 @@
     z-index: 200;
     width: 280px;
     height: 100%;
+    min-width: 280px;
     
     left: -280px;
     position: fixed;
@@ -169,7 +170,7 @@ main {
 /*    overflow-y: hidden;*/
 }
 .top-bar {
-    z-index: 10;
+    z-index: 100;
     width: 100%;
     
     top: 0px;
@@ -179,6 +180,10 @@ main {
 .top-bar, .top-bar * { 
     height: 50px; 
     line-height: 50px;
+}
+.section-title {
+    font-size: 22px;
+    font-weight: 300;
 }
 .toggle-side, .dd-user > .profile {
     width: 50px;
@@ -201,7 +206,10 @@ main {
     font-size: 18px;
     font-weight: 400;
 }
-.module-subheader { height: 40px; }
+.module-subheader { 
+    z-index: 5;
+    height: 40px; 
+}
 
 
 /* ------ GRAPH ------ */
@@ -268,12 +276,99 @@ main {
 /* MEDIA: Mobile Landscape */
 @media screen and (max-width: 720px) and (orientation: landscape)
 {
-
+    
 }
 
 
 /* MEDIA: Tablet */
-@media screen and (max-width: 992px)
+@media screen and (max-width: 1024px)
 {
     
 }
+
+
+/* MEDIA: Desktop */
+@media screen and (min-width: 1025px)
+{
+    .toggle-side,
+    .dd-sort 
+    { 
+        display: none;
+    }
+    
+    .side, 
+    .top-bar,
+    .transaction-item > *
+    { 
+        position: static; 
+    }
+    
+    body {
+        display: flex;
+        flex-flow: row nowrap;
+        
+        overflow: hidden;
+    }
+    
+    main {
+        width: 100%;
+        padding: 0px;
+    }
+    .top-bar, .top-bar * { 
+        height: 60px; 
+        line-height: 60px;
+    }
+    .section-title {
+        padding: 0px 20px;
+        font-size: 24px;
+    }
+    .toggle-side, .dd-user > .profile {
+        width: 60px;
+        font-size: 24px;
+    }
+    .dd-user .dropitem { width: 150px; }
+    .content {
+        height: calc(100% - 60px);
+        overflow-y: auto;
+    }
+    
+    .transaction-item,
+    .transaction-item > * {
+        height: 60px;
+        line-height: 60px;
+    }
+    
+    .transaction-item {
+        display: flex;
+        flex-flow: row nowrap;
+        
+        padding: 0px;
+    }
+    .transaction-item > * { 
+        height: 60px;
+        line-height: 60px;
+        font-size: 16px;
+        padding-left: 15px;
+    }
+    .transaction-account  { 
+        width: 30%; 
+    }
+    .transaction-date     { 
+        width: 10%; 
+    }
+    .transaction-amount   { 
+        width: 10%; 
+    }
+    .transaction-merchant { 
+        width: 30%; 
+    }
+    .transaction-category { 
+        width: 20%; 
+    }
+}
+
+
+
+
+
+

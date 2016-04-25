@@ -37,8 +37,6 @@ $(document).ready(function()
 
     bindEvents();
     //resetTimeout();
-
-    $('.toggle-side').click();
 });
 
 

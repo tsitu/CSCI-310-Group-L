@@ -116,6 +116,8 @@ foreach ($awb as $a)
         <div class='top-bar'>
             <button class='toggle-side fa fa-bars'></button>
             
+            <h2 class='section-title'>Dashboard</h2>
+            
             <div class='flex-glue'></div>
             <div class='dropdown right dd-user'>
                 <button class='toggle-drop profile icon ion-person'></button>
@@ -164,9 +166,18 @@ foreach ($awb as $a)
                     ~
                     <button id='list-end' class='date-select'>4/8/2016</button>
                 </div>
-
+                
+                
+                <li id='list-header' class='transaction-item'>
+                    <p class="transaction-account">Account</p>
+                    <p class="transaction-date"   >Date</p>
+                    <p class="transaction-amount" >Amount</p>
+                    <p class="transaction-merchant">Merchant <span class='icon'></span></p>
+                    <p class="transaction-category">Category</p>
+                </li>
+                
                 <ul id='transaction-list' class='table-list list'>
-
+                    
                 <?php 
                 foreach ($transactions as $pair)
                 {
@@ -187,8 +198,8 @@ foreach ($awb as $a)
                         <p class="transaction-account"><?= $a->name ?></p>
                         <p class="transaction-date"   ><?= date_format($t->time, "Y. n. j") ?></p>
                         <p class="transaction-amount" ><?= number_format($t->amount, 2) ?></p>
-                        <p class="transaction-category"><?= $t->category ?></p>
                         <p class="transaction-merchant"><?= $t->merchant ?></p>
+                        <p class="transaction-category"><?= $t->category ?></p>
                     </li>
                 <?php 
                         }
@@ -200,7 +211,7 @@ foreach ($awb as $a)
         </div>
     </main>
     
-    <div id='curtain'></div>
+<!--    <div id='curtain'></div>-->
     
     
     <!-- JS -->
