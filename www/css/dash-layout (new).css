@@ -240,6 +240,7 @@ main {
     padding: 15px 20px;
 }
 
+.transaction-header { display: none; }
 .transaction-item {
     position: relative;
     height: 100px;
@@ -350,20 +351,14 @@ main {
         font-size: 16px;
         padding-left: 15px;
     }
-    .transaction-account  { 
-        width: 30%; 
-    }
-    .transaction-date     { 
-        width: 10%; 
-    }
-    .transaction-amount   { 
-        width: 10%; 
-    }
-    .transaction-merchant { 
-        width: 30%; 
-    }
-    .transaction-category { 
-        width: 20%; 
+    .transaction-account  { width: 30%; }
+    .transaction-date     { width: 10%; }
+    .transaction-amount   { width: 10%; }
+    .transaction-merchant { width: 30%; }
+    .transaction-category { width: 20%; }
+    .transaction-col > .icon {
+        display: inline-block;
+        margin-left: 5px;
     }
 }
 

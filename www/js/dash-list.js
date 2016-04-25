@@ -37,7 +37,7 @@ var listEndPicker = null;
 var listBegTime = tmAgo.valueOf();
 var listEndTime = today.valueOf();
 
-var sortedBy = 'transaction-date';
+var sortedBy = '';
 var sortOrder = 'desc';
 
 
@@ -51,9 +51,7 @@ function initList()
 		valueNames: fields
 	});
 
-	listManager.sort(sortedBy, {
-		order: sortOrder
-	});
+	sortList('transaction-date');
 
 	initListPickers();
 }

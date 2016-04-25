@@ -168,12 +168,12 @@ foreach ($awb as $a)
                 </div>
                 
                 
-                <li id='list-header' class='transaction-item'>
-                    <p class="transaction-account">Account</p>
-                    <p class="transaction-date"   >Date</p>
-                    <p class="transaction-amount" >Amount</p>
-                    <p class="transaction-merchant">Merchant <span class='icon'></span></p>
-                    <p class="transaction-category">Category</p>
+                <li class='transaction-item transaction-header'>
+                    <p class="transaction-col transaction-account"  data-sort='transaction-account'>Account<span class='icon'></span></p>
+                    <p class="transaction-col transaction-date"     data-sort='transaction-date'>Date<span class='icon ion-ios-arrow-down'></span></p>
+                    <p class="transaction-col transaction-amount"   data-sort='transaction-amount'>Amount<span class='icon'></span></p>
+                    <p class="transaction-col transaction-merchant" data-sort='transaction-merchant'>Merchant<span class='icon'></span></p>
+                    <p class="transaction-col transaction-category" data-sort='transaction-category'>Category<span class='icon'></span></p>
                 </li>
                 
                 <ul id='transaction-list' class='table-list list'>
@@ -186,8 +186,6 @@ foreach ($awb as $a)
 
                     foreach($list as $t)
                     {
-                        for ($i = 0; $i < 10; $i++)
-                        {
                 ?>    
                     <li class='transaction-item' 
                             data-id='<?= $t->id ?>' 
@@ -202,7 +200,6 @@ foreach ($awb as $a)
                         <p class="transaction-category"><?= $t->category ?></p>
                     </li>
                 <?php 
-                        }
                     }
                 }
                 ?>

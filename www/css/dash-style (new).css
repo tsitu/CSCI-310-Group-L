@@ -92,6 +92,7 @@ body {
     text-decoration: underline;
 }
 
+.transaction-col { cursor: pointer; }
 .transaction-item { 
     color: #414141;
     border-bottom: 1px solid #b4b4b4; 

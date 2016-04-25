@@ -14,6 +14,8 @@ var INACTIVITY_TIME = 2 * 60 * 1000; //2min
 var DATE_FORMAT = 'YYYY. M. D';
 var DAY_MS = 24 * 60 * 60 * 1000;
 
+var ICON_ARROW = 'ion-ios-arrow-';
+
 var today = new Date();
 var tmAgo = new Date();
     tmAgo.setMonth(today.getMonth() - 3);
@@ -67,7 +69,7 @@ function bindEvents()
     $(document).on('change', '#csv-file', changeClicked);
     $(document).on('click', '#csv-upload', uploadClicked);
 
-    $(document).on('click', '.dd-sort .dropitem', sortClicked);
+    $(document).on('click', '.dd-sort .dropitem, .transaction-col', sortClicked);
 
     //auto logout
     document.onkeypress = resetTimeout;
@@ -411,20 +413,27 @@ function sortClicked(e)
     e.stopPropagation();
 
     var item = $(this);
-    var name = item.html();
+    var name = item[0].childNodes[0].nodeValue;
     var sort = item.attr('data-sort');
+
+    debug(name);
 
     //sort & get new direction
     var order = sortList(sort);
-    var dir = order ? 'up' : 'down';
+    var point = order ? 'up' : 'down';
+    var icon  = ICON_ARROW + point;
 
     //change dropmain
-    var main = item.parents('.dd-sort').children('.toggle-drop');
-    main.children('.sort-label').html(name);
-    main.children('.sort-icon').removeClass().addClass('sort-icon icon ion-ios-arrow-' + dir);
+    var label = $('.dd-sort > .toggle-drop');
+    label.children('.sort-label').html(name);
+    label.children('.sort-icon').removeClass().addClass('sort-icon icon ' + icon);
 
     //close list
     item.parents('.dropdown').removeClass('show');
+
+    //change col
+    $('.transaction-col > .icon').removeClass().addClass('icon');
+    $('.transaction-col[data-sort="' + sort + '"] > .icon').addClass(icon);
 }
 
 
