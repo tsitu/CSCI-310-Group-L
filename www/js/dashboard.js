@@ -22,6 +22,8 @@ var tmAgo = new Date();
 /* VARS */
 var timeout = null;
 
+var side = null;
+var active = null;
 
 /**
  * Initialize functionality
@@ -32,7 +34,7 @@ $(document).ready(function()
     initGraph();
 
     bindEvents();
-    resetTimeout();
+    //resetTimeout();
 });
 
 
@@ -41,16 +43,20 @@ $(document).ready(function()
  */
 function bindEvents()
 {
+    //frequent DOM elements
+    side = $('#side');
+
     //toggles
-    $(document).on('click', '#curtain', toggleSide);
-    $(document).on('click', '.dropdown', toggleDropdown);
-    $(document).on('click', '.toggle-side', toggleSide);
-    $(document).on('click', '.toggle-edit', toggleEdit);
-    $(document).on('click', '.toggle-list', toggleList);
-    $(document).on('click', '.toggle-graph', toggleGraph);
-    $(document).on('click', '.toggle-upload', toggleUpload);
-    
-    //buttons
+    $(document).click(hideActive);
+    $('.toggle-side').click(showSide);
+    $('.toggle-upload').click(toggleUpload);
+        //possibly dynamically added elements need to be bound to document
+        $(document).on('click', '.toggle-drop', toggleDrop);
+        $(document).on('click', '.toggle-edit', toggleEdit);
+        $(document).on('click', '.toggle-list', toggleList);
+        $(document).on('click', '.toggle-graph', toggleGraph);
+
+    //actions
     $(document).on('click', '.logout', logout);
     $(document).on('click', '.rename-butotn', renameClicked);
     $(document).on('click', '.delete-button', deleteClicked);
@@ -72,7 +78,7 @@ function bindEvents()
 function resetTimeout()
 {
     clearTimeout(timeout);
-    //timeout = setTimeout(logout, INACTIVITY_TIME);
+    // timeout = setTimeout(logout, INACTIVITY_TIME);
 }
 
 /**
@@ -89,27 +95,70 @@ function debug(msg)
 /**
  * Show/hide curtain backdrop by toggling class 'show'
  */
-function toggleCurtain()
+function toggleCurtain(e)
 {
     $('#curtain').toggleClass('show');
 }
 
 /**
- * Show/hide side panel by toggling class 'show'
+ * Hide any currently active 'show' elements
  */
-function toggleSide()
+function hideActive(e)
 {
-    toggleCurtain();
-    $('.side-panel').toggleClass('show');
+    // if(!$(event.target).closest('#menucontainer').length && !$(event.target).is('#menucontainer'))
+    // {
+    //     if($('#menucontainer').is(":visible"))
+    //     {
+    //         $('#menucontainer').hide();
+    //     }
+    // }
+
+    if (!active)
+        return;
+
+    var target = $(e.target);
+    if (!target.closest(active).length && !target.is(active))
+        active.removeClass('show');
+}
+
+/**
+ * Show the side panel
+ */
+function showSide(e)
+{   
+    e.stopPropagation();
+
+    if (active != null && side != active)
+        hideActive(e);
+
+    side.addClass('show');
+    active = side;
+}
+
+/**
+ * Hide the side panel
+ */
+function hideSide(e)
+{
+    if (side.hasClass('show'))
+        side.removeClass('show');
 }
 
 /**
  * Show/hide dropdown menu
  */
-function toggleDropdown()
+function toggleDrop(e)
 {
-    var list = $(this).children('.droplist');
-    list.toggleClass('show');
+    e.stopPropagation();
+
+    debug('drop');
+    hideActive(e);
+
+    var parent = $(this).parent();
+    parent.toggleClass('show');
+    
+    if (parent.hasClass('show'))
+        active = parent;
 }
 
 /**
@@ -212,7 +261,7 @@ function renameClicked(event)
  */
 function deleteClicked(event)
 {
-    event.preventDefault();
+    // event.preventDefault();
     
     var id = getAccountID(this);
     if (!id || id <= 0)
@@ -327,7 +376,7 @@ function sortClicked(event)
     main.children('.sort-icon').removeClass().addClass('sort-icon fa fa-chevron-' + dir);
 
     //close list
-    item.parent().removeClass('show');
+    item.parents('.dropdown').removeClass('active');
 }
 
 
@@ -372,8 +421,11 @@ function csvError(str)
 /**
  * Set csv message, and toggle 'error' class according to param.
  */
-function csvMessage(str, error = false)
+function csvMessage(str, error)
 {
+    if (!error)
+        error = false;
+
     var msg = $('#csv-msg');
     msg.html(str);
     
