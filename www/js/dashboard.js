@@ -22,6 +22,7 @@ var tmAgo = new Date();
 /* VARS */
 var timeout = null;
 
+var main = null;
 var side = null;
 var list = null;
 var active = null;
@@ -45,6 +46,7 @@ $(document).ready(function()
 function bindEvents()
 {
     //frequent DOM elements
+    main = $('main');
     side = $('#side');
     list = $('.account-list');
 
@@ -95,17 +97,28 @@ function debug(msg)
 }
 
 /**
- * Fix the side pane scrolling on mobile
+ * Fix the side pane scrolling on mobile.
+ * Disable scrolling on body if side is active.
+ * Limit scrolling to the account list and stop propagtion to underlying side div.
+ * Prevent default scrolling on side elements (logo & upload form) not within account list.
  */
 function fixSideScroll()
 {
-    side.on('touchstart', function(e)
+    $('body').on('touchmove', function(e)
     {
+        if (active === side)
+            e.preventDefault();
+    });
+
+    side.on('touchmove', function(e)
+    {
+        e.stopPropagation();
         e.preventDefault();
     });
 
-    list.on('touchstart', function(e)
+    list.on('touchmove', function(e)
     {
+        e.stopImmediatePropagation();
         e.stopPropagation();
 
         var scroll = this.scrollTop;
@@ -153,7 +166,13 @@ function hideActive(e)
 
     var target = $(e.target);
     if (!target.closest(active).length && !target.is(active))
+    {
+        if (active === side)
+            main.removeClass('disable-scroll');
+
         active.removeClass('show');
+        active = null;
+    }
 }
 
 /**
@@ -166,17 +185,9 @@ function showSide(e)
     if (active != null && side != active)
         hideActive(e);
 
-    side.addClass('show');
     active = side;
-}
-
-/**
- * Hide the side panel
- */
-function hideSide(e)
-{
-    if (side.hasClass('show'))
-        side.removeClass('show');
+    side.addClass('show');
+    main.addClass('disable-scroll');
 }
 
 /**
