@@ -172,6 +172,15 @@ function addToGraph(id, name, list)
 	});
 }
 
+/**
+ * Update series on graph when an account is renamed
+ */
+function renameGraphAccount(id, name)
+{
+	highcharts.get(id).update({name: name}, false);
+	highcharts.redraw();
+}
+
 
 /* --- PIKADAY --- */
 /**

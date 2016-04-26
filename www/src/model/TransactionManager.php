@@ -1,7 +1,7 @@
 <?php
 
-require_once "DBManager.php";
-require_once "Transaction.php";
+require_once __DIR__ . '/DBManager.php';
+require_once __DIR__ . '/Transaction.php';
 
 /**
  * Singleton TransactionManager provides DB queries related to a user's transactions.

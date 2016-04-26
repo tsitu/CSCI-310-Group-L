@@ -37,7 +37,7 @@ var listEndPicker = null;
 var listBegTime = tmAgo.valueOf();
 var listEndTime = today.valueOf();
 
-var sortedBy = 'transaction-date';
+var sortedBy = '';
 var sortOrder = 'desc';
 
 
@@ -51,9 +51,7 @@ function initList()
 		valueNames: fields
 	});
 
-	listManager.sort(sortedBy, {
-		order: sortOrder
-	});
+	sortList('transaction-date');
 
 	initListPickers();
 }
@@ -119,7 +117,8 @@ function listEndChanged(date)
 
 /* --- LIST --- */
 /**
- * 
+ * Filter function given to listManager.
+ * Given an item, check that its id is in the activeList & that date is within range.
  */
 function filterList(item)
 {
@@ -133,6 +132,7 @@ function filterList(item)
 
 
 /**
+ * Sort the list by the given column name.
  * Return true for asc, false for desc.
  */
 function sortList(col)
@@ -156,6 +156,23 @@ function sortList(col)
 	return sortOrder === 'asc';
 }
 
+
+/**
+ * Update transaction accounts in list when an account is renamed.
+ */
+function renameListAccount(id, name)
+{
+	for (var item of listManager.items)
+	{
+		var values = item.values();
+
+		if (id === +values['account-id'])
+		{
+			values['transaction-account'] = name;
+			item.values( values );
+		}
+	}
+}
 
 
 

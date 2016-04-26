@@ -1,7 +1,7 @@
 <?php
 
-require_once "DBManager.php";
-require_once "Account.php";
+require_once __DIR__ . '/DBManager.php';
+require_once __DIR__ . '/Account.php';
 
 
 /**
@@ -100,13 +100,16 @@ class AccountManager
 	 * @param $id
 	 * @param $
 	 */
-	public function updateAccount($id, $newInst, $newType)
+	public function updateAccount($id, $inst, $type)
 	{
 		$str = "UPDATE Accounts SET institution = :inst, type = :type WHERE id = :id";
 
+		$inst = DBManager::encrypt($inst);
+		$type = DBManager::encrypt($type);
+
 		$stmt = $this->connection->prepare($str);
-		$stmt->bindParam(':inst', $newInst);
-		$stmt->bindParam(':type', $newType);
+		$stmt->bindParam(':inst', $inst);
+		$stmt->bindParam(':type', $type);
 		$stmt->bindParam(':id', $id);
 		$stmt->execute();
 	}
@@ -186,7 +189,7 @@ class AccountManager
 		$stmt = $this->connection->prepare($str);
 		$stmt->execute([$user_id]);
 
-		$accounts = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account');
+		$accounts = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account', ['_id', '_user_id', '_institution', '_type']);
 		if (!$accounts)
 			return [];
 
@@ -214,7 +217,7 @@ class AccountManager
 		$stmt = $this->connection->prepare($str);
 		$stmt->execute([$user_id, $institution, $type]);
 
-		$accounts = $stmt->fetch(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account');
+		$accounts = $stmt->fetch(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account', ['_id', '_user_id', '_institution', '_type']);
 		if (!$a)
 			return null;
 		
