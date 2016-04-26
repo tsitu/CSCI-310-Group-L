@@ -1,11 +1,10 @@
 <?php
 
-require_once "../model/UserManager.php";
-
-CONST DOWNTIME = '+1 min';
-$now = new DateTime();
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../model/UserManager.php';
 
 session_start();
+$now = new DateTime();
 
 checkLock();
 checkStrike();
@@ -56,15 +55,15 @@ function error($msg)
  */
 function addStrike()
 {
-	global $now;
+	global $config, $now;
 
 	if ( !isset($_SESSION['strike']) )
 		$_SESSION['strike'] = 0;
 
 	$_SESSION['strike']++;
-	$_SESSION['strike_reset']= new DateTime(DOWNTIME);
+	$_SESSION['strike_reset']= new DateTime( $config['login_downtime'] );
 
-	return $_SESSION['strike'] >= 5;
+	return $_SESSION['strike'] >= $config['login_attempts'];
 }
 
 /**
@@ -95,9 +94,11 @@ function checkStrike()
  */
 function lock()
 {
+	global $config;
+
 	clearStrike();
 
-	$_SESSION['lock'] = new DateTime(DOWNTIME);
+	$_SESSION['lock'] = new DateTime( $config['login_downtime'] );
 	error('Locked for 1 minute');
 }
 

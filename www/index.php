@@ -1,7 +1,8 @@
 <?php
 
-require_once "src/model/AccountManager.php";
-require_once "src/model/TransactionManager.php";
+require_once 'src/config.php';
+require_once 'src/model/AccountManager.php';
+require_once 'src/model/TransactionManager.php';
 
 session_start();
 
@@ -17,7 +18,7 @@ $user_id = $_SESSION['user_id'];
 $username = $_SESSION['username'];
 
 //managers
-$beg = new DateTime('-3 months');
+$beg = new DateTime( $config['default_range'] );
 $end = new DateTime();
 
 $am = AccountManager::getInstance();

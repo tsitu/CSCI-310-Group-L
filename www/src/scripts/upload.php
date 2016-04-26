@@ -1,7 +1,7 @@
 <?php
 
-require_once "../model/AccountManager.php";
-require_once "../model/TransactionManager.php";
+require_once __DIR__ . '/../model/AccountManager.php';
+require_once __DIR__ . '/../model/TransactionManager.php';
 
 //session
 session_start();

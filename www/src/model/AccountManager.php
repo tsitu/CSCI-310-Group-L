@@ -1,7 +1,7 @@
 <?php
 
-require_once "DBManager.php";
-require_once "Account.php";
+require_once __DIR__ . '/DBManager.php';
+require_once __DIR__ . '/Account.php';
 
 
 /**
