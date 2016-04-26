@@ -493,6 +493,62 @@ function csvMessage(str, error)
 }
 
 /**
+ * Parse CSV into array of objects, convert to JSON, and POST to upload.php
+ */
+function csvUpload(event)
+{
+
+   
+
+    event.preventDefault();
+    $('#csv-upload').html('Uploading...');
+    
+    Papa.parse(csvInput.files[0], {
+        newline: '\n',
+        delimiter: ', ',
+        header: true,
+        fastMode: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+            // console.log(JSON.stringify(results.data));
+            
+            $.ajax({
+                type: "POST",
+                url: "src/scripts/upload.php",
+                data: {data: JSON.stringify(results.data)},
+                dataType: "json",
+                success: csvCallback
+            });
+        },
+        error: function(xhr, status, error) {
+          console.log(xhr.responseText);
+        }
+    });
+}
+
+/**
+ * Callback for CSV upload post 
+ */
+function csvCallback(accounts)
+{
+    toggleAdd();
+    $('#csv-upload').html("Done");
+    for (var i = 0; i < accounts.length; i++)
+    {
+        var a = accounts[i];
+        
+        var item = document.getElementById('account-' + a.id);
+        if (item)
+            $(item).children('.account-amount').html(a.balance.toFixed(2));
+        else
+        {
+            $('#account-list').append(newAccountItem(a.id, a.institution, a.type, a.balance.toFixed(2)));
+        }
+    }
+}
+
+/**
  * Return string for a new account list item with given params
  */
 function newAccountItem(id, inst, type, amount)

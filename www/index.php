@@ -55,6 +55,15 @@ foreach ($awb as $a)
     <link rel='stylesheet' href='css/dialog.css'>
     <link rel='stylesheet' href='css/dash-layout (new).css'>
     <link rel='stylesheet' href='css/dash-style (new).css'>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
+    <script src='js/libraries/papaparse.min.js'></script>
+    <script src='js/libraries/moment.min.js'></script>
+    <script src='js/libraries/pikaday.js'></script>
+    
+    <script src='js/dashboard.js'></script>
+    <script src='js/utils.js'></script>
 </head>
 <body>
     
@@ -210,7 +219,6 @@ foreach ($awb as $a)
     
 <!--    <div id='curtain'></div>-->
     
-    
     <!-- JS -->
     <script>
         var accounts = new Map(<?= json_encode($accounts) ?>);
@@ -234,5 +242,6 @@ foreach ($awb as $a)
     <script src='js/dash-user.js'></script>
     <script src='js/dash-list.js'></script>
     <script src='js/dash-graph.js'></script>
+
 </body>
 </html>

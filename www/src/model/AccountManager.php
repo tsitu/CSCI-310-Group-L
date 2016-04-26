@@ -186,7 +186,7 @@ class AccountManager
 		$stmt = $this->connection->prepare($str);
 		$stmt->execute([$user_id]);
 
-		$accounts = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account');
+		$accounts = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account', ['_id', '_user_id', '_institution', '_type']);
 		if (!$accounts)
 			return [];
 
@@ -214,7 +214,7 @@ class AccountManager
 		$stmt = $this->connection->prepare($str);
 		$stmt->execute([$user_id, $institution, $type]);
 
-		$accounts = $stmt->fetch(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account');
+		$accounts = $stmt->fetch(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account', ['_id', '_user_id', '_institution', '_type']);
 		if (!$a)
 			return null;
 		
