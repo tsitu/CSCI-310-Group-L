@@ -64,7 +64,7 @@ function bindEvents()
 
     //actions
     $(document).on('click', '.logout', logout);
-    $(document).on('click', '.rename-butotn', renameClicked);
+    $(document).on('click', '.rename-button', renameClicked);
     $(document).on('click', '.delete-button', deleteClicked);
     $(document).on('change', '#csv-file', changeClicked);
     $(document).on('click', '#csv-upload', uploadClicked);
@@ -214,7 +214,7 @@ function toggleDrop(e)
 /**
  * Show/hide edit options for accounts
  */
-function toggleEdit()
+function toggleEdit(e)
 {
     var button = $(this);
     var module = button.parent().siblings('.account-edit');
@@ -228,7 +228,7 @@ function toggleEdit()
 /**
  * Show/hide all transactions associated with clicked account
  */
-function toggleList()
+function toggleList(e)
 {
     $(this).toggleClass('active');
     var id = getAccountID(this);
@@ -244,7 +244,7 @@ function toggleList()
 /**
  * Show/hide graph balnce lines associated with clicked account
  */
-function toggleGraph()
+function toggleGraph(e)
 {
     $(this).toggleClass('active');
     var series = highcharts.get( getAccountID(this) );
@@ -256,7 +256,7 @@ function toggleGraph()
 /**
  * Show/hide add account from module by toggling class 'show' and 'active'
  */
-function toggleUpload()
+function toggleUpload(e)
 {    
     var form = $('#upload-form');
     if (!form.hasClass('show'))
@@ -295,15 +295,19 @@ function renameClicked(e)
     renameAccount(id, inst, type,
     {
         context: this,
-        success: function(data)
-        {
-            debug('[Log] successfully renamed account with id: ' + id);
-            $(this).parents('.account-edit').siblings('.account-name').html(inst + ' - ' + type);
-        },
         error: function()
         {
             //show error somewhere
             debug('[Error] failed to rename account with id: ' + id);
+        },
+        success: function(data)
+        {
+            debug('[Log] successfully renamed account with id: ' + id);
+
+            var name = inst + ' - ' + type;
+            renameListAccount(id, name);
+            renameGraphAccount(id, name);
+            $(this).parents('.account-edit').siblings('.account-name').html(name);
         }
     });
 }
@@ -313,6 +317,8 @@ function renameClicked(e)
  */
 function deleteClicked(e)
 {
+    e.preventDefault();
+
     var id = getAccountID(this);
     if (!id || id <= 0)
         return;
@@ -320,17 +326,17 @@ function deleteClicked(e)
     deleteAccount(id,
     {
         context: this,
+        error: function()
+        {
+            //show error somewhere
+            debug('[Error] failed to delete account with id: ' + id);
+        },
         success: function(data)
         {
             debug('[Log] successfully deleted account with id: ' + id);
 
             removeFromGraph(id);
             $(this).parents('.account-item').remove();
-        },
-        error: function()
-        {
-            //show error somewhere
-            debug('[Error] failed to delete account with id: ' + id);
         }
     });
 }
@@ -338,7 +344,7 @@ function deleteClicked(e)
 /**
  * Called when CSV file changes.
  */
-function changeClicked()
+function changeClicked(e)
 {    
     var input = document.getElementById('csv-file');
     if (input.files.length > 1)
@@ -385,7 +391,6 @@ function uploadClicked(e)
 
 /**
  * Callback for upload csv success.
- * 
  */
 function uploadSucces(data)
 {
