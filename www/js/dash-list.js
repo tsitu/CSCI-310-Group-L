@@ -156,6 +156,14 @@ function sortList(col)
 	return sortOrder === 'asc';
 }
 
+/**
+ *
+ */
+function updateList(id, name, list)
+{
+	
+}
+
 
 /**
  * Update transaction accounts in list when an account is renamed.

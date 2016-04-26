@@ -406,7 +406,8 @@ function uploadSucces(data)
         else
             $('#account-list').append( newAccountItem(a.id, a.institution, a.type, balance) );
 
-        addToGraph(a.id, a.name, data.transactions[a.id]);
+        //
+        updateGraph(a.id, a.name, data.transactions[a.id]);
     }
 }
 

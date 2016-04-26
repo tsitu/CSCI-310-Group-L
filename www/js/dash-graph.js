@@ -150,11 +150,8 @@ function removeFromGraph(id)
 /**
  * Add given [id, series] to the graph
  */
-function addToGraph(id, name, list)
+function updateGraph(id, name, list)
 {
-	if (highcharts.get(id))
-		return;
-
 	var data = [];
 	for (var i = list.length-1; i >= 0; --i)
 	{
@@ -165,11 +162,20 @@ function addToGraph(id, name, list)
 		data.push([date, ta.balance]);
 	}
 
-	highcharts.addSeries({
-		id: id,
-		name: name,
-		data: data
-	});
+	var series = highcharts.get(id);
+	if (series)
+	{
+		for (var point of data)
+			series.addPoint(point);
+	}
+	else
+	{
+		highcharts.addSeries({
+			id: id,
+			name: name,
+			data: data
+		});
+	}
 }
 
 /**
