@@ -47,7 +47,6 @@ foreach ($awb as $a)
     <meta charset="utf-8">
     <title>minance</title>
     
-    <link rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel='stylesheet' href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel='stylesheet' href='css/libraries/pikaday.css'>
     
@@ -55,15 +54,6 @@ foreach ($awb as $a)
     <link rel='stylesheet' href='css/dialog.css'>
     <link rel='stylesheet' href='css/dash-layout (new).css'>
     <link rel='stylesheet' href='css/dash-style (new).css'>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
-    <script src='js/libraries/papaparse.min.js'></script>
-    <script src='js/libraries/moment.min.js'></script>
-    <script src='js/libraries/pikaday.js'></script>
-    
-    <script src='js/dashboard.js'></script>
-    <script src='js/utils.js'></script>
 </head>
 <body>
     
