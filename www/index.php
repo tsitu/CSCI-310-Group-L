@@ -35,7 +35,7 @@ foreach ($awb as $a)
     $activeList[] = $aid;
     
     $accounts[] = [$aid, $a];
-    $transactions[] = [$aid, $tm->getListForAccountBetween($aid, $beg, $end)];
+    $transactions[] = [$aid, $tm->getListForAccountBetween($aid, $beg, $end), $a];
 }
 
 ?>
@@ -86,7 +86,9 @@ foreach ($awb as $a)
                         <button class='edit-option delete-button hoverable'>Delete Account</button>
                     </form>
                 </div>
-            </li>  
+            </li>
+
+
         <?php
         }
         ?>
@@ -182,6 +184,7 @@ foreach ($awb as $a)
                 {
                     $aid = $pair[0];
                     $list = $pair[1];
+                    $acc = $pair[2];
 
                     foreach($list as $t)
                     {
@@ -192,7 +195,7 @@ foreach ($awb as $a)
                             data-unixtime='<?= $t->unixtime * 1000 ?>'
                             data-amount='<?= $t->amount ?>'
                         >
-                        <p class="transaction-account"><?= $a->name ?></p>
+                        <p class="transaction-account"><?= $acc->name ?></p>
                         <p class="transaction-date"   ><?= date_format($t->time, "Y. n. j") ?></p>
                         <p class="transaction-amount" ><?= number_format($t->amount, 2) ?></p>
                         <p class="transaction-merchant"><?= $t->merchant ?></p>
