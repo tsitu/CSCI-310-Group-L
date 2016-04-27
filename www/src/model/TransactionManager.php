@@ -107,7 +107,7 @@ class TransactionManager
 			':amount' 		=> $a,
 			':time' 		=> $t->time,
 			':institution' 	=> $t->institution,
-			':type' 		=> $t->type,
+			':type' 		=> $t->type
 		]);
 
 		return $this->connection->lastInsertId();

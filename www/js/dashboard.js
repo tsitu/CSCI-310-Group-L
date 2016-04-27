@@ -384,37 +384,46 @@ function uploadClicked(e)
     var beg = graphBegPicker.getDate();
     var end = graphEndPicker.getDate();
 
-    upload(file, beg, end, {
+    upload(file, {
         context: this,
         error: function()
         {
             //show error somewhere
             debug('[Error] failed to upload csv');
         },
-        success: uploadSucces
+        success: uploadSuccess
     });
 }
 
 /**
  * Callback for upload csv success.
  */
-function uploadSucces(data)
+function uploadSuccess(data)
 {
     toggleUpload();
 
+    //insert new
+    for (var id of data.newIDs)
+    {
+        accounts.add(+id);
+        activeList.add(+id);
+    }
+
+    //update all accounts
     for (var a of data.accounts)
     {
         var item = document.getElementById('account-' + a.id);
         var balance = a.balance.toFixed(2);
 
         if (item)
-            $(item).children('.account-amount').html(a.balance);
+            $(item).children('.account-amount').html(balance);
         else
             $('#account-list').append( newAccountItem(a.id, a.institution, a.type, balance) );
-
-        //
-        updateGraph(a.id, a.name, data.transactions[a.id]);
     }
+    
+    sortAccounts();
+    refreshList(data.transactions);
+    refreshGraph(data.transactions);
 }
 
 /**
