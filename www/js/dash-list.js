@@ -11,8 +11,8 @@ var listItem = ""
 +     "<p class='transaction-account'></p>" 
 +     "<p class='transaction-date'   ></p>" 
 +     "<p class='transaction-amount' ></p>" 
-+     "<p class='transaction-category'></p>" 
-+     "<p class='transaction-merchant'></p>" 
++     "<p class='transaction-merchant'></p>"
++     "<p class='transaction-category'></p>"  
 + "</li>";
 
 var listFields = [
@@ -56,66 +56,6 @@ function initList()
 	initListPickers();
 }
 
-
-/* --- PICKERS --- */
-/**
- * Initialize pickers for transaction list
- */
-function initListPickers()
-{
-	listBegField = document.getElementById('list-beg');
-	listEndField = document.getElementById('list-end');
-
-	listBegPicker = new Pikaday({
-		field: listBegField,
-		onSelect: listBegChanged
-	});
-
-	listEndPicker = new Pikaday({
-		field: listEndField,
-		onSelect: listEndChanged
-	});
-
-	listBegPicker.setDate(tmAgo);
-	listEndPicker.setDate(today);
-	listEndPicker.setMaxDate(today);
-}
-
-/**
- * Called when beg date for list is changed
- */
-function listBegChanged(date)
-{
-	listBegTime = date.valueOf();
-
-	listEndPicker.setMinDate(date);
-	listBegPicker.setStartRange(date);
-	listEndPicker.setStartRange(date);
-
-	listBegField.innerHTML = listBegPicker.toString(DATE_FORMAT);
-
-	//change range and filter
-	listBegTime = date.valueOf();
-	listManager.filter(filterList);
-}
-
-/**
- * Called when end date for list is changed
- */
-function listEndChanged(date)
-{
-	listBegPicker.setMaxDate(date);
-	listBegPicker.setEndRange(date);
-	listEndPicker.setEndRange(date);
-
-	listEndField.innerHTML = listEndPicker.toString(DATE_FORMAT);
-
-	//change range and filter
-	listEndTime = date.valueOf();
-	listManager.filter(filterList);
-}
-
-
 /* --- LIST --- */
 /**
  * Filter function given to listManager.
@@ -128,7 +68,7 @@ function filterList(item)
 	var time = item.values().unixtime;
 	var range = listBegTime <= time && time <= listEndTime;
 
-	return shown & range;
+	return shown && range;
 }
 
 
@@ -158,15 +98,6 @@ function sortList(col)
 }
 
 /**
- *
- */
-function updateList(id, name, list)
-{
-
-}
-
-
-/**
  * Update transaction accounts in list when an account is renamed.
  */
 function renameListAccount(id, name)
@@ -181,4 +112,127 @@ function renameListAccount(id, name)
 			item.values( values );
 		}
 	}
+}
+
+/**
+ * Update the graph with newly fetched data points
+ */
+function updateList(data)
+{
+	var items = [];
+	for (var id of accounts)
+	{
+		var list = data[id];
+		if (list)
+		{
+			for (var ta of list)
+				items.push( getItem(ta.id, ta['account_id'], ta.institution, ta.type, ta.unixtime, ta.amount, ta.category, ta.merchant) );
+		}
+	}
+
+	listManager.add(items);
+}
+
+/**
+ * Return transaction object recognized by List.js
+ */
+function getItem(id, aid, inst, type, unixtime, amount, category, merchant)
+{
+	return {
+		'transaction-account'	: inst + ' - ' + type,
+		'transaction-date'		: formatDate(new Date(unixtime * 1000)),
+		'transaction-amount'	: amount.toFixed(2),
+		'transaction-category'	: category,
+		'transaction-merchant'	: merchant,
+
+		'id'		: id + '', 
+		'account-id': aid + '', 
+		'unixtime'	: (unixtime * 1000) + '', 
+		'amount'	: amount + ''
+	};
+}
+
+
+
+/* --- PICKERS --- */
+/**
+ * Initialize pickers for transaction list
+ */
+function initListPickers()
+{
+	listBegField = document.getElementById('list-beg');
+	listEndField = document.getElementById('list-end');
+
+	listBegPicker = new Pikaday({
+		field: listBegField,
+		onSelect: listPickerBegChanged
+	});
+
+	listEndPicker = new Pikaday({
+		field: listEndField,
+		onSelect: setListPickerEnd
+	});
+
+	setListPickerBeg(tmAgo);
+	setListPickerEnd(today);
+	listEndPicker.setMaxDate(today);
+
+	listBegPicker.setDate(tmAgo, true); //dont trigger callback
+	listEndPicker.setDate(today, true); //dont trigger callback
+}
+
+/**
+ *
+ */
+function listPickerBegChanged(date)
+{
+	if ( !(date < dataBegTime) )
+	{
+		setListPickerBeg(date);
+		return;
+	}
+
+	//if older than whats available
+	fetch(date, dataBegTime, 
+	{
+		context: this,
+		success: function()
+		{
+			setListPickerBeg(date);
+		}
+	});
+}
+
+/**
+ * Called when beg date for list is changed
+ */
+function setListPickerBeg(date)
+{
+	listBegTime = date.valueOf();
+
+	listEndPicker.setMinDate(date);
+	listBegPicker.setStartRange(date);
+	listEndPicker.setStartRange(date);
+
+	listBegField.innerHTML = formatDate(date);
+
+	//change range and filter
+	listBegTime = date.valueOf();
+	listManager.filter(filterList);
+}
+
+/**
+ * Called when end date for list is changed
+ */
+function setListPickerEnd(date)
+{
+	listBegPicker.setMaxDate(date);
+	listBegPicker.setEndRange(date);
+	listEndPicker.setEndRange(date);
+
+	listEndField.innerHTML = formatDate(date);
+
+	//change range and filter
+	listEndTime = date.valueOf();
+	listManager.filter(filterList);
 }

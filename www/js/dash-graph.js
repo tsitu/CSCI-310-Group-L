@@ -90,6 +90,10 @@ function initHighcharts()
 		series.push({
 			id: id,
 			name: aMap.get(id).name,
+			marker: {
+				enabled: true,
+
+			},
 			data: data
 		});
 	}
@@ -169,7 +173,13 @@ function updateGraph(data)
 			var series = highcharts.get(id);
 
 			for (var ta of list)
-				series.addPoint([ta.unixtime * 1000, ta.balance], false); //dont redraw
+				series.addPoint({
+					x: ta.unixtime * 1000,
+					y: ta.balance,
+					marker: {
+						enabled: true
+					}
+				}, false);
 		}
 	}
 
@@ -209,22 +219,21 @@ function initGraphPickers()
  */
 function graphPickerBegChanged(date)
 {
-	/* if new date is < data beg date
-	 * fetch transactions for all accounts from [new date, data beg date)
-	 * add to graph & list
-	 * 
-	 */
-	if (date < dataBegDate)
+	if ( !(date < dataBegTime) )
 	{
-		fetch(date, dataBegDate, 
-		{
-			context: this,
-			success: function()
-			{
-				setGraphPickerBeg(date);
-			}
-		});
+		setGraphPickerBeg(date);
+		return;
 	}
+
+	//if older than whats available
+	fetch(date, dataBegTime, 
+	{
+		context: this,
+		success: function()
+		{
+			setGraphPickerBeg(date);
+		}
+	});
 }
 
 /**

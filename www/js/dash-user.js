@@ -46,17 +46,23 @@ function logout()
  */
 function renameAccount(id, inst, type, callback)
 {
+    // debug('[Log] rename account with id ' + id ' to ' + inst + ' - ' + type);
+
     $.ajax('src/scripts/rename.php',
     {
         type: 'POST',
         data: {id: id, inst: inst, type: type},
         error: function()
         {
+            // debug('[Error] failed to rename account with id ' + id ' to ' + inst + ' - ' + type);
+
         	if (callback && callback.error)
         		callback.error.call(callback.context || this);
         },
         success: function(data)
         {
+            // debug('[Log] successfully renamed account with id ' + id ' to ' + inst + ' - ' + type);
+
         	if (callback && callback.success)
         		callback.success.call(callback.context || this, data);
         }
@@ -74,17 +80,23 @@ function renameAccount(id, inst, type, callback)
  */
 function deleteAccount(id, callback)
 {
+    debug('[Log] delete account with id ' + id);
+
     $.ajax('src/scripts/delete.php',
     {
         type: 'POST',
         data: {id: id},
         error: function()
         {
+            debug('[Error] failed to delete account with id ' + id);
+
         	if (callback && callback.error)
         		callback.error.call(callback.context || this);
         },
-        success: function(data)
+        success: function()
         {
+            debug('[Log] successfully deleted account with id ' + id);
+
         	if (callback && callback.success)
         		callback.success.call(callback.context || this, data);
         }
@@ -102,6 +114,8 @@ function deleteAccount(id, callback)
  */
 function upload(file, beg, end, callback)
 {
+    debug('[Log] upload file ' + file.name);
+
     Papa.parse(file,
     {
         newline: '',
@@ -112,13 +126,17 @@ function upload(file, beg, end, callback)
         skipEmptyLines: true,
         error: function()
         {
+            debug('[Error] failed to upload ' + file.name);
+
         	if (callback && callback.error)
         		callback.error.call(callback.context || this);
         },
         complete: function(results)
         {
             var json = JSON.stringify(results.data);
-            //debug(json);
+
+            debug('[Log] successfully uploaded ' + file.name + '. See results below');
+            debug(json);
             
             $.ajax('src/scripts/upload.php',
             {
@@ -146,6 +164,8 @@ function upload(file, beg, end, callback)
  */
 function fetch(newBeg, oldBeg, callback)
 {
+    debug('[Log] fetch data from ' + formatDate(newBeg) + ' ~ ' + formatDate(oldBeg));
+
     $.ajax('src/scripts/fetch.php',
     {
         type: 'POST',
@@ -161,7 +181,9 @@ function fetch(newBeg, oldBeg, callback)
         {
             var data = JSON.parse(raw);
 
+            updateList(data);
             updateGraph(data);
+            dataBegTime = newBeg;
 
             if (callback && callback.success)
                 callback.success.call(callback.context || this, data);

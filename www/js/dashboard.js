@@ -29,8 +29,8 @@ var side = null;
 var list = null;
 var active = null;
 
-var dataBegDate = tmAgo;
-var dataEndDate = today;
+var dataBegTime = tmAgo;
+var dataEndTime = today;
 
 
 
