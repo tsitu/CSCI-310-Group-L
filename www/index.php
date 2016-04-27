@@ -135,6 +135,8 @@ foreach ($awb as $a)
                 </div>
                 
                 <div class='module-subheader'>
+                    <button id='budget-update'>Update</button>
+                    <div class='flex-glue'></div>
                     <button id='budget-cal' class='date-select'>1970. 1. 1</button>
                 </div>
                 
