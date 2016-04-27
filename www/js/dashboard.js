@@ -345,6 +345,7 @@ function deleteClicked(e)
         {
             debug('[Log] successfully deleted account with id: ' + id);
 
+            removeFromList(id);
             removeFromGraph(id);
             $(this).parents('.account-item').remove();
         }

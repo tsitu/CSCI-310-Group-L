@@ -115,6 +115,14 @@ function renameListAccount(id, name)
 }
 
 /**
+ * Remove transactions with given account id
+ */
+function removeFromList(id)
+{
+	listManager.remove('account-id', id);
+}
+
+/**
  * Update the graph with newly fetched data points
  */
 function updateList(data)
@@ -126,7 +134,9 @@ function updateList(data)
 			items.push( getItem(ta.id, ta['account_id'], ta.institution, ta.type, ta.unixtime, ta.amount, ta.category, ta.merchant) );
 	}
 
-	listManager.add(items, function(items){});
+	listManager.add(items, function(items){
+		listManager.sort(sortedBy, {order: sortOrder});
+	});
 }
 
 /**
@@ -143,7 +153,9 @@ function refreshList(data)
 			items.push( getItem(ta.id, ta['account_id'], ta.institution, ta.type, ta.unixtime, ta.amount, ta.category, ta.merchant) );
 	}
 
-	listManager.add(items, function(items){});
+	listManager.add(items, function(items){
+		listManager.sort(sortedBy, {order: sortOrder});
+	});
 	listManager.filter(filterList);
 }
 
