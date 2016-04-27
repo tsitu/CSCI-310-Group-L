@@ -192,7 +192,7 @@ foreach ($awb as $a)
                             data-unixtime='<?= $t->unixtime * 1000 ?>'
                             data-amount='<?= $t->amount ?>'
                         >
-                        <p class="transaction-account"><?= $a->name ?></p>
+                        <p class="transaction-account"><?= $t->institution . ' ' . $t->type ?></p>
                         <p class="transaction-date"   ><?= date_format($t->time, "Y. n. j") ?></p>
                         <p class="transaction-amount" ><?= number_format($t->amount, 2) ?></p>
                         <p class="transaction-merchant"><?= $t->merchant ?></p>
