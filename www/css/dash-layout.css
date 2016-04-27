@@ -210,6 +210,8 @@ main {
     height: 40px; 
 }
 
+/ 
+
 
 /* ------ GRAPH ------ */
 .date-select {
@@ -219,9 +221,7 @@ main {
     font-size: 12px;
 }
 
-#graph {
-    height: 300px;
-}
+#graph { height: 300px; }
 
 
 /* ------ TRANSACTION ------ */
@@ -331,6 +331,8 @@ main {
         height: calc(100% - 60px);
         overflow-y: auto;
     }
+    
+    #graph { height: 400px; }
     
     .transaction-item,
     .transaction-item > * {

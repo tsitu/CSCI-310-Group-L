@@ -41,6 +41,7 @@ $(document).ready(function()
 {
     initList();
     initGraph();
+    initBudget();
     sortAccounts();
 
     bindEvents();

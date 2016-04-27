@@ -128,18 +128,35 @@ foreach ($awb as $a)
         
         <div id='content' class='content'>
             
+            <!-- Budget -->
+            <div id='budget-module' class='module budget-module'>
+                <div class='module-header'>
+                    <h3 class='label module-label'>Budget</h3>
+                </div>
+                
+                <div class='module-subheader'>
+                    <button id='budget-cal' class='date-select'>1970. 1. 1</button>
+                </div>
+                
+                <ul class='category-list'>
+                    <li class='category-item'></li>
+                </ul>
+            </div>
+            
+            <!-- Graph -->
             <div id='graph-module' class='module graph-module'>
                 <div class='module-header'>
                     <h3 class='label module-label'>Graph</h3>
                 </div>
                 <div class='module-subheader'>
-                    <button id='graph-beg' class='date-select'>4/8/2016</button>
+                    <button id='graph-beg' class='date-select'>1970. 1. 1</button>
                     ~
-                    <button id='graph-end' class='date-select'>4/8/2016</button>
+                    <button id='graph-end' class='date-select'>1970. 1. 1</button>
                 </div>
                 <div id='graph'></div>
             </div>
 
+            <!-- Transactions -->
             <div id='transaction-module' class='module transactions-module'>
                 <div class='module-header'>
                     <h3 class='label module-label'>Transactions</h3>
@@ -161,9 +178,9 @@ foreach ($awb as $a)
 
                     <div class='flex-glue'></div>
 
-                    <button id='list-beg' class='date-select'>4/8/2016</button>
+                    <button id='list-beg' class='date-select'>1970. 1. 1</button>
                     ~
-                    <button id='list-end' class='date-select'>4/8/2016</button>
+                    <button id='list-end' class='date-select'>1970. 1. 1</button>
                 </div>
                 
                 
@@ -206,8 +223,6 @@ foreach ($awb as $a)
             </div>
         </div>
     </main>
-    
-<!--    <div id='curtain'></div>-->
     
     <!-- JS -->
     <script>

@@ -263,5 +263,6 @@ function setGraphPickerEnd(date)
 	graphEndPicker.setEndRange(date);
 
 	graphEndField.innerHTML = formatDate(date);
+	debug(graphEndField.innerHTML);
 }
 
