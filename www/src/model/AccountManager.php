@@ -1,7 +1,7 @@
 <?php
 
-require_once "DBManager.php";
-require_once "Account.php";
+require_once __DIR__ . '/DBManager.php';
+require_once __DIR__ . '/Account.php';
 
 
 /**
@@ -100,13 +100,16 @@ class AccountManager
 	 * @param $id
 	 * @param $
 	 */
-	public function updateAccount($id, $newInst, $newType)
+	public function updateAccount($id, $inst, $type)
 	{
 		$str = "UPDATE Accounts SET institution = :inst, type = :type WHERE id = :id";
 
+		$inst = DBManager::encrypt($inst);
+		$type = DBManager::encrypt($type);
+
 		$stmt = $this->connection->prepare($str);
-		$stmt->bindParam(':inst', $newInst);
-		$stmt->bindParam(':type', $newType);
+		$stmt->bindParam(':inst', $inst);
+		$stmt->bindParam(':type', $type);
 		$stmt->bindParam(':id', $id);
 		$stmt->execute();
 	}

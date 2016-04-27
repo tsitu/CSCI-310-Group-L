@@ -1,7 +1,7 @@
 <?php
 
-require_once "../model/AccountManager.php";
-require_once "../model/TransactionManager.php";
+require_once __DIR__ . '/../model/AccountManager.php';
+require_once __DIR__ . '/../model/TransactionManager.php';
 
 //session
 session_start();
@@ -44,4 +44,6 @@ foreach ($response->accounts as $a)
 $response->beg = $beg;
 $response->end = $end;
 
+//success
+header('Content-Type: application/json');
 echo json_encode($response);

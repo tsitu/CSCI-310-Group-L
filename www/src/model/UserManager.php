@@ -1,6 +1,6 @@
 <?php
 
-require_once "DBManager.php";
+require_once __DIR__ . '/DBManager.php';
 
 /**
  * Singleton UserManager provides DB queries related to users.

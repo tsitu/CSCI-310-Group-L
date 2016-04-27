@@ -1,12 +1,6 @@
 <?php
 
-/* CONST */
-const HOST_NAME = "sql3.freemysqlhosting.net";
-const HOST_IP 	= "54.215.148.52";
-const USERNAME  = "sql3112429";
-const PASSWORD  = "NqxhS6d8yQ";
-const DB 		= "sql3112429";
-const PORT 		= "3306";
+require_once __DIR__ . '/../config.php';
 
 /**
  * Single DBConnection class maintains one PDO connection to DB specified by constants.
@@ -40,8 +34,10 @@ class DBManager
 	 */
 	protected function __construct()
 	{
-		$dsn = "mysql:host=" . HOST_IP . ";dbname=" . DB;
-		$this->connection = new PDO($dsn, USERNAME, PASSWORD);
+		global $config;
+
+		$dsn = "mysql:host=" . $config['db_host_ip'] . ";dbname=" . $config['db_name'];
+		$this->connection = new PDO($dsn, $config['db_username'], $config['db_password']);
 
 		//throw exceptions
 		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
