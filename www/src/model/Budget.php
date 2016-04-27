@@ -8,14 +8,14 @@ class Budget
 	public $id;
 	public $user_id;
 	public $month;
-	public $year;
+	public $category;
 	public $budget;
 
-	function __construct($id, $user_id, $month, $year, $budget) {
+	function __construct($id, $user_id, $month, $year, $category, $budget) {
 		$this->id = $id;
 		$this->user_id = $user_id;
 		$this->month = $month;
-		$this->year = $year;
+		$this->year = $category;
 		$this->budget = $budget;
 	}
 
@@ -27,7 +27,6 @@ class Budget
 		$this->id = (int) $this->id;
 		$this->user_id = (int) $this->user_id;
 		$this->month = (int) $this->month;
-		$this->year = (int) $this->year;
 
 		//$this->month = rtrim(DBManager::decrypt($this->month));
 		//$this->year = rtrim(DBManager::decrypt($this->year));
