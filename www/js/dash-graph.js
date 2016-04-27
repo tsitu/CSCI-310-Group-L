@@ -90,7 +90,8 @@ function initHighcharts()
 		series.push({
 			id: id,
 			name: accounts.get(id).name,
-			data: data
+			data: data,
+			step: 'left'
 		});
 	}
 

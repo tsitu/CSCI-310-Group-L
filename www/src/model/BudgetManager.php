@@ -74,7 +74,7 @@ class BudgetManager
 		$stmt = $this->connection->prepare($str);
 		$stmt->bindParam(':user_id', $user_id);
 		$stmt->bindParam(':month', $month);
-		$stmt->bindParam(':year', $month);
+		$stmt->bindParam(':year', $year);
 		$stmt->bindParam(':category', $category);
 		$stmt->bindParam(':budget', $budget);
 		$stmt->execute();
