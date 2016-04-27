@@ -1,29 +1,22 @@
 <?php
-require_once "src/model/BudgetManager.php";
+
+require_once 'src/model/BudgetManager.php';
+
+$bm = BudgetManager::getInstance();
+
+// $bm->addBudget(2, 2, 2016, "loan", 500.00);
+// $bm->addBudget(2, 3, 2016, "loan", 400.00);
+// $bm->addBudget(2, 4, 2016, "loan", 300.00);
+// $id = $bm->addBudget(2, 5, 2016, "loan", 200.00);
+
+// $bm->deleteBudget($id);
+
+$budget = $bm->getBudgetByInfo(2, 3, 2016, "loan");
+
+$budgets = $bm->getBudgetsByUser(2);
 
 
-echo "Starting budget test...delete me when done...<br>";
+foreach($budgets as $b) {
+echo $b->month . "/" . $b->year . " - " . $b->category . " -- $" . $b->budget . "<br>";
 
-$b = BudgetManager::getInstance();
-
-$b->addBudget(2, 12, 2011, 3.99);
-$b->addBudget(2, 1, 2012, 4.99);
-$b->addBudget(2, 2, 2012, 5.99);
-$id = $b->addBudget(2, 3, 2012, 6.99);
-$b->addBudget(2, 4, 2012, 1.99);
-
-$b->deleteBudget($id);
-
-$budgets = $b->getBudgetsByUser(2);
-
-echo "Should have 4 budgets and be missing 3/2012:<br>";
-foreach($budgets as $budget) {
-	echo $budget->month . "/" . $budget->year . " -- $" . $budget->budget . "<br>";
-}
-
-echo "<br>";
-
-$budget = $b->getBudgetByInfo(2, 2, 2012);
-
-echo "Should be $5.99: <br>";
-echo $budget->budget;
+} 

@@ -1,7 +1,7 @@
 <?php
 
-require_once "DBManager.php";
-require_once "Budget.php";
+require_once __DIR__ . '/DBManager.php';
+require_once __DIR__ . '/Budget.php';
 
 
 /**
@@ -58,23 +58,24 @@ class BudgetManager
 	/**
 	 * Adds a new financial account with given name tied to specified user.
 	 *
-	 * @param $year 		- the year this budget references
+	 * @param $category 	- the category this budget references
 	 * @param $month 		- the month this budget references
 	 * @param $user_id 		- user_id of user this budget belongs to
 	 * @return id of the budget if added, null otherwise
 	 */
-	public function addBudget($user_id, $month, $year, $budget)
+	public function addBudget($user_id, $month, $year, $category, $budget)
 	{
-		$str = "INSERT IGNORE INTO Budgets(user_id, month, year, budget) VALUES (:user_id, :month, :year, :budget);";
+		$str = "INSERT IGNORE INTO Budgets(user_id, month, year, category, budget) VALUES (:user_id, :month, :year, :category, :budget);";
 
 		//encrypt
 		//$month = DBManager::encrypt($month);
-		//$year = DBManager::encrypt($year);
+		//$category = DBManager::encrypt($category);
 
 		$stmt = $this->connection->prepare($str);
 		$stmt->bindParam(':user_id', $user_id);
 		$stmt->bindParam(':month', $month);
 		$stmt->bindParam(':year', $year);
+		$stmt->bindParam(':category', $category);
 		$stmt->bindParam(':budget', $budget);
 		$stmt->execute();
 
@@ -87,7 +88,7 @@ class BudgetManager
 	 * @param $id - unique id of account to delete.
 	 */
 	public function deleteBudget($id)
-	{
+	{		
 		$str = "DELETE FROM Budgets WHERE id = :id";
 
 		$stmt = $this->connection->prepare($str);
@@ -98,26 +99,27 @@ class BudgetManager
 	/**
 	 * Returns an `Budget` instance with the given info owned by the specified user.
 	 *
-	 * @param $institution  - the year of this budget
+	 * @param $institution  - the category of this budget
 	 * @param $month 		- the month of this budget
 	 * @param $user_id 		- user_id of user this budget belongs to
 	 * @return new `Budget` instance if found, null otherwise
 	 */
-	public function getBudgetByInfo($user_id, $month, $year)
+	public function getBudgetByInfo($user_id, $month, $year, $category)
 	{
-		$str = "SELECT * FROM Budgets WHERE user_id = :user_id AND month = :month AND year = :year";
+		$str = "SELECT * FROM Budgets WHERE user_id = :user_id AND month = :month AND category = :category AND year = :year";
 
 		//encrypt
 		//$month = DBManager::encrypt($month);
-		//$year = DBManager::encrypt($year);
+		//$category = DBManager::encrypt($category);
 
 		$stmt = $this->connection->prepare($str);
 		$stmt->bindParam(':user_id', $user_id);
 		$stmt->bindParam(':month', $month);
 		$stmt->bindParam(':year', $year);
+		$stmt->bindParam(':category', $category);
 		$stmt->execute();
 
-		$stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Budget', ['id', 'user_id', 'month', 'year', 'budget']);
+		$stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Budget', ['id', 'user_id', 'month', 'year', 'category', 'budget']);
 		$budget = $stmt->fetch();
 		if (!$budget)
 			return null;
@@ -137,7 +139,7 @@ class BudgetManager
 		$stmt->bindParam(':user_id', $user_id);
 		$stmt->execute();
 
-		$budgets = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Budget', ['id', 'user_id', 'month', 'year', 'budget']);
+		$budgets = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Budget', ['id', 'user_id', 'month', 'year', 'category', 'budget']);
 		if (!$budgets)
 			return [];
 

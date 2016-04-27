@@ -1,75 +1,112 @@
-.show-side {
+body { 
+    background-color: #333; 
+    
+}
+
+
+/* --- SIDE --- */
+#curtain { background-color: rgba(0, 0, 0, 0.6); }
+
+.logo { color: #ffa75c; }
+.side { 
+    background-color: white; 
+    box-shadow: 8px 0px 8px -8px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-edit { color: #6f6f6f; }
+.toggle-list, .neg { color: #f45170; }
+.toggle-graph, .pos { color: #1faa6f; }
+
+.account-option.active { color: white; }
+.toggle-graph.active { background-color: #1faa6f; }
+.toggle-list.active { background-color: #f45170; }
+.toggle-edit.active { 
+    color: #6f6f6f;
+    background-color: white;
+    box-shadow: 2px 4px 8px 0px rgba(0, 0, 0, 0.2);
+}
+
+.edit-form {
+    box-shadow: 
+        inset 0px 8px 8px -8px rgba(0, 0, 0, 0.2),
+        inset 0px -8px 8px -8px rgba(0, 0, 0, 0.2);
+}
+.edit-field { border-left: 2px solid #7e7e7e; }
+.edit-field:focus { border-left: 2px solid #ffa75c; }
+.rename-button {
+    color: white;
+    background-color: #44cc92;
+}
+.delete-button { color: #d84646; }
+
+.toggle-upload {
+    color: white;
+    background-color: #ffa75c; 
+    box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.2);
+}
+.csv-msg { color: #7e7e7e; }
+.csv-msg.error { color: #ff5353; }
+.csv-choose {
     color: white;
     background-color: #ffa75c;
 }
-
-.side-option { color: #b5b5b5; }
-.side-option:hover { color: black; }
-
-.new-account-button {
+.csv-upload {
     color: white;
-    background-color: #ffa75c;
+    background-color: #1faa6f;
+}
+.csv-upload[disabled='disabled'] { 
+    cursor: default;
+    background-color: #7e7e7e; 
 }
 
-.remove-account-confirm {
-    color: white;
-    background-color: #ffa75c;
+
+/* --- TOP -- */
+.top-bar, .top-bar * {
+    color: #dddddd;
+    background-color: #424242;
 }
 
-.title {
-    color: white;
-}
-
-.side-panel {
+.dd-user.show .toggle-drop,
+.dd-user .dropitem {
+    color: #333333;
     background-color: white;
 }
-.app-title {
-    background-color: #ffa75c;
+.dd-user .dropitem:hover { background-color: #eeeeee; }
+
+.dd-sort .toggle-drop {
+    color: #eb954b;
+    border-radius: 3px;
+}
+.dd-sort .droplist { border: 1px solid #d3d3d3; }
+.dd-sort .dropitem { border-bottom: 1px solid #d3d3d3; }
+.dd-sort .dropitem:hover { border-left: 3px solid #ffa75c; }
+
+
+/* --- MODULES --- */
+.module { background-color: white; }
+.module-header { background-color: #f5f5f5; }
+.module-subheader { border-bottom: 1px solid #e6e6e6; }
+
+.date-select {
+    color: #eb954b;
+    text-decoration: underline;
 }
 
-.account-item {
-/*    color: #6d6d6d;*/
-    border-bottom: 1px solid #cecece;
+.transaction-col { cursor: pointer; }
+.transaction-item { 
+    color: #414141;
+    border-bottom: 1px solid #b4b4b4; 
 }
-.account-item:last-child {
-    border-bottom: none;
-}
-
-.fa-cog { color: #6f6f6f; }
-.fa-cog:hover { background-color: #6f6f6f; }
-.fa-line-chart, .pos { color: #1faa6f; }
-.fa-line-chart:hover, .fa-line-chart.active { background-color: #1faa6f; }
-.fa-list-ul, .neg { color: #f45170; }
-.fa-list-ul:hover, .fa-list-ul.active { background-color: #f45170; }
-.account-option:hover { color: white; }
-
-.fa-trash:hover { background-color: #B0171F; }
-
-#add-account {
-    color: #ffa75c;
-    background-color: transparent;
-}
-#add-account:hover {
-    border: 2px solid #ffa75c;
-}
-
-.top-bar {
-    color: #FFF;
-    background-color: #444;
-}
-
-.user-label { border-right: 1px solid white; }
-
-.module {
-    background-color: white;
-}
-.module-header {
-    background-color: rgb(240, 240, 240);
-}
+.transaction-account, .transaction-date { color: #7b7b7b; }
 
 
-#transaction-table tr { border-bottom: 1px solid #cecece; }
-#transaction-table tr:first-child { border-top: 1px solid #cecece; }
-.transaction-col:hover {
-    cursor: pointer;
+
+
+
+/* MEDIA: Desktop */
+@media screen and (min-width: 993px)
+{
+    .transaction-item > *{ 
+        color: #333333;
+    }
 }

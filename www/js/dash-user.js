@@ -85,7 +85,7 @@ function upload(file, beg, end, callback)
 {
     Papa.parse(file,
     {
-        newline: '\n',
+        newline: '',
         delimiter: ', ',
         header: true,
         fastMode: true,
@@ -106,10 +106,10 @@ function upload(file, beg, end, callback)
                 type: 'POST',
                 data: {data: json, beg: beg, end: end},
                 dataType: "json",
-                error: function()
+                error: function(jqXHR, textStatus, errorThrown, data)
                 {
                 	if (callback && callback.error)
-        				callback.error.call(callback.context || this);
+        				callback.error.call(callback.context || this, jqXHR, textStatus, errorThrown, data);
                 },
                 success: function(data)
                 {

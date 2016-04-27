@@ -1,7 +1,7 @@
 <?php
 
-require_once "DBManager.php";
-require_once "Transaction.php";
+require_once __DIR__ . '/DBManager.php';
+require_once __DIR__ . '/Transaction.php';
 
 /**
  * Singleton TransactionManager provides DB queries related to a user's transactions.
@@ -59,7 +59,7 @@ class TransactionManager
 	 */
 	public function addTransaction($user_id, $t)
 	{
-		$str = "
+		$str1 = "
 		INSERT IGNORE INTO Transactions(user_id, account_id, t, merchant, category, amount, balance)
 		SELECT
 			:user_id, 
@@ -73,6 +73,13 @@ class TransactionManager
 		WHERE (institution, type) = (:institution, :type);
 		";
 
+		$str2 = "
+		UPDATE Transactions
+		SET
+			balance = balance + :amount
+		WHERE t > :time AND account_id = (SELECT id FROM Accounts WHERE institution = :institution AND type = :type);
+		";
+
 		//encrypt
 		$t->institution = DBManager::encrypt($t->institution);
 		$t->type = DBManager::encrypt($t->type);
@@ -80,16 +87,28 @@ class TransactionManager
 		$t->merchant = DBManager::encrypt($t->merchant);
 		$a = $t->amount;
 
-		$stmt = $this->connection->prepare($str);
-		$stmt->execute([':user_id' => $user_id, 
-						':institution' => $t->institution, 
-						':type' => $t->type, 
-						':time' => $t->time,
-						':merchant' => $t->merchant,
-						':category' => $t->category, 
-						':amount' => $a,
-						':amount2' => $a
-						]);
+		//prepare
+		$insert = $this->connection->prepare($str1);
+		$update = $this->connection->prepare($str2);
+
+		//execute
+		$insert->execute([
+			':user_id' 	=> $user_id, 
+			':institution' 	=> $t->institution, 
+			':type' 		=> $t->type, 
+			':time' 		=> $t->time,
+			':merchant' 	=> $t->merchant,
+			':category' 	=> $t->category, 
+			':amount' 		=> $a,
+			':amount2'		=> $a
+		]);
+
+		$update->execute([
+			':amount' 		=> $a,
+			':time' 		=> $t->time,
+			':institution' 	=> $t->institution,
+			':type' 		=> $t->type,
+		]);
 
 		return $this->connection->lastInsertId();
 	}
