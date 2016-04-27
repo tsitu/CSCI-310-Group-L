@@ -59,7 +59,7 @@ class BudgetManager
 	/**
 	 * Adds a new budget to given user .
 	 *
-	 * @param $year 		- the year this budget references
+	 * @param $category 	- the category this budget references
 	 * @param $month 		- the month this budget references
 	 * @param $user_id 		- user_id of user this budget belongs to
 	 * @return id of the budget if added, 0 otherwise
@@ -195,14 +195,14 @@ class BudgetManager
 	/**
 	 * Returns an `Budget` instance with the given info owned by the specified user.
 	 *
-	 * @param $institution  - the year of this budget
+	 * @param $institution  - the category of this budget
 	 * @param $month 		- the month of this budget
 	 * @param $user_id 		- user_id of user this budget belongs to
 	 * @return new `Budget` instance if found, null otherwise
 	 */
-	public function getBudgetByInfo($user_id, $month, $year)
+	public function getBudgetByInfo($user_id, $month, $year, $category)
 	{
-		$str = "SELECT * FROM Budgets WHERE user_id = :user_id AND month = :month AND year = :year";
+		$str = "SELECT * FROM Budgets WHERE user_id = :user_id AND month = :month AND category = :category AND year = :year";
 
 		$stmt = $this->connection->prepare($str);
 		$stmt->execute([

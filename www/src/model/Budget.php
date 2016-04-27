@@ -32,7 +32,6 @@ class Budget
 		$this->id = (int) $this->id;
 		$this->user_id = (int) $this->user_id;
 		$this->month = (int) $this->month;
-		$this->year = (int) $this->year;
 
 		$this->category = rtrim(DBManager::decrypt($this->category));
 
