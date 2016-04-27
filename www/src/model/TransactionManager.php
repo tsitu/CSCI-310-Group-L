@@ -167,6 +167,35 @@ class TransactionManager
 
 		return $list;
 	}
+
+	/**
+	 * Get transaction list for specified account NOT between [`$beg`, `$end`] datetime objects
+	 */
+	public function getListForAccountNotBetween($account_id, $beg, $end)
+	{
+		$str = "
+		SELECT ta.id, a.user_id, a.id as account_id, a.institution, a.type, ta.t as time, ta.merchant, ta.category, ta.amount, ta.balance 
+		FROM Transactions as ta JOIN Accounts as a
+		ON a.id = ta.account_id
+		WHERE a.id = :id AND (ta.t NOT BETWEEN :beg AND :end) ORDER BY ta.t DESC;
+		";
+
+		$stmt = $this->connection->prepare($str);
+		$stmt->execute([
+			':id' => $account_id, 
+			':beg' => DBManager::sqlDatetime($beg),
+			':end' => DBManager::sqlDatetime($end)
+		]);
+
+		$list = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Transaction');
+		if (!$list)
+			return [];
+
+		foreach ($list as $a)
+			$a->fixTypes();
+
+		return $list;
+	}
 }
 
 
