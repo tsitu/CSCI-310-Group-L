@@ -88,17 +88,16 @@ function deleteAccount(id, callback)
         data: {id: id},
         error: function()
         {
-            debug('[Error] failed to delete account with id ' + id);
-
         	if (callback && callback.error)
         		callback.error.call(callback.context || this);
         },
         success: function()
         {
-            debug('[Log] successfully deleted account with id ' + id);
+            accounts.delete(id);
+            activeList.delete(id);
 
         	if (callback && callback.success)
-        		callback.success.call(callback.context || this, data);
+        		callback.success.call(callback.context || this);
         }
     });
 }
@@ -112,7 +111,7 @@ function deleteAccount(id, callback)
  * 		success - handler for request completes
  * 		error   - handler for request fails 
  */
-function upload(file, beg, end, callback)
+function upload(file, callback)
 {
     debug('[Log] upload file ' + file.name);
 
@@ -128,21 +127,19 @@ function upload(file, beg, end, callback)
         {
             debug('[Error] failed to upload ' + file.name);
 
+            toggleUpload();
+
         	if (callback && callback.error)
         		callback.error.call(callback.context || this);
         },
         complete: function(results)
         {
-            var json = JSON.stringify(results.data);
-
-            debug('[Log] successfully uploaded ' + file.name + '. See results below');
-            debug(json);
-            
+            var newlist = JSON.stringify(results.data);
+                    
             $.ajax('src/scripts/upload.php',
             {
                 type: 'POST',
-                data: {data: json, beg: beg.valueOf()/1000, end: end.valueOf()/1000},
-                dataType: "json",
+                data: {data: newlist, beg: dataBegTime.valueOf()/1000, end: dataEndTime.valueOf()/1000},
                 error: function(jqXHR, textStatus, errorThrown, data)
                 {
                 	if (callback && callback.error)
@@ -150,11 +147,13 @@ function upload(file, beg, end, callback)
                 },
                 success: function(data)
                 {
+                    debug('[Log] successfully uploaded ' + file.name + '. See results below');
+
                 	if (callback && callback.success)
         				callback.success.call(callback.context || this, data);
                 }
             });
-        },
+        }
     });
 }
 
@@ -177,10 +176,8 @@ function fetch(newBeg, oldBeg, callback)
             if (callback && callback.error)
                 callback.error.call(callback.context || this);
         },
-        success: function(raw)
+        success: function(data)
         {
-            var data = JSON.parse(raw);
-
             updateList(data);
             updateGraph(data);
             dataBegTime = newBeg;
@@ -203,9 +200,9 @@ function newAccountItem(id, inst, type, amount)
     +   "<p class='account-name'>" + inst + " - " + type + "</p>"
     +   "<p class='account-amount'>" + amount + "</p>"
     +   "<div class='account-menu'>"
-    +       "<button class='account-option toggle-graph fa fa-line-chart'></button>"
-    +       "<button class='account-option toggle-list fa fa-list-ul'></button>"
-    +       "<button class='account-option toggle-edit fa fa-cog'></button>"
+    +       "<button class='account-option toggle-graph ion-arrow-graph-up-right active'></button>"
+    +       "<button class='account-option toggle-list ion-ios-list active'></button>"
+    +       "<button class='account-option toggle-edit icon ion-ios-gear'></button>"
     +   "</div>"
     +   "<div class='account-edit'>"
     +       "<form class='edit-form'>"

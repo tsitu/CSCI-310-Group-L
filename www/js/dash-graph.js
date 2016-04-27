@@ -166,22 +166,54 @@ function renameGraphAccount(id, name)
  */
 function updateGraph(data)
 {
-	for (var id of accounts)
+	for (var [id, list] of Object.entries(data))
 	{
-		var list = data[id];
-		if (list)
-		{
-			var series = highcharts.get(id);
+		var series = highcharts.get(+id);
 
-			for (var ta of list)
-				series.addPoint({
-					x: ta.unixtime * 1000,
-					y: ta.balance,
-					marker: {
-						enabled: true
-					}
-				}, false);
+		for (var ta of list)
+		{
+			series.addPoint({
+				x: ta.unixtime * 1000,
+				y: ta.balance,
+				marker: {
+					enabled: true
+				}
+			}, false);
 		}
+	}
+
+	highcharts.redraw();
+}
+
+/** 
+ *
+ */
+function refreshGraph(data)
+{
+	for (var [id, list] of Object.entries(data))
+	{
+		var existing = highcharts.get(+id);
+		if (existing)
+			existing.remove();
+
+		var name;
+		var data = [];
+		for (var i = list.length-1; i >= 0; --i)
+		{
+			var ta = list[i];
+			data.push([ta.unixtime * 1000, ta.balance]);
+
+			name = ta.institution + ' - ' + ta.type;
+		}
+
+		highcharts.addSeries({
+			id: id,
+			name: name,
+			marker: {
+				enabled: true,
+			},
+			data: data
+		}, false);
 	}
 
 	highcharts.redraw();

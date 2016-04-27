@@ -120,17 +120,31 @@ function renameListAccount(id, name)
 function updateList(data)
 {
 	var items = [];
-	for (var id of accounts)
+	for (var [id, list] of Object.entries(data))
 	{
-		var list = data[id];
-		if (list)
-		{
-			for (var ta of list)
-				items.push( getItem(ta.id, ta['account_id'], ta.institution, ta.type, ta.unixtime, ta.amount, ta.category, ta.merchant) );
-		}
+		for (var ta of list)
+			items.push( getItem(ta.id, ta['account_id'], ta.institution, ta.type, ta.unixtime, ta.amount, ta.category, ta.merchant) );
 	}
 
-	listManager.add(items);
+	listManager.add(items, function(items){});
+}
+
+/**
+ *
+ */
+function refreshList(data)
+{
+	listManager.clear();
+
+	var items = [];
+	for (var [id, list] of Object.entries(data))
+	{
+		for (var ta of list)
+			items.push( getItem(ta.id, ta['account_id'], ta.institution, ta.type, ta.unixtime, ta.amount, ta.category, ta.merchant) );
+	}
+
+	listManager.add(items, function(items){});
+	listManager.filter(filterList);
 }
 
 /**

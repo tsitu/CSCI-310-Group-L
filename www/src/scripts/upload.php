@@ -26,10 +26,14 @@ usort($data, "comp");
 $am = AccountManager::getInstance();
 $tm = TransactionManager::getInstance();
 
+$newIDs = [];
 foreach ($data as $t)
 {
-	$am->addAccount($t->institution, $t->type, $user_id);
+	$newID = $am->addAccount($t->institution, $t->type, $user_id);
 	$tm->addTransaction($user_id, $t);
+
+	if ($newID > 0)
+		$newIDs[] = $newID;
 }
 
 
@@ -41,6 +45,7 @@ $response->transactions = [];
 foreach ($response->accounts as $a)
 	$response->transactions[$a->id] = $tm->getListForAccountBetween($a->id, $beg, $end);
 
+$response->newIDs = $newIDs;
 $response->beg = $beg;
 $response->end = $end;
 

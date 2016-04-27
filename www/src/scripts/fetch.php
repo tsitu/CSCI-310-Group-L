@@ -22,4 +22,5 @@ foreach ($list as $ta)
 	$transactions[$ta->account_id][] = $ta;
 
 
+header('Content-Type: application/json');
 echo json_encode($transactions);
