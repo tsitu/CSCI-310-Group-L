@@ -191,7 +191,7 @@ function fetch(newBeg, oldBeg, callback)
  */
 function updateBudget(category, amount, callback)
 {
-    debug('[Log] update budget category ' + category + ' to ' + amount);
+    debug('[Log] update budget category ' + category + ' to ' + amount + ' for current month');
 
     var date = budgetDatePicker.getDate();
 
@@ -210,8 +210,30 @@ function updateBudget(category, amount, callback)
                 callback.success.call(callback.context || this);
         }
     });
-    if (callback && callback.success)
-        callback.success.call(callback.context || this);
+}
+
+/**
+ *
+ */
+function getBudget(month, year, callback)
+{
+    debug('[Log] get budgets across all categories for ' + year + '-' + month);
+
+    $.ajax('src/scripts/getBudget.php',
+    {
+        type: 'POST',
+        data: {month: month, year: year},
+        error: function()
+        {
+            if (callback && callback.error)
+                callback.error.call(callback.context || this);
+        },
+        success: function(data)
+        {
+            if (callback && callback.success)
+                callback.success.call(callback.context || this, data);
+        }
+    });
 }
 
 

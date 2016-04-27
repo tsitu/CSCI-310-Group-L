@@ -130,8 +130,6 @@ class BudgetManager
 		//encrypt
 		$category = DBManager::encrypt($category);
 
-		echo $category;
-
 		$stmt = $this->connection->prepare($str);
 		$stmt->execute([
 			':budget'   => $budget,

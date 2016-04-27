@@ -37,7 +37,8 @@ function initBudgetPicker()
 	});
 
 	var current = new Date(today.getUTCFullYear(), today.getUTCMonth());
-	budgetDatePicker.setDate(current); //dont trigger callback
+	budgetDatePicker.setDate(current, true); //dont trigger callback
+	budgetDateField.innerHTML = today.getUTCFullYear() + '. ' + (today.getUTCMonth() + 1);
 }
 
 /**
@@ -45,12 +46,27 @@ function initBudgetPicker()
  */
 function budgetDateChanged(date)
 {
-	//call budget functions here
-
 	var year = date.getUTCFullYear();
 	var month = (date.getUTCMonth() + 1);
 	budgetDateField.innerHTML = year + '. ' + month;
 
 	var current = (year === today.getUTCFullYear() && month === today.getUTCMonth() + 1);
 	$('.category-amount').prop('disabled', !current);
+
+	getBudget(month, year,
+	{
+		error: function()
+		{
+			//error handling
+			debug('[Error] failed to get budget for ' + year + '-' + month);
+		},
+		success: function(data)
+		{
+			for (var [c, b] of Object.entries(data))
+				$('.category-' + c + ' > .category-amount').val(b.budget);
+		}
+	});
 }
+
+
+
