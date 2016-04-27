@@ -10,6 +10,7 @@ var graphColors = [];
 var hc_options = {
 	title: { text: null },
 	chart: {
+		backgroundColor: '#EEEEEE',
 		zoomType: '',
 		events: {
 			selection: zoomed

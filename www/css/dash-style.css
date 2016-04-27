@@ -83,9 +83,15 @@ body {
 
 
 /* --- MODULES --- */
-.module { background-color: white; }
-.module-header { background-color: #f5f5f5; }
-.module-subheader { border-bottom: 1px solid #e6e6e6; }
+.module { background-color: #eeeeee; }
+.module-header { background-color: #d1d1d1; }
+
+.module-header, 
+.module-subheader,
+.transaction-item 
+{ 
+    border-bottom: 1px solid #c4c4c4; 
+}
 
 .date-select {
     color: #eb954b;
@@ -95,7 +101,6 @@ body {
 .transaction-col { cursor: pointer; }
 .transaction-item { 
     color: #414141;
-    border-bottom: 1px solid #b4b4b4; 
 }
 .transaction-account, .transaction-date { color: #7b7b7b; }
 
