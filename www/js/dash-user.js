@@ -188,6 +188,16 @@ function fetch(newBeg, oldBeg, callback)
     });
 }
 
+/**
+ *
+ */
+function updateBudget(category, amount, callback)
+{
+    debug('[Log] update budget category ' + category + ' to ' + amount);
+
+    if (callback && callback.success)
+        callback.success.call(callback.context || this);
+}
 
 
 /**

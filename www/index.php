@@ -135,13 +135,38 @@ foreach ($awb as $a)
                 </div>
                 
                 <div class='module-subheader'>
-                    <button id='budget-update'>Update</button>
-                    <div class='flex-glue'></div>
-                    <button id='budget-cal' class='date-select'>1970. 1. 1</button>
+                    <button id='budget-cal' class='date-select'>1970. 1</button>
                 </div>
                 
                 <ul class='category-list'>
-                    <li class='category-item'></li>
+                    <li class='category-item category-food' data-category='food'>
+                        <input type='number' class='category-amount' value='300.00'>
+                        <p class='category-label'>
+                            <span class='category-icon icon ion-spoon'></span>
+                            <span class='category-text'>Food</span>
+                        </p>
+                    </li>
+                    <li class='category-item category-shopping' data-category='shopping'>
+                        <input type='number' class='category-amount' value='300.00'>
+                        <p class='category-label'>
+                            <span class='category-icon icon ion-pricetag'></span>
+                            <span class='category-text'>Shopping</span>
+                        </p>
+                    </li>
+                    <li class='category-item category-travel' data-category='travel'>
+                        <input type='number' class='category-amount' value='300.00'>
+                        <p class='category-label'>
+                            <span class='category-icon icon ion-plane'></span>
+                            <span class='category-text'>Travel</span>
+                        </p>
+                    </li>
+                    <li class='category-item category-education' data-category='education'>
+                        <input type='number' class='category-amount' value='300.00'>
+                        <p class='category-label'>
+                            <span class='category-icon icon ion-university'></span>
+                            <span class='category-text'>Education</span>
+                        </p>
+                    </li>
                 </ul>
             </div>
             
@@ -251,6 +276,7 @@ foreach ($awb as $a)
     <script src='js/dash-user.js'></script>
     <script src='js/dash-list.js'></script>
     <script src='js/dash-graph.js'></script>
-
+    <script src='js/dash-budget.js'></script>
+    
 </body>
 </html>

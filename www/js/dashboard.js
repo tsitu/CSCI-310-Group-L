@@ -76,6 +76,9 @@ function bindEvents()
     $(document).on('change', '#csv-file', changeClicked);
     $(document).on('click', '#csv-upload', uploadClicked);
 
+    $(document).on('change', '.category-amount', budgetChanged);
+    $(document).on('focus blur', '.category-amount', resetBugetLine);
+
     $(document).on('click', '.dd-sort .dropitem, .transaction-col', sortClicked);
 
     //auto logout
@@ -456,6 +459,40 @@ function sortClicked(e)
     //change col
     $('.transaction-col > .icon').removeClass().addClass('icon');
     $('.transaction-col[data-sort="' + sort + '"] > .icon').addClass(icon);
+}
+
+/**
+ *
+ */
+function budgetChanged(e)
+{
+    var value = this.value;
+    var category = $(this).parent().attr('data-category');
+
+    if (!value)
+    {
+        $(this).addClass('invalid');
+        return;
+    }
+
+    updateBudget(category, value,
+    {
+        context: this,
+        success: function()
+        {
+            $(this).removeClass('invalid');
+            $(this).addClass('valid');
+        }
+    });
+}
+
+/**
+ * Remove all indicators from budget input field
+ */
+function resetBugetLine(e)
+{
+    $(this).removeClass('valid');
+    $(this).removeClass('invalid');
 }
 
 
