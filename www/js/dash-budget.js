@@ -36,9 +36,8 @@ function initBudgetPicker()
 		}
 	});
 
-	var test = new Date(today.getUTCFullYear(), today.getUTCMonth());
-	debug(test);
-	budgetDatePicker.setDate(test); //dont trigger callback
+	var current = new Date(today.getUTCFullYear(), today.getUTCMonth());
+	budgetDatePicker.setDate(current); //dont trigger callback
 }
 
 /**
@@ -47,6 +46,11 @@ function initBudgetPicker()
 function budgetDateChanged(date)
 {
 	//call budget functions here
-	
-	budgetDateField.innerHTML = date.getUTCFullYear() + '. ' + (date.getUTCMonth() + 1);
+
+	var year = date.getUTCFullYear();
+	var month = (date.getUTCMonth() + 1);
+	budgetDateField.innerHTML = year + '. ' + month;
+
+	var current = (year === today.getUTCFullYear() && month === today.getUTCMonth() + 1);
+	$('.category-amount').prop('disabled', !current);
 }

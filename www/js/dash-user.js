@@ -194,8 +194,6 @@ function updateBudget(category, amount, callback)
     debug('[Log] update budget category ' + category + ' to ' + amount);
 
     var date = budgetDatePicker.getDate();
-    debug(category);
-    debug(amount);
 
     $.ajax('src/scripts/updateBudget.php',
     {
