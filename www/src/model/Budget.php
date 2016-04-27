@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/DBManager.php';
+
 /**
  * Budget class
  */
@@ -7,16 +9,19 @@ class Budget
 {
 	public $id;
 	public $user_id;
+
+	public $category;
+	public $budget;
 	public $month;
 	public $year;
-	public $budget;
 
-	function __construct($id, $user_id, $month, $year, $budget) {
+	function __construct($id, $user_id, $category, $budget, $month, $year) {
 		$this->id = $id;
 		$this->user_id = $user_id;
+		$this->category = $category;
+		$this->budget = $budget;
 		$this->month = $month;
 		$this->year = $year;
-		$this->budget = $budget;
 	}
 
 	/**
@@ -29,8 +34,7 @@ class Budget
 		$this->month = (int) $this->month;
 		$this->year = (int) $this->year;
 
-		//$this->month = rtrim(DBManager::decrypt($this->month));
-		//$this->year = rtrim(DBManager::decrypt($this->year));
+		$this->category = rtrim(DBManager::decrypt($this->category));
 
 		$this->budget = (double) $this->budget;
 	}

@@ -1,6 +1,7 @@
 <?php
 
 require_once 'src/config.php';
+require_once 'src/model/BudgetManager.php';
 require_once 'src/model/AccountManager.php';
 require_once 'src/model/TransactionManager.php';
 
@@ -13,16 +14,22 @@ if ( !isset($_SESSION['user_id']) )
     exit();
 }
 
-//session vars
+//vars
 $user_id = $_SESSION['user_id'];
 $username = $_SESSION['username'];
 
-//managers
 $beg = new DateTime( $config['default_range'] );
 $end = new DateTime();
 
+
+//fetch data
+$bm = BudgetManager::getInstance();
 $am = AccountManager::getInstance();
 $tm = TransactionManager::getInstance();
+
+
+$icons = $config['budget_icons'];
+$budgets = $bm->getBudgetsForTime($user_id, $end->format('n'), $end->format('Y'));
 
 $accounts = [];
 $transactions = [];
@@ -139,34 +146,23 @@ foreach ($awb as $a)
                 </div>
                 
                 <ul class='category-list'>
-                    <li class='category-item category-food' data-category='food'>
-                        <input type='number' class='category-amount' value='300.00'>
+                    
+                    <?php
+                    foreach ($budgets as $c => $b)
+                    {
+                    ?>
+                    <li class='category-item category-<?= $c ?>' data-category='<?= $c ?>'>
+                        <input type='number' class='category-amount' 
+                                value='<?= number_format($b->budget, 2) ?>'
+                                data-previous='<?= $b->budget ?>'>
                         <p class='category-label'>
-                            <span class='category-icon icon ion-spoon'></span>
-                            <span class='category-text'>Food</span>
+                            <span class='category-icon icon ion-<?= $icons[$c] ?>'></span>
+                            <span class='category-text'><?= ucfirst($c) ?></span>
                         </p>
                     </li>
-                    <li class='category-item category-shopping' data-category='shopping'>
-                        <input type='number' class='category-amount' value='300.00'>
-                        <p class='category-label'>
-                            <span class='category-icon icon ion-pricetag'></span>
-                            <span class='category-text'>Shopping</span>
-                        </p>
-                    </li>
-                    <li class='category-item category-travel' data-category='travel'>
-                        <input type='number' class='category-amount' value='300.00'>
-                        <p class='category-label'>
-                            <span class='category-icon icon ion-plane'></span>
-                            <span class='category-text'>Travel</span>
-                        </p>
-                    </li>
-                    <li class='category-item category-education' data-category='education'>
-                        <input type='number' class='category-amount' value='300.00'>
-                        <p class='category-label'>
-                            <span class='category-icon icon ion-university'></span>
-                            <span class='category-text'>Education</span>
-                        </p>
-                    </li>
+                    <?php
+                    }
+                    ?>
                 </ul>
             </div>
             

@@ -7,6 +7,7 @@
 
 
 /* VARS */
+var budgetDate = null;
 var budgetDateField = null;
 var budgetDatePicker = null;
 
@@ -46,6 +47,6 @@ function initBudgetPicker()
 function budgetDateChanged(date)
 {
 	//call budget functions here
-
+	
 	budgetDateField.innerHTML = date.getUTCFullYear() + '. ' + (date.getUTCMonth() + 1);
 }

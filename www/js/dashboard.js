@@ -466,22 +466,34 @@ function sortClicked(e)
  */
 function budgetChanged(e)
 {
-    var value = this.value;
-    var category = $(this).parent().attr('data-category');
+    var item = $(this);
+    var value = item.val();
+    var category = item.parent().attr('data-category');
 
     if (!value)
     {
-        $(this).addClass('invalid');
+        item.addClass('invalid');
         return;
     }
 
     updateBudget(category, value,
     {
         context: this,
+        error: function()
+        {
+            debug('error');
+
+            item.addClass('invalid');
+            item.val(item.attr('data-previous'));
+        },
         success: function()
         {
-            $(this).removeClass('invalid');
-            $(this).addClass('valid');
+            debug('success');
+
+            item.removeClass('invalid');
+            item.addClass('valid');
+
+            item.attr('data-previous', item.val());
         }
     });
 }

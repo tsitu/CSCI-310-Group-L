@@ -171,8 +171,6 @@ function fetch(newBeg, oldBeg, callback)
         data: {newBeg: newBeg.valueOf()/1000, oldBeg: oldBeg.valueOf()/1000},
         error: function()
         {
-            debug('[Error] failed to fetch older data');
-
             if (callback && callback.error)
                 callback.error.call(callback.context || this);
         },
@@ -195,6 +193,25 @@ function updateBudget(category, amount, callback)
 {
     debug('[Log] update budget category ' + category + ' to ' + amount);
 
+    var date = budgetDatePicker.getDate();
+    debug(category);
+    debug(amount);
+
+    $.ajax('src/scripts/updateBudget.php',
+    {
+        type: 'POST',
+        data: {category: category, budget: amount, month: date.getUTCMonth() + 1, year: date.getUTCFullYear()},
+        error: function()
+        {
+            if (callback && callback.error)
+                callback.error.call(callback.context || this);
+        },
+        success: function()
+        {
+            if (callback && callback.success)
+                callback.success.call(callback.context || this);
+        }
+    });
     if (callback && callback.success)
         callback.success.call(callback.context || this);
 }
