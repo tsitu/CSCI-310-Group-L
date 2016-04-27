@@ -6,16 +6,16 @@
 'use strict';
 
 /* CONST */
-var listItem =
-"<li class='transaction-item' data-id='' data-account-id=''>" +
-    "<p class='transaction-account'></p>" +
-    "<p class='transaction-date'   ></p>" +
-    "<p class='transaction-amount' ></p>" +
-    "<p class='transaction-category'></p>" +
-    "<p class='transaction-merchant'></p>" +
-"</li>";
+var listItem = ""
++ "<li class='transaction-item' data-id='' data-account-id=''>"
++     "<p class='transaction-account'></p>" 
++     "<p class='transaction-date'   ></p>" 
++     "<p class='transaction-amount' ></p>" 
++     "<p class='transaction-category'></p>" 
++     "<p class='transaction-merchant'></p>" 
++ "</li>";
 
-var fields = [
+var listFields = [
 	'transaction-account',
 	'transaction-date',
 	'transaction-amount',
@@ -48,7 +48,7 @@ function initList()
 {
 	listManager = new List('transaction-module', {
 		item: listItem,
-		valueNames: fields
+		valueNames: listFields
 	});
 
 	sortList('transaction-date');
@@ -78,6 +78,7 @@ function initListPickers()
 
 	listBegPicker.setDate(tmAgo);
 	listEndPicker.setDate(today);
+	listEndPicker.setMaxDate(today);
 }
 
 /**
@@ -161,7 +162,7 @@ function sortList(col)
  */
 function updateList(id, name, list)
 {
-	
+
 }
 
 

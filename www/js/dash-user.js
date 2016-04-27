@@ -6,6 +6,25 @@
  */
 'use strict';
 
+
+/* Account List */
+/**
+ * Sort account list by alphabetical name
+ */
+function sortAccounts()
+{
+    $(".account-item").sort(function(a, b){
+
+        var an = $(a).children('.account-name').text().toLowerCase();
+        var bn = $(b).children('.account-name').text().toLowerCase();
+
+        return (an < bn) ? -1 : ( (an > bn) ? 1 : 0 );
+
+    }).appendTo('#account-list');
+}
+
+
+/* User Actions */
 /**
  * Logout user
  */
@@ -120,3 +139,28 @@ function upload(file, beg, end, callback)
         },
     });
 }
+
+/**
+ *
+ */
+function fetch(newBeg, oldBeg)
+{
+    $.ajax('src/scripts/fetch.php',
+    {
+        type: 'POST',
+        data: {newBeg: newBeg, oldBeg: oldBeg},
+        error: function()
+        {
+            if (callback && callback.error)
+                callback.error.call(callback.context || this);
+        },
+        success: function(data)
+        {
+            if (callback && callback.success)
+                callback.success.call(callback.context || this, data);
+        }
+    });
+}
+
+
+

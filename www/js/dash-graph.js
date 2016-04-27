@@ -53,8 +53,6 @@ var hc_options = {
 
 
 /* VARS */
-var graphBegDate = tmAgo;
-var graphEndDate = today;
 var graphBegField = null;
 var graphEndField = null;
 var graphBegPicker = null;
@@ -156,10 +154,7 @@ function updateGraph(id, name, list)
 	for (var i = list.length-1; i >= 0; --i)
 	{
 		var ta = list[i];
-		var part = ta.timeStr.split(' ');
-		var date = Date.UTC(part[0], part[1]-1, part[2], part[3], part[4], part[5]);
-
-		data.push([date, ta.balance]);
+		data.push([new Date(ta.unixtime), ta.balance]);
 	}
 
 	var series = highcharts.get(id);
@@ -209,6 +204,7 @@ function initGraphPickers()
 
 	graphBegPicker.setDate(tmAgo);
 	graphEndPicker.setDate(today);
+	graphEndPicker.setMaxDate(today);
 }
 
 /**
@@ -216,7 +212,20 @@ function initGraphPickers()
  */
 function graphPickerBegChanged(date)
 {
-	graphBegDate = date;
+	/* if new date is < data beg date
+	 * fetch transactions for all accounts from [new date, data beg date)
+	 * add to graph & list
+	 * 
+	 */
+	// if (date < dataBegDate)
+	// {
+	// 	fetch(date, dataBegDate, 
+	// 	{
+
+	// 	});
+	// }
+
+
 	setGraphMin(date.valueOf());
 
 	graphEndPicker.setMinDate(date);
@@ -231,7 +240,6 @@ function graphPickerBegChanged(date)
  */
 function graphPickerEndChanged(date)
 {
-	graphEndDate = date;
 	setGraphMax(date.valueOf());
 
 	graphBegPicker.setMaxDate(date);

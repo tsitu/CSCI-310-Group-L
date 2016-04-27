@@ -29,6 +29,11 @@ var side = null;
 var list = null;
 var active = null;
 
+var dataBegDate = tmAgo;
+var dataEndDate = today;
+
+
+
 /**
  * Initialize functionality
  */
@@ -39,6 +44,9 @@ $(document).ready(function()
 
     bindEvents();
     //resetTimeout();
+
+    //
+    sortAccounts();
 });
 
 
@@ -550,6 +558,7 @@ function csvCallback(accounts)
         else
         {
             $('#account-list').append(newAccountItem(a.id, a.institution, a.type, a.balance.toFixed(2)));
+            sortAccounts();
         }
     }
 }
