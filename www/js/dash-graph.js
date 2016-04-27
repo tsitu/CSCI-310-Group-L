@@ -78,7 +78,7 @@ function initGraph()
 function initHighcharts()
 {
 	var series = [];
-	for (var [id, list] of transactions.entries())
+	for (var [id, list] of tMap.entries())
 	{
 		var data = [];
 		for (var i = list.length-1; i >= 0; --i)
@@ -89,7 +89,7 @@ function initHighcharts()
 
 		series.push({
 			id: id,
-			name: accounts.get(id).name,
+			name: aMap.get(id).name,
 			data: data
 		});
 	}
@@ -97,7 +97,9 @@ function initHighcharts()
 	hc_options.series = series;
 	highcharts = Highcharts.chart('graph', hc_options);
 
-	console.log(highcharts.series)
+	//for GC
+	aMap = null;
+	tMap = null;
 }
 
 /**
@@ -146,39 +148,31 @@ function removeFromGraph(id)
 }
 
 /**
- * Add given [id, series] to the graph
- */
-function updateGraph(id, name, list)
-{
-	var data = [];
-	for (var i = list.length-1; i >= 0; --i)
-	{
-		var ta = list[i];
-		data.push([new Date(ta.unixtime), ta.balance]);
-	}
-
-	var series = highcharts.get(id);
-	if (series)
-	{
-		for (var point of data)
-			series.addPoint(point);
-	}
-	else
-	{
-		highcharts.addSeries({
-			id: id,
-			name: name,
-			data: data
-		});
-	}
-}
-
-/**
  * Update series on graph when an account is renamed
  */
 function renameGraphAccount(id, name)
 {
 	highcharts.get(id).update({name: name}, false);
+	highcharts.redraw();
+}
+
+/**
+ * Update the graph with newly fetched data points
+ */
+function updateGraph(data)
+{
+	for (var id of accounts)
+	{
+		var list = data[id];
+		if (list)
+		{
+			var series = highcharts.get(id);
+
+			for (var ta of list)
+				series.addPoint([ta.unixtime * 1000, ta.balance], false); //dont redraw
+		}
+	}
+
 	highcharts.redraw();
 }
 
@@ -199,12 +193,15 @@ function initGraphPickers()
 
 	graphEndPicker = new Pikaday({
 		field: graphEndField,
-		onSelect: graphPickerEndChanged
+		onSelect: setGraphPickerEnd
 	});
 
-	graphBegPicker.setDate(tmAgo);
-	graphEndPicker.setDate(today);
+	setGraphPickerBeg(tmAgo);
+	setGraphPickerEnd(today);
 	graphEndPicker.setMaxDate(today);
+
+	graphBegPicker.setDate(tmAgo, true); //dont trigger callback
+	graphEndPicker.setDate(today, true); //dont trigger callback
 }
 
 /**
@@ -217,28 +214,37 @@ function graphPickerBegChanged(date)
 	 * add to graph & list
 	 * 
 	 */
-	// if (date < dataBegDate)
-	// {
-	// 	fetch(date, dataBegDate, 
-	// 	{
+	if (date < dataBegDate)
+	{
+		fetch(date, dataBegDate, 
+		{
+			context: this,
+			success: function()
+			{
+				setGraphPickerBeg(date);
+			}
+		});
+	}
+}
 
-	// 	});
-	// }
-
-
+/**
+ *
+ */
+function setGraphPickerBeg(date)
+{
 	setGraphMin(date.valueOf());
 
 	graphEndPicker.setMinDate(date);
 	graphBegPicker.setStartRange(date);
 	graphEndPicker.setStartRange(date);
 
-	graphBegField.innerHTML = date.getUTCFullYear() + '. ' + (date.getUTCMonth() + 1) + '. ' + date.getUTCDate();
+	graphBegField.innerHTML = formatDate(date);
 }
 
 /**
- * Callback for graph's end picker date change
+ *
  */
-function graphPickerEndChanged(date)
+function setGraphPickerEnd(date)
 {
 	setGraphMax(date.valueOf());
 
@@ -246,10 +252,6 @@ function graphPickerEndChanged(date)
 	graphBegPicker.setEndRange(date);
 	graphEndPicker.setEndRange(date);
 
-	graphEndField.innerHTML = date.getUTCFullYear() + '. ' + (date.getUTCMonth() + 1) + '. '  + date.getUTCDate();
+	graphEndField.innerHTML = formatDate(date);
 }
-
-
-
-
 

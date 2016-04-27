@@ -211,13 +211,15 @@ foreach ($awb as $a)
     
     <!-- JS -->
     <script>
-        var accounts = new Map(<?= json_encode($accounts) ?>);
-        var transactions = new Map(<?= json_encode($transactions) ?>);
+        var accounts = new Set(<?= json_encode($activeList) ?>);
         var activeList = new Set(<?= json_encode($activeList) ?>);
+
+        var aMap = new Map(<?= json_encode($accounts) ?>);
+        var tMap = new Map(<?= json_encode($transactions) ?>);
         
         console.log(accounts);
-        console.log(transactions);
-        console.log(activeList);
+        console.log(aMap);
+        console.log(tMap);
     </script>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>

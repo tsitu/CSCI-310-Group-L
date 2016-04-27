@@ -182,6 +182,3 @@ function renameListAccount(id, name)
 		}
 	}
 }
-
-
-

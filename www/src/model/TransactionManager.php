@@ -119,10 +119,11 @@ class TransactionManager
 	public function getListForUserBetween($user_id, $beg, $end)
 	{
 		$str = "
-		SELECT ta.id, a.id as account_id, a.institution, a.type, ta.t as time, ta.merchant, ta.category, ta.amount, ta.balance 
+		SELECT ta.id, ta.user_id, a.id as account_id, a.institution, a.type, ta.t as time, ta.merchant, ta.category, ta.amount, ta.balance 
 		FROM Transactions as ta JOIN Accounts as a
 		ON a.id = ta.account_id
-		WHERE (ta.t BETWEEN :beg AND :end) ORDER BY ta.t DESC;
+		WHERE ta.user_id = :uid AND (ta.t BETWEEN :beg AND :end) 
+		ORDER BY ta.t DESC;
 		";
 
 
@@ -131,7 +132,11 @@ class TransactionManager
 		$end = DBManager::sqlDatetime($end);
 
 		$stmt = $this->connection->prepare($str);
-		$stmt->execute([':beg' => $beg, ':end' => $end]);
+		$stmt->execute([
+			':uid' => $user_id,
+			':beg' => $beg, 
+			':end' => $end
+		]);
 
 		$list = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Transaction');
 		foreach ($list as $a)
@@ -149,7 +154,8 @@ class TransactionManager
 		SELECT ta.id, a.user_id, a.id as account_id, a.institution, a.type, ta.t as time, ta.merchant, ta.category, ta.amount, ta.balance 
 		FROM Transactions as ta JOIN Accounts as a
 		ON a.id = ta.account_id
-		WHERE a.id = :id AND (ta.t BETWEEN :beg AND :end) ORDER BY ta.t DESC;
+		WHERE a.id = :id AND (ta.t BETWEEN :beg AND :end) 
+		ORDER BY ta.t DESC;
 		";
 
 		$stmt = $this->connection->prepare($str);

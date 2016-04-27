@@ -123,7 +123,7 @@ function upload(file, beg, end, callback)
             $.ajax('src/scripts/upload.php',
             {
                 type: 'POST',
-                data: {data: json, beg: beg, end: end},
+                data: {data: json, beg: beg.valueOf()/1000, end: end.valueOf()/1000},
                 dataType: "json",
                 error: function(jqXHR, textStatus, errorThrown, data)
                 {
@@ -141,21 +141,28 @@ function upload(file, beg, end, callback)
 }
 
 /**
- *
+ * Fetch transaction data from dates [newBeg, oldBeg].
+ * 
  */
-function fetch(newBeg, oldBeg)
+function fetch(newBeg, oldBeg, callback)
 {
     $.ajax('src/scripts/fetch.php',
     {
         type: 'POST',
-        data: {newBeg: newBeg, oldBeg: oldBeg},
+        data: {newBeg: newBeg.valueOf()/1000, oldBeg: oldBeg.valueOf()/1000},
         error: function()
         {
+            debug('[Error] failed to fetch older data');
+
             if (callback && callback.error)
                 callback.error.call(callback.context || this);
         },
-        success: function(data)
+        success: function(raw)
         {
+            var data = JSON.parse(raw);
+
+            updateGraph(data);
+
             if (callback && callback.success)
                 callback.success.call(callback.context || this, data);
         }
@@ -163,4 +170,33 @@ function fetch(newBeg, oldBeg)
 }
 
 
+
+/**
+ * Return string for a new account list item with given params
+ */
+function newAccountItem(id, inst, type, amount)
+{
+    var str = ""
+    + "<li id='account-" + id + "' class='account-item' data-id='" + id + "'>" 
+    +   "<p class='account-name'>" + inst + " - " + type + "</p>"
+    +   "<p class='account-amount'>" + amount + "</p>"
+    +   "<div class='account-menu'>"
+    +       "<button class='account-option toggle-graph fa fa-line-chart'></button>"
+    +       "<button class='account-option toggle-list fa fa-list-ul'></button>"
+    +       "<button class='account-option toggle-edit fa fa-cog'></button>"
+    +   "</div>"
+    +   "<div class='account-edit'>"
+    +       "<form class='edit-form'>"
+    +           "<input name='new-institution' placeholder='" + inst + "'"
+    +                   "class='edit-option edit-field inst-field'>"
+    +           "<input name='new-type' placeholder='" + type + "'"
+    +                   "class='edit-option edit-field type-field'>"
+    +           "<button class='edit-option rename-button'>Rename</button>"
+    +           "<button class='edit-option delete-button'>Delete Account</button>"
+    +       "</form>"
+    +   "</div>"
+    + "</li>";
+    
+    return str;
+}
 

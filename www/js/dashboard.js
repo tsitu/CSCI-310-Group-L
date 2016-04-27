@@ -41,12 +41,10 @@ $(document).ready(function()
 {
     initList();
     initGraph();
+    sortAccounts();
 
     bindEvents();
     //resetTimeout();
-
-    //
-    sortAccounts();
 });
 
 
@@ -383,8 +381,8 @@ function uploadClicked(e)
 
     //params
     var file = document.getElementById('csv-file').files[0];
-    var beg = graphBegPicker.getDate().valueOf()/1000;
-    var end = graphEndPicker.getDate().valueOf()/1000;
+    var beg = graphBegPicker.getDate();
+    var end = graphEndPicker.getDate();
 
     upload(file, beg, end, {
         context: this,
@@ -453,6 +451,14 @@ function sortClicked(e)
 
 /* --- HELPERS --- */
 /**
+ * Return formatted date as YYYY. M. D.
+ */
+function formatDate(date)
+{
+    return date.getUTCFullYear() + '. ' + (date.getUTCMonth() + 1) + '. ' + date.getUTCDate();
+}
+
+/**
  * Returns an account id given an element inside a 'li.account-item'
  */
 function getAccountID(element)
@@ -504,90 +510,4 @@ function csvMessage(str, error)
         msg.addClass('error');
     else
         msg.removeClass('error');
-}
-
-/**
- * Parse CSV into array of objects, convert to JSON, and POST to upload.php
- */
-function csvUpload(event)
-{
-
-   
-
-    event.preventDefault();
-    $('#csv-upload').html('Uploading...');
-    
-    Papa.parse(csvInput.files[0], {
-        newline: '\n',
-        delimiter: ', ',
-        header: true,
-        fastMode: true,
-        dynamicTyping: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-            // console.log(JSON.stringify(results.data));
-            
-            $.ajax({
-                type: "POST",
-                url: "src/scripts/upload.php",
-                data: {data: JSON.stringify(results.data)},
-                dataType: "json",
-                success: csvCallback
-            });
-        },
-        error: function(xhr, status, error) {
-          console.log(xhr.responseText);
-        }
-    });
-}
-
-/**
- * Callback for CSV upload post 
- */
-function csvCallback(accounts)
-{
-    toggleAdd();
-    $('#csv-upload').html("Done");
-    for (var i = 0; i < accounts.length; i++)
-    {
-        var a = accounts[i];
-        
-        var item = document.getElementById('account-' + a.id);
-        if (item)
-            $(item).children('.account-amount').html(a.balance.toFixed(2));
-        else
-        {
-            $('#account-list').append(newAccountItem(a.id, a.institution, a.type, a.balance.toFixed(2)));
-            sortAccounts();
-        }
-    }
-}
-
-/**
- * Return string for a new account list item with given params
- */
-function newAccountItem(id, inst, type, amount)
-{
-    var str = ""
-    + "<li id='account-" + id + "' class='account-item' data-id='" + id + "'>" 
-    +   "<p class='account-name'>" + inst + " - " + type + "</p>"
-    +   "<p class='account-amount'>" + amount + "</p>"
-    +   "<div class='account-menu'>"
-    +       "<button class='account-option toggle-graph fa fa-line-chart'></button>"
-    +       "<button class='account-option toggle-list fa fa-list-ul'></button>"
-    +       "<button class='account-option toggle-edit fa fa-cog'></button>"
-    +   "</div>"
-    +   "<div class='account-edit'>"
-    +       "<form class='edit-form'>"
-    +           "<input name='new-institution' placeholder='" + inst + "'"
-    +                   "class='edit-option edit-field inst-field'>"
-    +           "<input name='new-type' placeholder='" + type + "'"
-    +                   "class='edit-option edit-field type-field'>"
-    +           "<button class='edit-option rename-button'>Rename</button>"
-    +           "<button class='edit-option delete-button'>Delete Account</button>"
-    +       "</form>"
-    +   "</div>"
-    + "</li>";
-    
-    return str;
 }
