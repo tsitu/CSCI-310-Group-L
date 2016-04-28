@@ -427,6 +427,8 @@ function uploadSuccess(data)
     }
     
     sortAccounts();
+    budgetDateChanged(budgetDate);
+    
     refreshList(data.transactions);
     refreshGraph(data.transactions);
 }

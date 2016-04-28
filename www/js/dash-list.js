@@ -128,8 +128,9 @@ function removeFromList(id)
 function updateList(data)
 {
 	var items = [];
-	for (var [id, list] of Object.entries(data))
+	for (var id in data)
 	{
+		var list = data[id];
 		for (var ta of list)
 			items.push( getItem(ta.id, ta['account_id'], ta.institution, ta.type, ta.unixtime, ta.amount, ta.category, ta.merchant) );
 	}
