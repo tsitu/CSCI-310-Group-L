@@ -30,8 +30,7 @@ var hc_options = {
 	yAxis: {
 		id: 'y',
 		title: { text: null },
-		gridLineDashStyle: 'longdash',
-		min: 0
+		gridLineDashStyle: 'longdash'
 	},
 	xAxis: {
 		id: 'x',
@@ -207,12 +206,24 @@ function updateGraph(data)
  */
 function refreshGraph(data)
 {
-	debug(data);
-	debug(highcharts.series);
-
-	for (var id in data)
+	//totals
+	for (var name in data.totals)
 	{
-		var list = data[id];
+		var set = data.totals[name];
+
+		var points = [];
+		for (var unixtime in set)
+			points.push([+unixtime * 1000, +set[unixtime]]);
+
+		highcharts.get(name).update({
+			data: points
+		});
+	}
+
+	//accounts
+	for (var id in data.transactions)
+	{
+		var list = data.transactions[id];
 
 		var existing = highcharts.get(+id);
 		if (existing)
