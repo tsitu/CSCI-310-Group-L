@@ -85,12 +85,8 @@ class budgetTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($return_budget, null);
 	}
 
-	public function testGetInvalidBudgetsByUser(){
+	public function testGetBudgetsByInvalidUser(){
 		$return_budgetArray = $this->b->getBudgetsByUser(500);
-		$this->assertEquals(sizeof($return_budgetArray), 0);
-	}
-	public function testEmptyBudget(){
-		$return_budgetArray = $this->b->getBudgetsByUser(73352);
 		$this->assertEquals(sizeof($return_budgetArray), 0);
 	}
 
