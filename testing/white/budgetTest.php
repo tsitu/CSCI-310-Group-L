@@ -104,7 +104,7 @@ class budgetTest extends PHPUnit_Framework_TestCase
 		$start_date = new DateTime('04/01/2011');
 		$end_date = new DateTime('05/11/2016');
 		$return_array = $this->u->getAssetHistory("asset", 2, $start_date, $end_date);
-		$this->assertEquals(count($return_array), 10);
+		$this->assertEquals(count($return_array), 17);
 		
 		echo "Get asset History test done\n";
 
