@@ -81,11 +81,13 @@ function initHighcharts()
 	var series = [];
 
 	//totals
-	for (var [name, set] of Object.entries(totals))
+	for (var name in totals)
 	{
+		var set = totals[name];
+
 		var data = [];
-		for (var [unixtime, balance] of Object.entries(set))
-			data.push([+unixtime * 1000, balance]);
+		for (var unixtime in set)
+			data.push([+unixtime * 1000, +set[unixtime]]);
 
 		series.push({
 			id: name,
@@ -181,8 +183,9 @@ function renameGraphAccount(id, name)
  */
 function updateGraph(data)
 {
-	for (var [id, list] of Object.entries(data))
+	for (var id in data)
 	{
+		var list = data[id];
 		var series = highcharts.get(+id);
 
 		for (var ta of list)
@@ -205,8 +208,10 @@ function updateGraph(data)
  */
 function refreshGraph(data)
 {
-	for (var [id, list] of Object.entries(data))
+	for (var id in data)
 	{
+		var list = data[id];
+
 		var existing = highcharts.get(+id);
 		if (existing)
 			existing.remove();
