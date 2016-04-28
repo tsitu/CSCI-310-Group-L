@@ -9,9 +9,6 @@
 /* CONST */
 var DEBUG = true;
 
-var INACTIVITY_TIME = 2 * 60 * 1000; //2min
-
-var DATE_FORMAT = 'YYYY. M. D';
 var DAY_MS = 24 * 60 * 60 * 1000;
 
 var ICON_ARROW = 'ion-ios-arrow-';
@@ -45,7 +42,7 @@ $(document).ready(function()
     setDataEnd(today);
 
     bindEvents();
-    //resetTimeout();
+    resetTimeout();
 });
 
 
@@ -428,7 +425,7 @@ function uploadSuccess(data)
     
     sortAccounts();
     budgetDateChanged(budgetDate);
-    
+
     refreshList(data.transactions);
     refreshGraph(data.transactions);
 }

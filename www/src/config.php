@@ -5,9 +5,10 @@ $config = [
 //dashboard
 'default_range'		=> '-3 months',
 
-//login
+//auth 
 'login_attempts' 	=> 4,
 'login_downtime'	=> '+1 min',
+'logout_countdown'  => 2 * 60 * 1000, //2 min
 
 //db
 'db_host'			=> 'sql3.freemysqlhosting.net',
