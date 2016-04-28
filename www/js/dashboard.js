@@ -311,10 +311,13 @@ function renameClicked(e)
         {
             debug('[Log] successfully renamed account with id: ' + id);
 
+            var div = $(this).parents('.account-item');
+            div.find('.toggle-edit').click();
+
             var name = inst + ' - ' + type;
             renameListAccount(id, name);
             renameGraphAccount(id, name);
-            $(this).parents('.account-edit').siblings('.account-name').html(name);
+            div.find('.account-name').html(name);
         }
     });
 }
