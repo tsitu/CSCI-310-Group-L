@@ -18,7 +18,7 @@ When(/^user adds it through browse$/) do
 	#Capybara.ignore_hidden_elements = false
 	attach_file('csv-file', File.absolute_path('../samples/test.csv'))
 	#Capybara.ignore_hidden_elements = false
-	#page.find('#csv-upload', visible:false).click()
+	page.find('#csv-upload').click()
 end 
 
 Then(/^account list increases$/) do 
