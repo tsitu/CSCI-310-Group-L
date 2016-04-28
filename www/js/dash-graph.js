@@ -201,15 +201,14 @@ function updateGraph(data)
 	highcharts.redraw();
 }
 
-/** 
+/**
  *
  */
-function refreshGraph(data)
+function updateGraphTotals(totals)
 {
-	//totals
-	for (var name in data.totals)
+	for (var name in totals)
 	{
-		var set = data.totals[name];
+		var set = totals[name];
 
 		var points = [];
 		for (var unixtime in set)
@@ -219,6 +218,15 @@ function refreshGraph(data)
 			data: points
 		});
 	}
+}
+
+/** 
+ *
+ */
+function refreshGraph(data)
+{
+	//totals
+	updateGraphTotals(data.totals);
 
 	//accounts
 	for (var id in data.transactions)

@@ -345,9 +345,15 @@ function deleteClicked(e)
         {
             debug('[Log] successfully deleted account with id: ' + id);
 
+            accounts.delete(id);
+            activeList.delete(id);
+
             removeFromList(id);
             removeFromGraph(id);
             $(this).parents('.account-item').remove();
+
+            debug(data);
+            updateGraphTotals(data.totals);
         }
     });
 }
