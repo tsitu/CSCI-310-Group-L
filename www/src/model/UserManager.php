@@ -168,7 +168,7 @@ class UserManager
         return $results;
     }
 
-    //account_type = {'asset', 'liability', 'net worth'}
+    //account_type = {'asset', 'liability', 'net'}
     //time parameters are in datetime format or YYYY-MM-DDThh:mm:ss.nnn format
     //DOES NOT account for negatives...so if savings balance is negative, it's not counted in liabilities or net worth...
     public function getAssetHistory($account_type, $user_id, $beg, $end)
@@ -212,6 +212,8 @@ class UserManager
         //prepare
         $stmt = $this->connection->prepare($str);
         $stmt->bindParam(':user_id', $user_id);
+
+
         $stmt->bindParam(':beg', $beg);
         $stmt->bindParam(':end', $end);
 
@@ -245,10 +247,12 @@ class UserManager
         $sum = 0;
         foreach($rows as $row)
         {
-            if(in_array($row['account_id'], $unique_accounts))
+        	echo "Processing " . $row['account_id'] . "<br>";
+            if(!in_array($row['account_id'], $unique_accounts))
             {
                 $unique_accounts[] = $row['account_id'];
                 $sum += $row['balance'];
+                $snapshot[ date_create($row['t'])->getTimestamp() ] = $sum;
             }
             else 
             {
@@ -256,6 +260,8 @@ class UserManager
                 $snapshot[ date_create($row['t'])->getTimestamp() ] = $sum;
             }
         }
+        echo "size: " . count($unique_accounts) . "<br>";
+        echo $unique_accounts[0] . " " . $unique_accounts[1] . "<br>";
         return $snapshot;
     }
 }
