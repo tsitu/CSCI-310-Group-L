@@ -29,9 +29,6 @@ var side = null;
 var list = null;
 var active = null;
 
-var dataBegTime = tmAgo;
-var dataEndTime = today;
-
 
 
 /**
@@ -43,6 +40,9 @@ $(document).ready(function()
     initGraph();
     initBudget();
     sortAccounts();
+
+    setDataBeg(tmAgo);
+    setDataEnd(today);
 
     bindEvents();
     //resetTimeout();

@@ -191,54 +191,27 @@ function initListPickers()
 
 	listBegPicker = new Pikaday({
 		field: listBegField,
-		onSelect: listPickerBegChanged
+		onSelect: setDataBeg
 	});
 
 	listEndPicker = new Pikaday({
 		field: listEndField,
-		onSelect: setListPickerEnd
+		onSelect: setDataEnd
 	});
 
-	setListPickerBeg(tmAgo);
-	setListPickerEnd(today);
 	listEndPicker.setMaxDate(today);
-
-	listBegPicker.setDate(tmAgo, true); //dont trigger callback
-	listEndPicker.setDate(today, true); //dont trigger callback
 }
 
 /**
- *
- */
-function listPickerBegChanged(date)
-{
-	if ( !(date < dataBegTime) )
-	{
-		setListPickerBeg(date);
-		return;
-	}
-
-	//if older than whats available
-	fetch(date, dataBegTime, 
-	{
-		context: this,
-		success: function()
-		{
-			setListPickerBeg(date);
-		}
-	});
-}
-
-/**
- * Called when beg date for list is changed
+ * Adjust range beg picker for list to given date.
+ * Filter the list to apply new range 
  */
 function setListPickerBeg(date)
 {
-	listBegTime = date.valueOf();
-
 	listEndPicker.setMinDate(date);
 	listBegPicker.setStartRange(date);
 	listEndPicker.setStartRange(date);
+	listBegPicker.setDate(date, true); //dont trigger callback
 
 	listBegField.innerHTML = formatDate(date);
 
@@ -248,13 +221,15 @@ function setListPickerBeg(date)
 }
 
 /**
- * Called when end date for list is changed
+ * Adjust range end picker for list to given date.
+ * Filter the list to apply new range
  */
 function setListPickerEnd(date)
 {
 	listBegPicker.setMaxDate(date);
 	listBegPicker.setEndRange(date);
 	listEndPicker.setEndRange(date);
+	listEndPicker.setDate(date, true); //dont trigger callback
 
 	listEndField.innerHTML = formatDate(date);
 

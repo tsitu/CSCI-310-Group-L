@@ -153,7 +153,7 @@ foreach ($awb as $a)
                     ?>
                     <li class='category-item category-<?= $c ?>' data-category='<?= $c ?>'>
                         <input type='number' class='category-amount' 
-                                value='<?= number_format($b->budget, 2) ?>'
+                                value='<?= $b->budget ?>'
                                 data-previous='<?= $b->budget ?>'>
                         <p class='category-label'>
                             <span class='category-icon icon ion-<?= $icons[$c] ?>'></span>
@@ -255,6 +255,7 @@ foreach ($awb as $a)
         var aMap = new Map(<?= json_encode($accounts) ?>);
         var tMap = new Map(<?= json_encode($transactions) ?>);
         
+        console.log(<?= json_encode($budgets) ?>);
         console.log(accounts);
         console.log(aMap);
         console.log(tMap);
