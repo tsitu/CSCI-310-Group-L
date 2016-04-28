@@ -12,7 +12,7 @@ Given(/^user has an account csv file$/) do
 end 
 
 When(/^user adds it through browse$/) do 
-	#page.find('#show-side').click()
+	page.find('.toggle-side').click()
 	page.find('#toggle-upload').click()
 	#page.execute_script("$('.dyn-crm-upload-btn-container').css('display','block')")
 	#Capybara.ignore_hidden_elements = false
