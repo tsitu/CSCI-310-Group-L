@@ -16,10 +16,6 @@ class Transaction
 	public $category;	//"fast food", "loan"
 	public $merchant;	//"McDonalds", "Loan Payment", etc.
 
-	public $institution;
-	public $type;
-	public $balance;
-
 
 	/**
 	 * Ensure numeric fields are the correct type since PDO::fetch() only generates strings

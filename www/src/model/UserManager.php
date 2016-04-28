@@ -132,4 +132,82 @@ class UserManager
 
 		return new User($row->id, $row->email, $row->password);
 	}
+
+	//account_type = {'asset', 'liability', 'net worth'}
+	//time parameters are in datetime format or YYYY-MM-DDThh:mm:ss.nnn format
+	//DOES NOT account for negatives...so if savings balance is negative, it's not counted in liabilities or net worth...
+	public function getAssetHistory($account_type, $user_id, $startTime, $endTime)
+	{
+		//Assets = total savings
+		//Liabilities = total credit, loans
+		//Net Worth = assets - liabilities
+
+		$transactions = array();
+		$times = array();	//all transaction datetimes in range startTime to endTime
+		$unique_accounts = array();
+		$snapshot = array(); //k->datetime, v->totalAmount
+		$sum = 0;
+
+		//1. find all transaction occurances after startTime and before endTime
+		if($account_type == 'asset') 
+			$str = 
+			"SELECT * FROM Transactions INNER JOIN Accounts ON Transactions.account_id=Accounts.id
+			WHERE Transactions.t >= :startTime AND Transactions.t <= :endTime AND Transactions.user_id = :user_id AND Accounts.type = :savings";
+		else if($account_type == 'liability')
+			$str = 
+			"SELECT * FROM Transactions INNER JOIN Accounts ON Transactions.account_id=Accounts.id
+			WHERE Transactions.t >= :startTime AND Transactions.t <= :endTime AND Transactions.user_id = :user_id AND (Accounts.type = :credit OR Accounts.type = :loan)";
+		else if($account_type == 'net worth')
+			$str = 
+			"SELECT * FROM Transactions INNER JOIN Accounts ON Transactions.account_id=Accounts.id
+			WHERE Transactions.t >= :startTime AND Transactions.t <= :endTime AND Transactions.user_id = :user_id AND (Accounts.type = :savings OR Accounts.type = :credit OR Accounts.type = :loan)";
+		else
+		{
+			echo '$account_type parameter not formatted correctly.<br>';
+			return null;
+		}
+
+
+		$stmt = $this->connection->prepare($str);
+		$stmt->bindParam(':startTime', $startTime);
+		$stmt->bindParam(':endTime', $endTime);
+		$stmt->bindParam(':user_id', $user_id);
+		if($account_type == 'asset') 
+			$stmt->bindParam(':savings', DBManager::encrypt('savings'));
+		else if($account_type == 'liability')
+		{
+			$stmt->bindParam(':credit', DBManager::encrypt('credit'));
+			$stmt->bindParam(':loan', DBManager::encrypt('loan'));
+		}
+		else if($account_type == 'net worth')
+		{
+			$stmt->bindParam(':savings', DBManager::encrypt('savings'));
+			$stmt->bindParam(':credit', DBManager::encrypt('credit'));
+			$stmt->bindParam(':loan', DBManager::encrypt('loan'));
+		}
+		$stmt->execute();
+
+		$rows = $stmt->fetchAll();
+		
+		//sum up the amounts, and at each timestamp, add a snapshot into the array.
+		foreach($rows as $row)
+		{
+			if(in_array($row['account_id'], $unique_accounts))
+			{
+				$unique_accounts[] = $row['account_id'];
+				$sum += $row['balance'];
+			}
+			else 
+			{
+		 	$sum += $row['amount'];
+		 	$snapshot[$row['t']] = $sum;
+			}
+			
+			//echo $row['t'] . " - " $row['amount'] . "<br>";
+		}
+
+		 return $snapshot;
+
+		//returns array of pairs, with each element containing timestamp, balance.
+	}
 }

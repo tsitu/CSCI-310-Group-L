@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/DBManager.php';
 require_once __DIR__ . '/Budget.php';
 
@@ -56,30 +57,91 @@ class BudgetManager
 
 	/* --- QUERIES --- */
 	/**
-	 * Adds a new financial account with given name tied to specified user.
+	 * Adds a new budget to given user .
 	 *
 	 * @param $category 	- the category this budget references
 	 * @param $month 		- the month this budget references
 	 * @param $user_id 		- user_id of user this budget belongs to
-	 * @return id of the budget if added, null otherwise
+	 * @return id of the budget if added, 0 otherwise
 	 */
-	public function addBudget($user_id, $month, $year, $category, $budget)
+
+	public function addBudget($user_id, $category, $month, $year, $budget)
 	{
-		$str = "INSERT IGNORE INTO Budgets(user_id, month, year, category, budget) VALUES (:user_id, :month, :year, :category, :budget);";
+		$str = "INSERT IGNORE INTO Budgets(user_id, category, budget, month, year) VALUES (:user_id, :category, :budget, :month, :year);";
 
 		//encrypt
-		//$month = DBManager::encrypt($month);
-		//$category = DBManager::encrypt($category);
+		$category = DBManager::encrypt($category);
 
 		$stmt = $this->connection->prepare($str);
-		$stmt->bindParam(':user_id', $user_id);
-		$stmt->bindParam(':month', $month);
-		$stmt->bindParam(':year', $month);
-		$stmt->bindParam(':category', $category);
-		$stmt->bindParam(':budget', $budget);
-		$stmt->execute();
+		$stmt->execute([
+			':user_id' 	=> $user_id,
+			':category' => $category,
+			':budget'   => $budget,
+			':month'	=> $month,
+			':year'		=> $year,
+		]);
 
 		return $this->connection->lastInsertId();
+	}
+
+	/**
+	 * Add default budget for specified user and time
+	 *
+	 * @return true if inserted defaults for all categories, false otherwise.
+	 */
+	private function addDefaultBudgetsForTime($user_id, $month, $year)
+	{
+		global $config;
+
+		//defaults
+		$categories = $config['budget_categories'];
+		$amount = $config['budget_default'];
+
+		//prepare
+		$str = "INSERT IGNORE INTO Budgets(user_id, category, budget, month, year) VALUES (:user_id, :category, :budget, :month, :year);";
+		$stmt = $this->connection->prepare($str);
+
+		//loop execute
+		$count = 0;
+		foreach ($categories as $c)
+		{
+			$stmt->execute([
+				':user_id' 	=> $user_id,
+				':budget'   => $amount,
+				':month'	=> $month,
+				':year'		=> $year,
+				':category' => DBManager::encrypt($c),
+			]);
+
+			$count += $stmt->rowCount();
+		}
+
+		return $count == count($categories);
+	}
+
+	/**
+	 * Update scpecified budget for category during month, year to given amount
+	 *
+	 * @return true if updated, false otherwise.
+	 */
+	public function updateBudget($user_id, $category, $month, $year, $budget)
+	{
+		$str = "UPDATE Budgets SET budget = :budget WHERE (user_id, category, month, year) = (:user_id, :category, :month, :year);";
+
+		//encrypt
+		$category = DBManager::encrypt($category);
+
+		$stmt = $this->connection->prepare($str);
+		$stmt->execute([
+			':budget'   => $budget,
+			':user_id' 	=> $user_id,
+			':category' => $category,
+			':month'	=> $month,
+			':year'		=> $year
+		]);
+
+
+		return $stmt->rowCount() > 0;
 	}
 
 	/**
@@ -97,6 +159,41 @@ class BudgetManager
 	}
 
 	/**
+	 * Retreive budget across all categories for specified user and time
+	 *
+	 * @return map of category to the budget, empty array otherwise.
+	 */
+	public function getBudgetsForTime($user_id, $month, $year)
+	{
+		//if there no budget is set, create it
+		$this->addDefaultBudgetsForTime($user_id, $month, $year);
+
+		$str = "SELECT user_id, category, budget, month, year FROM Budgets WHERE (user_id, month, year) = (:user_id, :month, :year);";
+
+		//do the deed
+		$stmt = $this->connection->prepare($str);
+		$stmt->execute([
+			':user_id' 	=> $user_id,
+			':month'	=> $month,
+			':year'		=> $year,
+		]);
+
+		//result
+		$budgets = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Budget', ['id', 'user_id', 'category', 'budget', 'month', 'year']);
+		if (!$budgets)
+			return [];
+
+		$response = [];
+		foreach ($budgets as $b)
+		{
+			$b->fixTypes();
+			$response[$b->category] = $b;
+		}
+
+		return $response;
+	}
+
+	/**
 	 * Returns an `Budget` instance with the given info owned by the specified user.
 	 *
 	 * @param $institution  - the category of this budget
@@ -108,19 +205,15 @@ class BudgetManager
 	{
 		$str = "SELECT * FROM Budgets WHERE user_id = :user_id AND month = :month AND category = :category AND year = :year";
 
-		//encrypt
-		//$month = DBManager::encrypt($month);
-		//$category = DBManager::encrypt($category);
-
 		$stmt = $this->connection->prepare($str);
-		$stmt->bindParam(':user_id', $user_id);
-		$stmt->bindParam(':month', $month);
-		$stmt->bindParam(':year', $year);
-		$stmt->bindParam(':category', $category);
-		$stmt->execute();
+		$stmt->execute([
+			':user_id' 	=> $user_id,
+			':month'	=> $month,
+			':year'		=> $year,
+		]);
 
-		$stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Budget', ['id', 'user_id', 'month', 'year', 'category', 'budget']);
-		$budget = $stmt->fetch();
+		$budget = $stmt->fetch(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Budget', ['id', 'user_id', 'category', 'budget', 'month', 'year']);
+
 		if (!$budget)
 			return null;
 
@@ -136,10 +229,12 @@ class BudgetManager
 		$str = " SELECT * FROM Budgets WHERE user_id = :user_id";
 
 		$stmt = $this->connection->prepare($str);
-		$stmt->bindParam(':user_id', $user_id);
-		$stmt->execute();
+		$stmt->execute([
+			':user_id' => $user_id
+		]);
 
-		$budgets = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Budget', ['id', 'user_id', 'month', 'year', 'category', 'budget']);
+		$budgets = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Budget', ['id', 'user_id', 'category', 'budget', 'month', 'year']);
+
 		if (!$budgets)
 			return [];
 
