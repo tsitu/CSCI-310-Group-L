@@ -49,7 +49,7 @@ foreach ($awb as $a)
     $activeList[] = $aid;
     
     $accounts[] = [$aid, $a];
-    $transactions[] = [$aid, $tm->getListForAccountBetween($aid, $beg, $end), $a];
+    $transactions[] = [$aid, $tm->getListForAccountBetween($aid, $beg, $end)];
 }
 
 ?>
@@ -239,7 +239,6 @@ foreach ($awb as $a)
                 {
                     $aid = $pair[0];
                     $list = $pair[1];
-                    $acc = $pair[2];
 
                     foreach($list as $t)
                     {
