@@ -28,19 +28,19 @@ class budgetTest extends PHPUnit_Framework_TestCase
 		if($before_rowNumber == false) 
 			$before_rowNumber = 0;
 
-		$return_id = (int)$this->b->addBudget(500, 12, 2500, "loan", 100); 
+		$return_id = (int)$this->b->addBudget(500, "loan", 12, 2500, 100); 
 		
 		$after_array = DBManager::getNumberOfRowsBudget();
 		$after_rowNumber = count($after_array);
 
-		$this->assertNotEquals($return_id, null);
+		$this->assertNotEquals($return_id, 0);
 		$this->assertEquals($before_rowNumber+1, $after_rowNumber);
 
 	}
 
 
 	public function testGetBudgetByInfo(){
-		$return_budget = $this->b->getBudgetByInfo(500,12,2500,"loan");
+		$return_budget = $this->b->getBudgetByInfo(500, 12, 2500, "loan");
 		$this->assertNotEquals($return_budget, null);
 	}
 
@@ -51,9 +51,9 @@ class budgetTest extends PHPUnit_Framework_TestCase
 
 	public function testExistId() {
 
-		$before_rowNumber = (int)DBManager::getNumberOfRowsBudget();
-		$return_id2 = $this->b->addBudget(500, 12, 2500, "loan",  100);
-		$after_rowNumber = (int)DBManager::getNumberOfRowsBudget();
+		$before_rowNumber = count(DBManager::getNumberOfRowsBudget());
+		$return_id2 = $this->b->addBudget(500, "loan", 12, 2500,  100);
+		$after_rowNumber = count(DBManager::getNumberOfRowsBudget());
 		$this->assertEquals($return_id2, 0);
 		$this->assertEquals($before_rowNumber, $after_rowNumber);
 
@@ -61,20 +61,20 @@ class budgetTest extends PHPUnit_Framework_TestCase
 
 	public function testDeleteBudget() {
 		$budget = $this->b->getBudgetByInfo(500,12,2500, "loan");
-		$id = $budget->id;
+		$id = $budget["loan"]->id;
 
 
-		$before_rowNumber = (int)DBManager::getNumberOfRowsBudget();
+		$before_rowNumber = count(DBManager::getNumberOfRowsBudget());
 		$this->b->deleteBudget($id); 
-		$after_rowNumber = (int)DBManager::getNumberOfRowsBudget();
+		$after_rowNumber = count(DBManager::getNumberOfRowsBudget());
 		$this->assertEquals($before_rowNumber-1, $after_rowNumber);
 
 	}
 
 	public function testDeleteInvalidBudget(){
-		$before_rowNumber = (int)DBManager::getNumberOfRowsBudget();
+		$before_rowNumber = count(DBManager::getNumberOfRowsBudget());
 		$this->b->deleteBudget(768901); 
-		$after_rowNumber = (int)DBManager::getNumberOfRowsBudget();
+		$after_rowNumber = count(DBManager::getNumberOfRowsBudget());
 		$this->assertEquals($before_rowNumber, $after_rowNumber);
 
 	}
@@ -82,14 +82,19 @@ class budgetTest extends PHPUnit_Framework_TestCase
 
 	public function testGetInvalidBudgetByInfo(){
 		$return_budget = $this->b->getBudgetByInfo(520,12,2500,"loan");
-		$this->assertEquals($return_budget, null);
+		$this->assertEquals(count($return_budget), 0);
 	}
 
 	public function testGetBudgetsByInvalidUser(){
 		$return_budgetArray = $this->b->getBudgetsByUser(500);
 		$this->assertEquals(sizeof($return_budgetArray), 0);
 	}
+	public function testGetAssetHistory(){
+		//account_type = category
+		//
+		//$return_array = UserManager::getAssetHistory("asset", 2, );
 
+	}
 }
 
 ?>

@@ -210,16 +210,23 @@ class BudgetManager
 		$stmt->execute([
 			':user_id' 	=> $user_id,
 			':month'	=> $month,
-			':year'		=> $year,
+			':category' => DBManager::encrypt($category),
+			':year'		=> $year
 		]);
 
-		$budget = $stmt->fetch(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Budget', ['id', 'user_id', 'category', 'budget', 'month', 'year']);
+		$budgets = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Budget', ['id', 'user_id', 'month', 'year', 'category', 'budget']);
 
-		if (!$budget)
-			return null;
+		if (!$budgets)
+			return [];
 
-		$budget->fixTypes();
-		return $budget;
+		$response = [];
+		foreach ($budgets as $b)
+		{
+			$b->fixTypes();
+			$response[$b->category] = $b;
+		}
+
+		return $response;
 	}
 
 	/**
