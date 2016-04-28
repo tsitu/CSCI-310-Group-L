@@ -247,16 +247,19 @@ class UserManager
         $sum = 0;
         foreach($rows as $row)
         {
+            $type = trim( DBManager::decrypt($row['type']) );
+            $neg = ($type !== 'Savings') ? -1 : 0;
+
         	// echo "Processing " . $row['account_id'] . "<br>";
             if(!in_array($row['account_id'], $unique_accounts))
             {
                 $unique_accounts[] = $row['account_id'];
-                $sum += $row['balance'];
+                $sum += $row['balance'] * $neg;
                 $snapshot[ date_create($row['t'])->getTimestamp() ] = $sum;
             }
             else 
             {
-                $sum += $row['amount'];
+                $sum += $row['amount'] * $neg;
                 $snapshot[ date_create($row['t'])->getTimestamp() ] = $sum;
             }
         }

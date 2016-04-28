@@ -13,8 +13,8 @@ var hc_options = {
 		backgroundColor: '#EEEEEE',
 		zoomType: '',
 		events: {
-			selection: zoomed
-		}
+			selection: zoomed,
+		},
 	},
 	//colors: graphColors,
 	legend: {
@@ -25,20 +25,21 @@ var hc_options = {
 		verticalAlign: 'top',
 
 		y: 30,
-		itemMarginBottom: 10
+		itemMarginBottom: 10,
 	},
 	yAxis: {
 		id: 'y',
 		title: { text: null },
-		gridLineDashStyle: 'longdash'
+		gridLineDashStyle: 'longdash',
+		// min: 0,
 	},
 	xAxis: {
 		id: 'x',
 		type: 'datetime',
 		dateTimeLabelFormats: { 
-			day: '%b %e<br/>%Y'
+			day: '%b %e<br/>%Y',
 		},
-		tickInterval: 7 * DAY_MS
+		tickInterval: 7 * DAY_MS,
 	},
 	tooltip: {
 		useHTML: true,
@@ -47,7 +48,7 @@ var hc_options = {
 			return ''
 			+ Highcharts.dateFormat('%A <br/> %b %e, %Y', this.x) + '<br/><br/>'
 			+ 'Balance: <b>' + this.y + '</b>';
-		}
+		},
 	}
 };
 
