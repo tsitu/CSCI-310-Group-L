@@ -162,12 +162,15 @@ class AccountManager
 		$stmt->bindParam(':inst', $inst);
 		$stmt->execute();
 
-		$account = $stmt->fetch(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account', ['_id', '_user_id', '_institution', '_type']);
-		if (!$account)
-			return null;
+		$accounts = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Account', ['_id', '_user_id', '_institution', '_type']);
+		if (!$accounts)
+			return [];
 
-		$account->fixTypes();
-		return $account;
+		$list = [];
+		foreach ($accounts as $a)
+			$a->fixTypes();
+
+		return $list;
 	}
 
 	/**

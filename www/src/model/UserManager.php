@@ -247,10 +247,7 @@ class UserManager
         $sum = 0;
         foreach($rows as $row)
         {
-<<<<<<< Updated upstream
-        	echo "Processing " . $row['account_id'] . "<br>";
-=======
->>>>>>> Stashed changes
+
             if(!in_array($row['account_id'], $unique_accounts))
             {
                 $unique_accounts[] = $row['account_id'];
