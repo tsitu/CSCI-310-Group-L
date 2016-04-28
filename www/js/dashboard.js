@@ -29,8 +29,8 @@ var side = null;
 var list = null;
 var active = null;
 
-var dataBegDate = tmAgo;
-var dataEndDate = today;
+var dataBegTime = tmAgo;
+var dataEndTime = today;
 
 
 
@@ -41,12 +41,11 @@ $(document).ready(function()
 {
     initList();
     initGraph();
+    initBudget();
+    sortAccounts();
 
     bindEvents();
     //resetTimeout();
-
-    //
-    sortAccounts();
 });
 
 
@@ -76,6 +75,9 @@ function bindEvents()
     $(document).on('click', '.delete-button', deleteClicked);
     $(document).on('change', '#csv-file', changeClicked);
     $(document).on('click', '#csv-upload', uploadClicked);
+
+    $(document).on('change', '.category-amount', budgetChanged);
+    $(document).on('focus blur', '.category-amount', resetBugetLine);
 
     $(document).on('click', '.dd-sort .dropitem, .transaction-col', sortClicked);
 
@@ -383,40 +385,49 @@ function uploadClicked(e)
 
     //params
     var file = document.getElementById('csv-file').files[0];
-    var beg = graphBegPicker.getDate().valueOf()/1000;
-    var end = graphEndPicker.getDate().valueOf()/1000;
+    var beg = graphBegPicker.getDate();
+    var end = graphEndPicker.getDate();
 
-    upload(file, beg, end, {
+    upload(file, {
         context: this,
         error: function()
         {
             //show error somewhere
             debug('[Error] failed to upload csv');
         },
-        success: uploadSucces
+        success: uploadSuccess
     });
 }
 
 /**
  * Callback for upload csv success.
  */
-function uploadSucces(data)
+function uploadSuccess(data)
 {
     toggleUpload();
 
+    //insert new
+    for (var id of data.newIDs)
+    {
+        accounts.add(+id);
+        activeList.add(+id);
+    }
+
+    //update all accounts
     for (var a of data.accounts)
     {
         var item = document.getElementById('account-' + a.id);
         var balance = a.balance.toFixed(2);
 
         if (item)
-            $(item).children('.account-amount').html(a.balance);
+            $(item).children('.account-amount').html(balance);
         else
             $('#account-list').append( newAccountItem(a.id, a.institution, a.type, balance) );
-
-        //
-        updateGraph(a.id, a.name, data.transactions[a.id]);
     }
+    
+    sortAccounts();
+    refreshList(data.transactions);
+    refreshGraph(data.transactions);
 }
 
 /**
@@ -450,8 +461,62 @@ function sortClicked(e)
     $('.transaction-col[data-sort="' + sort + '"] > .icon').addClass(icon);
 }
 
+/**
+ *
+ */
+function budgetChanged(e)
+{
+    var item = $(this);
+    var value = item.val();
+    var category = item.parent().attr('data-category');
+
+    if (!value)
+    {
+        item.addClass('invalid');
+        return;
+    }
+
+    updateBudget(category, value,
+    {
+        context: this,
+        error: function()
+        {
+            debug('error');
+
+            item.addClass('invalid');
+            item.val(item.attr('data-previous'));
+        },
+        success: function()
+        {
+            debug('success');
+
+            item.removeClass('invalid');
+            item.addClass('valid');
+
+            item.attr('data-previous', item.val());
+        }
+    });
+}
+
+/**
+ * Remove all indicators from budget input field
+ */
+function resetBugetLine(e)
+{
+    $(this).removeClass('valid');
+    $(this).removeClass('invalid');
+}
+
 
 /* --- HELPERS --- */
+/**
+ * Return formatted date as YYYY. M. D.
+ */
+function formatDate(date)
+{
+    return date.getUTCFullYear() + '. ' + (date.getUTCMonth() + 1) + '. ' + date.getUTCDate();
+}
+
 /**
  * Returns an account id given an element inside a 'li.account-item'
  */
@@ -504,90 +569,4 @@ function csvMessage(str, error)
         msg.addClass('error');
     else
         msg.removeClass('error');
-}
-
-/**
- * Parse CSV into array of objects, convert to JSON, and POST to upload.php
- */
-function csvUpload(event)
-{
-
-   
-
-    event.preventDefault();
-    $('#csv-upload').html('Uploading...');
-    
-    Papa.parse(csvInput.files[0], {
-        newline: '\n',
-        delimiter: ', ',
-        header: true,
-        fastMode: true,
-        dynamicTyping: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-            // console.log(JSON.stringify(results.data));
-            
-            $.ajax({
-                type: "POST",
-                url: "src/scripts/upload.php",
-                data: {data: JSON.stringify(results.data)},
-                dataType: "json",
-                success: csvCallback
-            });
-        },
-        error: function(xhr, status, error) {
-          console.log(xhr.responseText);
-        }
-    });
-}
-
-/**
- * Callback for CSV upload post 
- */
-function csvCallback(accounts)
-{
-    toggleAdd();
-    $('#csv-upload').html("Done");
-    for (var i = 0; i < accounts.length; i++)
-    {
-        var a = accounts[i];
-        
-        var item = document.getElementById('account-' + a.id);
-        if (item)
-            $(item).children('.account-amount').html(a.balance.toFixed(2));
-        else
-        {
-            $('#account-list').append(newAccountItem(a.id, a.institution, a.type, a.balance.toFixed(2)));
-            sortAccounts();
-        }
-    }
-}
-
-/**
- * Return string for a new account list item with given params
- */
-function newAccountItem(id, inst, type, amount)
-{
-    var str = ""
-    + "<li id='account-" + id + "' class='account-item' data-id='" + id + "'>" 
-    +   "<p class='account-name'>" + inst + " - " + type + "</p>"
-    +   "<p class='account-amount'>" + amount + "</p>"
-    +   "<div class='account-menu'>"
-    +       "<button class='account-option toggle-graph fa fa-line-chart'></button>"
-    +       "<button class='account-option toggle-list fa fa-list-ul'></button>"
-    +       "<button class='account-option toggle-edit fa fa-cog'></button>"
-    +   "</div>"
-    +   "<div class='account-edit'>"
-    +       "<form class='edit-form'>"
-    +           "<input name='new-institution' placeholder='" + inst + "'"
-    +                   "class='edit-option edit-field inst-field'>"
-    +           "<input name='new-type' placeholder='" + type + "'"
-    +                   "class='edit-option edit-field type-field'>"
-    +           "<button class='edit-option rename-button'>Rename</button>"
-    +           "<button class='edit-option delete-button'>Delete Account</button>"
-    +       "</form>"
-    +   "</div>"
-    + "</li>";
-    
-    return str;
 }

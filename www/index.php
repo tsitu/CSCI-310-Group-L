@@ -1,6 +1,7 @@
 <?php
 
 require_once 'src/config.php';
+require_once 'src/model/BudgetManager.php';
 require_once 'src/model/AccountManager.php';
 require_once 'src/model/TransactionManager.php';
 
@@ -13,16 +14,22 @@ if ( !isset($_SESSION['user_id']) )
     exit();
 }
 
-//session vars
+//vars
 $user_id = $_SESSION['user_id'];
 $username = $_SESSION['username'];
 
-//managers
 $beg = new DateTime( $config['default_range'] );
 $end = new DateTime();
 
+
+//fetch data
+$bm = BudgetManager::getInstance();
 $am = AccountManager::getInstance();
 $tm = TransactionManager::getInstance();
+
+
+$icons = $config['budget_icons'];
+$budgets = $bm->getBudgetsForTime($user_id, $end->format('n'), $end->format('Y'));
 
 $accounts = [];
 $transactions = [];
@@ -130,18 +137,51 @@ foreach ($awb as $a)
         
         <div id='content' class='content'>
             
+            <!-- Budget -->
+            <div id='budget-module' class='module budget-module'>
+                <div class='module-header'>
+                    <h3 class='label module-label'>Budget</h3>
+                </div>
+                
+                <div class='module-subheader'>
+                    <button id='budget-cal' class='date-select'>1970. 1</button>
+                </div>
+                
+                <ul class='category-list'>
+                    
+                    <?php
+                    foreach ($budgets as $c => $b)
+                    {
+                    ?>
+                    <li class='category-item category-<?= $c ?>' data-category='<?= $c ?>'>
+                        <input type='number' class='category-amount' 
+                                value='<?= number_format($b->budget, 2) ?>'
+                                data-previous='<?= $b->budget ?>'>
+                        <p class='category-label'>
+                            <span class='category-icon icon ion-<?= $icons[$c] ?>'></span>
+                            <span class='category-text'><?= ucfirst($c) ?></span>
+                        </p>
+                    </li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+            </div>
+            
+            <!-- Graph -->
             <div id='graph-module' class='module graph-module'>
                 <div class='module-header'>
                     <h3 class='label module-label'>Graph</h3>
                 </div>
                 <div class='module-subheader'>
-                    <button id='graph-beg' class='date-select'>4/8/2016</button>
+                    <button id='graph-beg' class='date-select'>1970. 1. 1</button>
                     ~
-                    <button id='graph-end' class='date-select'>4/8/2016</button>
+                    <button id='graph-end' class='date-select'>1970. 1. 1</button>
                 </div>
                 <div id='graph'></div>
             </div>
 
+            <!-- Transactions -->
             <div id='transaction-module' class='module transactions-module'>
                 <div class='module-header'>
                     <h3 class='label module-label'>Transactions</h3>
@@ -163,9 +203,9 @@ foreach ($awb as $a)
 
                     <div class='flex-glue'></div>
 
-                    <button id='list-beg' class='date-select'>4/8/2016</button>
+                    <button id='list-beg' class='date-select'>1970. 1. 1</button>
                     ~
-                    <button id='list-end' class='date-select'>4/8/2016</button>
+                    <button id='list-end' class='date-select'>1970. 1. 1</button>
                 </div>
                 
                 
@@ -195,7 +235,7 @@ foreach ($awb as $a)
                             data-unixtime='<?= $t->unixtime * 1000 ?>'
                             data-amount='<?= $t->amount ?>'
                         >
-                        <p class="transaction-account"><?= $acc->name ?></p>
+                        <p class="transaction-account"><?= $t->institution . ' - ' . $t->type ?></p>
                         <p class="transaction-date"   ><?= date_format($t->time, "Y. n. j") ?></p>
                         <p class="transaction-amount" ><?= number_format($t->amount, 2) ?></p>
                         <p class="transaction-merchant"><?= $t->merchant ?></p>
@@ -210,17 +250,17 @@ foreach ($awb as $a)
         </div>
     </main>
     
-<!--    <div id='curtain'></div>-->
-    
     <!-- JS -->
     <script>
-        var accounts = new Map(<?= json_encode($accounts) ?>);
-        var transactions = new Map(<?= json_encode($transactions) ?>);
+        var accounts = new Set(<?= json_encode($activeList) ?>);
         var activeList = new Set(<?= json_encode($activeList) ?>);
+
+        var aMap = new Map(<?= json_encode($accounts) ?>);
+        var tMap = new Map(<?= json_encode($transactions) ?>);
         
         console.log(accounts);
-        console.log(transactions);
-        console.log(activeList);
+        console.log(aMap);
+        console.log(tMap);
     </script>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
@@ -235,6 +275,7 @@ foreach ($awb as $a)
     <script src='js/dash-user.js'></script>
     <script src='js/dash-list.js'></script>
     <script src='js/dash-graph.js'></script>
-
+    <script src='js/dash-budget.js'></script>
+    
 </body>
 </html>
