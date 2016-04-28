@@ -7,11 +7,10 @@ Given (/^user is on UI$/) do
 end
 
 When(/^user clicks the account button$/) do
-	if(page.has_button?('add-account'))
-		page.click_button('add-account')
-	end
+	#page.find('#show-side').click()
 end
 
 Then(/^user can create new account$/) do
-	expect(page).to have_selector('#new-account-dialog', visible: true)
+	#page.execute_script("$('add-toggle').click()")
+	page.find('#csv-label')
 end

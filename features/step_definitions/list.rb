@@ -9,5 +9,5 @@ end
 
 Then(/^user should see a list$/) do
 	expect(current_path).to eq '/'
-	expect(page).to have_selector('#account-module')
+	expect(page).to have_selector('#account-list')
 end

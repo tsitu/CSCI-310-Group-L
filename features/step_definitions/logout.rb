@@ -9,7 +9,10 @@ end
 
 When(/^I click on the log out button$/) do
 	expect(current_path).to eq '/'
-	page.execute_script("$('#logout').click()")
+	#page.find('#show-side').click()
+	#expect(page).to have_selector('.highcharts-series.highcharts-series-0', visible: 'null')
+	page.find('.toggle-drop.profile.icon.ion-person').click()
+	page.find('.dropitem.logout').click()
 end
 
 Then(/^the page goes back to login page$/) do

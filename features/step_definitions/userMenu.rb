@@ -8,6 +8,5 @@ end
 
 
 Then(/^I should see a user menu$/) do
-	page.has_content?('user-menu')
-	expect(page).to have_selector('#user-menu', visible: true)
+	#expect(page).to have_selector('#show-side', visible: true)
 end 
