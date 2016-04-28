@@ -33,10 +33,15 @@ $am = AccountManager::getInstance();
 $tm = TransactionManager::getInstance();
 
 
+//budget
 $icons = $config['budget_icons'];
 $budgets = $bm->getBudgetsForTime($user_id, $month, $year);
-
 $spendings = $um->getCategorySpendingsForTime($user_id, $month, $year);
+
+//totals
+$net = $um->getAssetHistory('net', $user_id, $beg, $end);
+$assets = $um->getAssetHistory('asset', $user_id, $beg, $end);
+$liabilities = $um->getAssetHistory('liability', $user_id, $beg, $end);
 
 $accounts = [];
 $transactions = [];
@@ -267,11 +272,17 @@ foreach ($awb as $a)
         var accounts = new Set(<?= json_encode($activeList) ?>);
         var activeList = new Set(<?= json_encode($activeList) ?>);
 
+        var totals = {
+            'Net Worth':    <?= json_encode($net) ?>,
+            'Assets':       <?= json_encode($assets) ?>,
+            'Liabilities':  <?= json_encode($liabilities) ?>
+        };
+
         var aMap = new Map(<?= json_encode($accounts) ?>);
         var tMap = new Map(<?= json_encode($transactions) ?>);
         
-        console.log(<?= json_encode($spendings) ?>);
         console.log(accounts);
+        console.log(totals);
         console.log(aMap);
         console.log(tMap);
     </script>
