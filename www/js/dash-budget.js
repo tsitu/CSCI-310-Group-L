@@ -64,8 +64,10 @@ function budgetDateChanged(date)
 		{
 			debug(data);
 
-			for (var [c, b] of Object.entries(data))
+			for (var c in data)
 			{
+				var b = data[c];
+
 				var category = $('.category-' + c);
 				var budgetField = category.children('.category-amount');
 				var spentField = category.children('.category-spent');
