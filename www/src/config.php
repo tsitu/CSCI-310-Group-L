@@ -15,6 +15,24 @@ $config = [
 'db_port'			=> '3306',
 'db_name'			=> 'sql3112429',
 'db_username'		=> 'sql3112429',
-'db_password'		=> 'NqxhS6d8yQ'
+'db_password'		=> 'NqxhS6d8yQ',
+
+//account
+// 'savings', 'loan', 'credit'
+
+//budget
+'budget_categories'	=> [
+	'food', 
+	'shopping', 
+	'travel', 
+	'education'
+],
+'budget_icons'	=> [
+	'food' 		=> 'spoon',
+	'shopping' 	=> 'pricetag',
+	'travel' 	=> 'plane',
+	'education' => 'university',
+],
+'budget_default'	=> 200
 
 ];

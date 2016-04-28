@@ -10,6 +10,7 @@ var graphColors = [];
 var hc_options = {
 	title: { text: null },
 	chart: {
+		backgroundColor: '#EEEEEE',
 		zoomType: '',
 		events: {
 			selection: zoomed
@@ -53,8 +54,6 @@ var hc_options = {
 
 
 /* VARS */
-var graphBegDate = tmAgo;
-var graphEndDate = today;
 var graphBegField = null;
 var graphEndField = null;
 var graphBegPicker = null;
@@ -80,7 +79,7 @@ function initGraph()
 function initHighcharts()
 {
 	var series = [];
-	for (var [id, list] of transactions.entries())
+	for (var [id, list] of tMap.entries())
 	{
 		var data = [];
 		for (var i = list.length-1; i >= 0; --i)
@@ -91,7 +90,11 @@ function initHighcharts()
 
 		series.push({
 			id: id,
-			name: accounts.get(id).name,
+			name: aMap.get(id).name,
+			marker: {
+				enabled: true,
+
+			},
 			data: data
 		});
 	}
@@ -99,7 +102,9 @@ function initHighcharts()
 	hc_options.series = series;
 	highcharts = Highcharts.chart('graph', hc_options);
 
-	console.log(highcharts.series)
+	//for GC
+	aMap = null;
+	tMap = null;
 }
 
 /**
@@ -148,42 +153,69 @@ function removeFromGraph(id)
 }
 
 /**
- * Add given [id, series] to the graph
- */
-function updateGraph(id, name, list)
-{
-	var data = [];
-	for (var i = list.length-1; i >= 0; --i)
-	{
-		var ta = list[i];
-		var part = ta.timeStr.split(' ');
-		var date = Date.UTC(part[0], part[1]-1, part[2], part[3], part[4], part[5]);
-
-		data.push([date, ta.balance]);
-	}
-
-	var series = highcharts.get(id);
-	if (series)
-	{
-		for (var point of data)
-			series.addPoint(point);
-	}
-	else
-	{
-		highcharts.addSeries({
-			id: id,
-			name: name,
-			data: data
-		});
-	}
-}
-
-/**
  * Update series on graph when an account is renamed
  */
 function renameGraphAccount(id, name)
 {
 	highcharts.get(id).update({name: name}, false);
+	highcharts.redraw();
+}
+
+/**
+ * Update the graph with newly fetched data points
+ */
+function updateGraph(data)
+{
+	for (var [id, list] of Object.entries(data))
+	{
+		var series = highcharts.get(+id);
+
+		for (var ta of list)
+		{
+			series.addPoint({
+				x: ta.unixtime * 1000,
+				y: ta.balance,
+				marker: {
+					enabled: true
+				}
+			}, false);
+		}
+	}
+
+	highcharts.redraw();
+}
+
+/** 
+ *
+ */
+function refreshGraph(data)
+{
+	for (var [id, list] of Object.entries(data))
+	{
+		var existing = highcharts.get(+id);
+		if (existing)
+			existing.remove();
+
+		var name;
+		var data = [];
+		for (var i = list.length-1; i >= 0; --i)
+		{
+			var ta = list[i];
+			data.push([ta.unixtime * 1000, ta.balance]);
+
+			name = ta.institution + ' - ' + ta.type;
+		}
+
+		highcharts.addSeries({
+			id: id,
+			name: name,
+			marker: {
+				enabled: true,
+			},
+			data: data
+		}, false);
+	}
+
 	highcharts.redraw();
 }
 
@@ -204,11 +236,15 @@ function initGraphPickers()
 
 	graphEndPicker = new Pikaday({
 		field: graphEndField,
-		onSelect: graphPickerEndChanged
+		onSelect: setGraphPickerEnd
 	});
 
-	graphBegPicker.setDate(tmAgo);
-	graphEndPicker.setDate(today);
+	setGraphPickerBeg(tmAgo);
+	setGraphPickerEnd(today);
+	graphEndPicker.setMaxDate(today);
+
+	graphBegPicker.setDate(tmAgo, true); //dont trigger callback
+	graphEndPicker.setDate(today, true); //dont trigger callback
 }
 
 /**
@@ -216,32 +252,49 @@ function initGraphPickers()
  */
 function graphPickerBegChanged(date)
 {
-	graphBegDate = date;
+	if ( !(date < dataBegTime) )
+	{
+		setGraphPickerBeg(date);
+		return;
+	}
+
+	//if older than whats available
+	fetch(date, dataBegTime, 
+	{
+		context: this,
+		success: function()
+		{
+			setGraphPickerBeg(date);
+		}
+	});
+}
+
+/**
+ *
+ */
+function setGraphPickerBeg(date)
+{
 	setGraphMin(date.valueOf());
 
 	graphEndPicker.setMinDate(date);
 	graphBegPicker.setStartRange(date);
 	graphEndPicker.setStartRange(date);
 
-	graphBegField.innerHTML = date.getUTCFullYear() + '. ' + (date.getUTCMonth() + 1) + '. ' + date.getUTCDate();
+	graphBegField.innerHTML = formatDate(date);
 }
 
 /**
- * Callback for graph's end picker date change
+ *
  */
-function graphPickerEndChanged(date)
+function setGraphPickerEnd(date)
 {
-	graphEndDate = date;
 	setGraphMax(date.valueOf());
 
 	graphBegPicker.setMaxDate(date);
 	graphBegPicker.setEndRange(date);
 	graphEndPicker.setEndRange(date);
 
-	graphEndField.innerHTML = date.getUTCFullYear() + '. ' + (date.getUTCMonth() + 1) + '. '  + date.getUTCDate();
+	graphEndField.innerHTML = formatDate(date);
+	debug(graphEndField.innerHTML);
 }
-
-
-
-
 

@@ -59,7 +59,7 @@ class AccountManager
 	 * Adds a new financial account with given name tied to specified user.
 	 *
 	 * @param $institution  - string of account's institution (ex. Bank of America)
-	 * @param $type 		- string of account type (ex. Credit, Debit)
+	 * @param $type 		- {savings, credit, loan}
 	 * @param $user_id 		- user_id of user this account belongs to
 	 * @return id of the account if added, 0 otherwise.
 	 */
