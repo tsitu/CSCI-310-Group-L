@@ -1,8 +1,8 @@
 institution, type, time, merchant, category, amount
-USC Credit Union, Loan, 2016-04-02 14:00:00, USC Tuition Loan, Education, 4000
-USC Credit Union, Loan, 2016-04-10 14:00:00, USC Tuition Loan, Education, -100
-USC Credit Union, Loan, 2016-04-17 14:00:00, USC Tuition Loan, Education, -100
-USC Credit Union, Loan, 2016-04-24 14:00:00, USC Tuition Loan, Education, -200
+USC Credit Union, Loan, 2016-04-02 14:00:00, USC Tuition Loan, Education, -4000
+USC Credit Union, Loan, 2016-04-10 14:00:00, USC Tuition Loan, Education, 100
+USC Credit Union, Loan, 2016-04-17 14:00:00, USC Tuition Loan, Education, 100
+USC Credit Union, Loan, 2016-04-24 14:00:00, USC Tuition Loan, Education, 200
 American Express, Credit, 2016-03-01 10:00:00, Apple, Shopping, -599
 American Express, Credit, 2016-03-06 10:00:00, Amazon, Shopping, -34
 American Express, Credit, 2016-03-15 10:00:00, Baekjeong, Food, -39.50
