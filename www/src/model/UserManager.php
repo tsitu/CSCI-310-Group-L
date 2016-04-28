@@ -248,9 +248,8 @@ class UserManager
         foreach($rows as $row)
         {
             $type = trim( DBManager::decrypt($row['type']) );
-            $neg = ($type !== 'Savings') ? -1 : 0;
-
-        	// echo "Processing " . $row['account_id'] . "<br>";
+            $neg = 1;//($type !== 'Savings') ? -1 : 1;
+            
             if(!in_array($row['account_id'], $unique_accounts))
             {
                 $unique_accounts[] = $row['account_id'];
@@ -263,8 +262,6 @@ class UserManager
                 $snapshot[ date_create($row['t'])->getTimestamp() ] = $sum;
             }
         }
-        // echo "size: " . count($unique_accounts) . "<br>";
-        // echo $unique_accounts[0] . " " . $unique_accounts[1] . "<br>";
         return $snapshot;
     }
 }
