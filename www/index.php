@@ -269,6 +269,11 @@ foreach ($awb as $a)
     
     <!-- JS -->
     <script>
+        //CONSTS
+        var INACTIVITY_TIME = <?= $config['logout_countdown']; ?>;
+
+        
+        //DATA
         var accounts = new Set(<?= json_encode($activeList) ?>);
         var activeList = new Set(<?= json_encode($activeList) ?>);
 
