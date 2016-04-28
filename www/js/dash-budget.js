@@ -62,8 +62,6 @@ function budgetDateChanged(date)
 		},
 		success: function(data)
 		{
-			debug(data);
-
 			for (var c in data)
 			{
 				var b = data[c];

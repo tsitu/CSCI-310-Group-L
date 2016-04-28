@@ -108,7 +108,7 @@ function initHighcharts()
 		}
 
 		series.push({
-			id: id,
+			id: +id,
 			name: aMap.get(id).name,
 			marker: { enabled: true },
 			data: data
@@ -207,6 +207,9 @@ function updateGraph(data)
  */
 function refreshGraph(data)
 {
+	debug(data);
+	debug(highcharts.series);
+
 	for (var id in data)
 	{
 		var list = data[id];
@@ -216,22 +219,20 @@ function refreshGraph(data)
 			existing.remove();
 
 		var name;
-		var data = [];
+		var points = [];
 		for (var i = list.length-1; i >= 0; --i)
 		{
 			var ta = list[i];
-			data.push([ta.unixtime * 1000, ta.balance]);
+			points.push([ta.unixtime * 1000, ta.balance]);
 
 			name = ta.institution + ' - ' + ta.type;
 		}
 
 		highcharts.addSeries({
-			id: id,
+			id: +id,
 			name: name,
-			marker: {
-				enabled: true,
-			},
-			data: data
+			marker: { enabled: true },
+			data: points
 		}, false);
 	}
 

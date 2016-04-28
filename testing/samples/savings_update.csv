@@ -1,0 +1,6 @@
+institution, type, time, merchant, category, amount
+Bank of America, Savings, 2016-04-01 12:00:00, Panda Express, Food, -8.40
+Bank of America, Savings, 2016-04-02 08:30:00, Starbucks, Food, -2.45
+Bank of America, Savings, 2016-04-02 18:00:00, Chipotle, Food, -7.30
+Bank of America, Savings, 2016-04-10 12:00:00, Overwatch, Shopping, -60
+Bank of America, Savings, 2016-04-20 12:00:00, Hearthstone, Shopping, -50
