@@ -148,9 +148,9 @@ function refreshList(data)
 	listManager.clear();
 
 	var items = [];
-	for (var id in data)
+	for (var id in data.transactions)
 	{
-		var list = data[id];
+		var list = data.transactions[id];
 		for (var ta of list)
 			items.push( getItem(ta.id, ta['account_id'], ta.institution, ta.type, ta.unixtime, ta.amount, ta.category, ta.merchant) );
 	}

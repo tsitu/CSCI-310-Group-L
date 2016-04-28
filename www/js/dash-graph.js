@@ -13,8 +13,8 @@ var hc_options = {
 		backgroundColor: '#EEEEEE',
 		zoomType: '',
 		events: {
-			selection: zoomed
-		}
+			selection: zoomed,
+		},
 	},
 	//colors: graphColors,
 	legend: {
@@ -25,21 +25,21 @@ var hc_options = {
 		verticalAlign: 'top',
 
 		y: 30,
-		itemMarginBottom: 10
+		itemMarginBottom: 10,
 	},
 	yAxis: {
 		id: 'y',
 		title: { text: null },
 		gridLineDashStyle: 'longdash',
-		min: 0
+		// min: 0,
 	},
 	xAxis: {
 		id: 'x',
 		type: 'datetime',
 		dateTimeLabelFormats: { 
-			day: '%b %e<br/>%Y'
+			day: '%b %e<br/>%Y',
 		},
-		tickInterval: 7 * DAY_MS
+		tickInterval: 7 * DAY_MS,
 	},
 	tooltip: {
 		useHTML: true,
@@ -48,7 +48,7 @@ var hc_options = {
 			return ''
 			+ Highcharts.dateFormat('%A <br/> %b %e, %Y', this.x) + '<br/><br/>'
 			+ 'Balance: <b>' + this.y + '</b>';
-		}
+		},
 	}
 };
 
@@ -108,7 +108,7 @@ function initHighcharts()
 		}
 
 		series.push({
-			id: id,
+			id: +id,
 			name: aMap.get(id).name,
 			marker: { enabled: true },
 			data: data
@@ -202,36 +202,57 @@ function updateGraph(data)
 	highcharts.redraw();
 }
 
+/**
+ *
+ */
+function updateGraphTotals(totals)
+{
+	for (var name in totals)
+	{
+		var set = totals[name];
+
+		var points = [];
+		for (var unixtime in set)
+			points.push([+unixtime * 1000, +set[unixtime]]);
+
+		highcharts.get(name).update({
+			data: points
+		});
+	}
+}
+
 /** 
  *
  */
 function refreshGraph(data)
 {
-	for (var id in data)
+	//totals
+	updateGraphTotals(data.totals);
+
+	//accounts
+	for (var id in data.transactions)
 	{
-		var list = data[id];
+		var list = data.transactions[id];
 
 		var existing = highcharts.get(+id);
 		if (existing)
 			existing.remove();
 
 		var name;
-		var data = [];
+		var points = [];
 		for (var i = list.length-1; i >= 0; --i)
 		{
 			var ta = list[i];
-			data.push([ta.unixtime * 1000, ta.balance]);
+			points.push([ta.unixtime * 1000, ta.balance]);
 
 			name = ta.institution + ' - ' + ta.type;
 		}
 
 		highcharts.addSeries({
-			id: id,
+			id: +id,
 			name: name,
-			marker: {
-				enabled: true,
-			},
-			data: data
+			marker: { enabled: true },
+			data: points
 		}, false);
 	}
 
