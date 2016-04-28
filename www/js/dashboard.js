@@ -345,9 +345,15 @@ function deleteClicked(e)
         {
             debug('[Log] successfully deleted account with id: ' + id);
 
+            accounts.delete(id);
+            activeList.delete(id);
+
             removeFromList(id);
             removeFromGraph(id);
             $(this).parents('.account-item').remove();
+
+            debug(data);
+            updateGraphTotals(data.totals);
         }
     });
 }
@@ -386,9 +392,6 @@ function uploadClicked(e)
 
     //params
     var file = document.getElementById('csv-file').files[0];
-    var beg = graphBegPicker.getDate();
-    var end = graphEndPicker.getDate();
-
     upload(file, {
         context: this,
         error: function()
@@ -425,12 +428,11 @@ function uploadSuccess(data)
         else
             $('#account-list').append( newAccountItem(a.id, a.institution, a.type, balance) );
     }
-    
     sortAccounts();
-    budgetDateChanged(budgetDate);
+    budgetDateChanged(budgetDate || today);
 
-    refreshList(data.transactions);
-    refreshGraph(data.transactions);
+    refreshList(data);
+    refreshGraph(data);
 }
 
 /**

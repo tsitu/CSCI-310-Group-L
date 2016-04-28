@@ -90,19 +90,16 @@ function deleteAccount(id, callback)
     $.ajax('src/scripts/delete.php',
     {
         type: 'POST',
-        data: {id: id},
+        data: {id: id, beg: dataBegTime.valueOf()/1000, end: dataEndTime.valueOf()/1000},
         error: function()
         {
         	if (callback && callback.error)
         		callback.error.call(callback.context || this);
         },
-        success: function()
+        success: function(data)
         {
-            accounts.delete(id);
-            activeList.delete(id);
-
         	if (callback && callback.success)
-        		callback.success.call(callback.context || this);
+        		callback.success.call(callback.context || this, data);
         }
     });
 }

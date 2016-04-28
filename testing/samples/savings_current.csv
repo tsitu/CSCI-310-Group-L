@@ -1,0 +1,11 @@
+institution, type, time, merchant, category, amount
+Bank of America, Savings, 2016-02-01 00:00:00, Self, Education, 1000.00
+Bank of America, Savings, 2016-02-02 18:30:00, Chipotle, Food, -7.30
+Bank of America, Savings, 2016-02-03 19:00:00, Pizza Studio, Food, -8.60
+Bank of America, Savings, 2016-02-04 17:20:00, Starbucks, Food, -10.30
+Bank of America, Savings, 2016-02-04 10:10:00, Amazon, Shopping, -50.30
+Bank of America, Savings, 2016-02-05 12:30:00, The Habit, Food, -5.20
+Bank of America, Savings, 2016-02-05 17:00:00, Chipotle, Food, -7.30
+Bank of America, Savings, 2016-02-06 14:15:00, Whichwich, Food, -6.50
+Bank of America, Savings, 2016-03-10 11:25:00, Southwest, Travel, -167.00
+Bank of America, Savings, 2016-03-17 22:00:00, Southwest, Travel, -170.00
