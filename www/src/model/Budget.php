@@ -9,7 +9,6 @@ class Budget
 {
 	public $id;
 	public $user_id;
-
 	public $category;
 	public $budget;
 	public $month;
