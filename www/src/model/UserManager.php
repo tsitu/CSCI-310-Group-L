@@ -247,7 +247,7 @@ class UserManager
         $sum = 0;
         foreach($rows as $row)
         {
-        	echo "Processing " . $row['account_id'] . "<br>";
+        	// echo "Processing " . $row['account_id'] . "<br>";
             if(!in_array($row['account_id'], $unique_accounts))
             {
                 $unique_accounts[] = $row['account_id'];
@@ -260,8 +260,8 @@ class UserManager
                 $snapshot[ date_create($row['t'])->getTimestamp() ] = $sum;
             }
         }
-        echo "size: " . count($unique_accounts) . "<br>";
-        echo $unique_accounts[0] . " " . $unique_accounts[1] . "<br>";
+        // echo "size: " . count($unique_accounts) . "<br>";
+        // echo $unique_accounts[0] . " " . $unique_accounts[1] . "<br>";
         return $snapshot;
     }
 }
