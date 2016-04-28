@@ -85,7 +85,7 @@ function sortList(col)
 		sortedBy = col;
 
 		//for date & amount, default to desc
-		if (['transaction-date', 'trasaction-amount'].includes(col))
+		if (['transaction-date', 'trasaction-amount'].indexOf(col) >= 0)
 			sortOrder = 'desc';
 	}
 
@@ -115,18 +115,29 @@ function renameListAccount(id, name)
 }
 
 /**
+ * Remove transactions with given account id
+ */
+function removeFromList(id)
+{
+	listManager.remove('account-id', id);
+}
+
+/**
  * Update the graph with newly fetched data points
  */
 function updateList(data)
 {
 	var items = [];
-	for (var [id, list] of Object.entries(data))
+	for (var id in data)
 	{
+		var list = data[id];
 		for (var ta of list)
 			items.push( getItem(ta.id, ta['account_id'], ta.institution, ta.type, ta.unixtime, ta.amount, ta.category, ta.merchant) );
 	}
 
-	listManager.add(items, function(items){});
+	listManager.add(items, function(items){
+		listManager.sort(sortedBy, {order: sortOrder});
+	});
 }
 
 /**
@@ -137,13 +148,16 @@ function refreshList(data)
 	listManager.clear();
 
 	var items = [];
-	for (var [id, list] of Object.entries(data))
+	for (var id in data)
 	{
+		var list = data[id];
 		for (var ta of list)
 			items.push( getItem(ta.id, ta['account_id'], ta.institution, ta.type, ta.unixtime, ta.amount, ta.category, ta.merchant) );
 	}
 
-	listManager.add(items, function(items){});
+	listManager.add(items, function(items){
+		listManager.sort(sortedBy, {order: sortOrder});
+	});
 	listManager.filter(filterList);
 }
 
@@ -179,54 +193,27 @@ function initListPickers()
 
 	listBegPicker = new Pikaday({
 		field: listBegField,
-		onSelect: listPickerBegChanged
+		onSelect: setDataBeg
 	});
 
 	listEndPicker = new Pikaday({
 		field: listEndField,
-		onSelect: setListPickerEnd
+		onSelect: setDataEnd
 	});
 
-	setListPickerBeg(tmAgo);
-	setListPickerEnd(today);
 	listEndPicker.setMaxDate(today);
-
-	listBegPicker.setDate(tmAgo, true); //dont trigger callback
-	listEndPicker.setDate(today, true); //dont trigger callback
 }
 
 /**
- *
- */
-function listPickerBegChanged(date)
-{
-	if ( !(date < dataBegTime) )
-	{
-		setListPickerBeg(date);
-		return;
-	}
-
-	//if older than whats available
-	fetch(date, dataBegTime, 
-	{
-		context: this,
-		success: function()
-		{
-			setListPickerBeg(date);
-		}
-	});
-}
-
-/**
- * Called when beg date for list is changed
+ * Adjust range beg picker for list to given date.
+ * Filter the list to apply new range 
  */
 function setListPickerBeg(date)
 {
-	listBegTime = date.valueOf();
-
 	listEndPicker.setMinDate(date);
 	listBegPicker.setStartRange(date);
 	listEndPicker.setStartRange(date);
+	listBegPicker.setDate(date, true); //dont trigger callback
 
 	listBegField.innerHTML = formatDate(date);
 
@@ -236,13 +223,15 @@ function setListPickerBeg(date)
 }
 
 /**
- * Called when end date for list is changed
+ * Adjust range end picker for list to given date.
+ * Filter the list to apply new range
  */
 function setListPickerEnd(date)
 {
 	listBegPicker.setMaxDate(date);
 	listBegPicker.setEndRange(date);
 	listEndPicker.setEndRange(date);
+	listEndPicker.setDate(date, true); //dont trigger callback
 
 	listEndField.innerHTML = formatDate(date);
 

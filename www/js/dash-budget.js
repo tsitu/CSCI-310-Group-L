@@ -53,7 +53,7 @@ function budgetDateChanged(date)
 	var current = (year === today.getUTCFullYear() && month === today.getUTCMonth() + 1);
 	$('.category-amount').prop('disabled', !current);
 
-	getBudget(month, year,
+	getBudgetAndSpending(month, year,
 	{
 		error: function()
 		{
@@ -62,8 +62,26 @@ function budgetDateChanged(date)
 		},
 		success: function(data)
 		{
-			for (var [c, b] of Object.entries(data))
-				$('.category-' + c + ' > .category-amount').val(b.budget);
+			debug(data);
+
+			for (var c in data)
+			{
+				var b = data[c];
+
+				var category = $('.category-' + c);
+				var budgetField = category.children('.category-amount');
+				var spentField = category.children('.category-spent');
+
+				var color = (-b.spent > b.budget) ? 'neg' : 'pos';
+				var sign = (-b.spent <= b.budget && b.spent !== 0) ? '+' : '';
+
+				//change
+				budgetField.val(b.budget);
+				spentField.html(sign + Math.abs(b.spent));
+
+				spentField.removeClass('pos neg');
+				spentField.addClass(color);
+			}
 		}
 	});
 }

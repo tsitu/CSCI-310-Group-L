@@ -9,9 +9,6 @@
 /* CONST */
 var DEBUG = true;
 
-var INACTIVITY_TIME = 2 * 60 * 1000; //2min
-
-var DATE_FORMAT = 'YYYY. M. D';
 var DAY_MS = 24 * 60 * 60 * 1000;
 
 var ICON_ARROW = 'ion-ios-arrow-';
@@ -29,9 +26,6 @@ var side = null;
 var list = null;
 var active = null;
 
-var dataBegTime = tmAgo;
-var dataEndTime = today;
-
 
 
 /**
@@ -44,8 +38,11 @@ $(document).ready(function()
     initBudget();
     sortAccounts();
 
+    setDataBeg(tmAgo);
+    setDataEnd(today);
+
     bindEvents();
-    //resetTimeout();
+    resetTimeout();
 });
 
 
@@ -314,10 +311,13 @@ function renameClicked(e)
         {
             debug('[Log] successfully renamed account with id: ' + id);
 
+            var div = $(this).parents('.account-item');
+            div.find('.toggle-edit').click();
+
             var name = inst + ' - ' + type;
             renameListAccount(id, name);
             renameGraphAccount(id, name);
-            $(this).parents('.account-edit').siblings('.account-name').html(name);
+            div.find('.account-name').html(name);
         }
     });
 }
@@ -345,6 +345,7 @@ function deleteClicked(e)
         {
             debug('[Log] successfully deleted account with id: ' + id);
 
+            removeFromList(id);
             removeFromGraph(id);
             $(this).parents('.account-item').remove();
         }
@@ -426,6 +427,8 @@ function uploadSuccess(data)
     }
     
     sortAccounts();
+    budgetDateChanged(budgetDate);
+
     refreshList(data.transactions);
     refreshGraph(data.transactions);
 }

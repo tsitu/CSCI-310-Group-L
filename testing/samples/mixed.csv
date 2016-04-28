@@ -1,0 +1,14 @@
+institution, type, time, merchant, category, amount
+Bank of America, Savings, 2016-04-01 10:00:00, Deposit, Education, 1000.00
+Bank of America, Savings, 2016-04-02 10:00:00, Chipotle, Food, -10.00
+Bank of America, Savings, 2016-04-03 10:00:00, Chipotle, Food, -8.00
+Bank of America, Savings, 2016-04-10 10:00:00, Chipotle, Food, -4.00
+Bank of America, Savings, 2016-04-12 10:00:00, Chipotle, Food, -12.00
+Bank of America, Savings, 2016-04-15 10:00:00, Chipotle, Food, -4.00
+Bank of America, Savings, 2016-04-23 10:00:00, Chipotle, Food, -7.00
+Chase, Savings, 2016-03-26 10:00:00, Deposit, Education, 400.00
+Chase, Savings, 2016-04-02 10:00:00, Deposit, Education, 200.00
+Chase, Savings, 2016-04-10 10:00:00, Deposit, Education, 100.00
+Chase, Savings, 2016-04-13 10:00:00, Deposit, Education, 40.00
+Chase, Savings, 2016-04-18 10:00:00, Deposit, Education, 900.00
+Chase, Savings, 2016-04-23 10:00:00, Deposit, Education, 20.00

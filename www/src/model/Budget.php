@@ -14,7 +14,7 @@ class Budget
 	public $month;
 	public $year;
 
-	function __construct($id, $user_id, $month, $year, $category, $budget) {
+	function __construct($id, $user_id, $category, $budget, $month, $year) {
 		$this->id = $id;
 		$this->user_id = $user_id;
 		$this->category = $category;

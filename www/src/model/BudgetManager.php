@@ -64,7 +64,6 @@ class BudgetManager
 	 * @param $user_id 		- user_id of user this budget belongs to
 	 * @return id of the budget if added, 0 otherwise
 	 */
-
 	public function addBudget($user_id, $category, $month, $year, $budget)
 	{
 		$str = "INSERT IGNORE INTO Budgets(user_id, category, budget, month, year) VALUES (:user_id, :category, :budget, :month, :year);";
@@ -214,6 +213,7 @@ class BudgetManager
 			':year'		=> $year
 		]);
 
+
 		$budgets = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Budget', ['id', 'user_id', 'month', 'year', 'category', 'budget']);
 
 		if (!$budgets)
@@ -242,7 +242,6 @@ class BudgetManager
 		]);
 
 		$budgets = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Budget', ['id', 'user_id', 'category', 'budget', 'month', 'year']);
-
 		if (!$budgets)
 			return [];
 

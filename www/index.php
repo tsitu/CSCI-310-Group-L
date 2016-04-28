@@ -1,6 +1,7 @@
 <?php
 
 require_once 'src/config.php';
+require_once 'src/model/UserManager.php';
 require_once 'src/model/BudgetManager.php';
 require_once 'src/model/AccountManager.php';
 require_once 'src/model/TransactionManager.php';
@@ -21,15 +22,26 @@ $username = $_SESSION['username'];
 $beg = new DateTime( $config['default_range'] );
 $end = new DateTime();
 
+$month = (int) $end->format('n');
+$year  = (int) $end->format('Y');
+
 
 //fetch data
+$um = UserManager::getInstance();
 $bm = BudgetManager::getInstance();
 $am = AccountManager::getInstance();
 $tm = TransactionManager::getInstance();
 
 
+//budget
 $icons = $config['budget_icons'];
-$budgets = $bm->getBudgetsForTime($user_id, $end->format('n'), $end->format('Y'));
+$budgets = $bm->getBudgetsForTime($user_id, $month, $year);
+$spendings = $um->getCategorySpendingsForTime($user_id, $month, $year);
+
+//totals
+$net = $um->getAssetHistory('net', $user_id, $beg, $end);
+$assets = $um->getAssetHistory('asset', $user_id, $beg, $end);
+$liabilities = $um->getAssetHistory('liability', $user_id, $beg, $end);
 
 $accounts = [];
 $transactions = [];
@@ -150,11 +162,19 @@ foreach ($awb as $a)
                     <?php
                     foreach ($budgets as $c => $b)
                     {
+                        $budget = $b->budget;
+                        $spent = array_key_exists($c, $spendings) ? $spendings[$c] : 0;
+                        
+                        $color = (-$spent > $budget) ? 'neg' : 'pos';
+				        $sign = (-$spent <= $budget && $spent != 0) ? '+' : '';
                     ?>
                     <li class='category-item category-<?= $c ?>' data-category='<?= $c ?>'>
                         <input type='number' class='category-amount' 
-                                value='<?= number_format($b->budget, 2) ?>'
-                                data-previous='<?= $b->budget ?>'>
+                                value='<?= $budget ?>'
+                                data-previous='<?= $budget ?>'>
+                        <p class='category-spent <?= $color ?>'>
+                            <?= $sign . abs($spent) ?>
+                        </p>
                         <p class='category-label'>
                             <span class='category-icon icon ion-<?= $icons[$c] ?>'></span>
                             <span class='category-text'><?= ucfirst($c) ?></span>
@@ -249,13 +269,25 @@ foreach ($awb as $a)
     
     <!-- JS -->
     <script>
+        //CONSTS
+        var INACTIVITY_TIME = <?= $config['logout_countdown']; ?>;
+
+        
+        //DATA
         var accounts = new Set(<?= json_encode($activeList) ?>);
         var activeList = new Set(<?= json_encode($activeList) ?>);
+
+        var totals = {
+            'Net Worth':    <?= json_encode($net) ?>,
+            'Assets':       <?= json_encode($assets) ?>,
+            'Liabilities':  <?= json_encode($liabilities) ?>
+        };
 
         var aMap = new Map(<?= json_encode($accounts) ?>);
         var tMap = new Map(<?= json_encode($transactions) ?>);
         
         console.log(accounts);
+        console.log(totals);
         console.log(aMap);
         console.log(tMap);
     </script>
