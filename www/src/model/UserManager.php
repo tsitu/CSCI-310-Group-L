@@ -249,7 +249,6 @@ class UserManager
         {
             $type = trim( DBManager::decrypt($row['type']) );
             $neg = 1;//($type !== 'Savings') ? -1 : 1;
-            
             if(!in_array($row['account_id'], $unique_accounts))
             {
                 $unique_accounts[] = $row['account_id'];

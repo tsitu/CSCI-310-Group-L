@@ -72,6 +72,7 @@ class BudgetManager
 		$category = DBManager::encrypt($category);
 
 		$stmt = $this->connection->prepare($str);
+
 		$stmt->execute([
 			':user_id' 	=> $user_id,
 			':category' => $category,
@@ -149,7 +150,7 @@ class BudgetManager
 	 * @param $id - unique id of account to delete.
 	 */
 	public function deleteBudget($id)
-	{
+	{		
 		$str = "DELETE FROM Budgets WHERE id = :id";
 
 		$stmt = $this->connection->prepare($str);
@@ -207,15 +208,24 @@ class BudgetManager
 		$stmt->execute([
 			':user_id' 	=> $user_id,
 			':month'	=> $month,
-			':year'		=> $year,
+			':category' => DBManager::encrypt($category),
+			':year'		=> $year
 		]);
 
-		$budget = $stmt->fetch(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Budget', ['id', 'user_id', 'category', 'budget', 'month', 'year']);
-		if (!$budget)
-			return null;
 
-		$budget->fixTypes();
-		return $budget;
+		$budgets = $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Budget', ['id', 'user_id', 'month', 'year', 'category', 'budget']);
+
+		if (!$budgets)
+			return [];
+
+		$response = [];
+		foreach ($budgets as $b)
+		{
+			$b->fixTypes();
+			$response[$b->category] = $b;
+		}
+
+		return $response;
 	}
 
 	/**

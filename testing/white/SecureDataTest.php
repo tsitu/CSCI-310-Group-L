@@ -1,6 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../www/src/inc/queries.php';
+
+require_once __DIR__ . '/../../www/src/model/DBManager.php';
+require_once __DIR__ . '/../../www/src/model/BudgetManager.php';
+require_once __DIR__ . '/../../www/src/model/UserManager.php';
 
 class SecureDataTest extends PHPUnit_Framework_TestCase
 {
