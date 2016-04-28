@@ -17,6 +17,9 @@ $config = [
 'db_username'		=> 'sql3112429',
 'db_password'		=> 'NqxhS6d8yQ',
 
+//account
+// 'savings', 'loan', 'credit'
+
 //budget
 'budget_categories'	=> [
 	'food', 

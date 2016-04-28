@@ -79,6 +79,23 @@ function initGraph()
 function initHighcharts()
 {
 	var series = [];
+
+	//totals
+	for (var [name, set] of Object.entries(totals))
+	{
+		var data = [];
+		for (var [unixtime, balance] of Object.entries(set))
+			data.push([+unixtime * 1000, balance]);
+
+		series.push({
+			id: name,
+			name: name,
+			marker: {enabled: true},
+			data: data
+		});
+	}
+
+	//accounts
 	for (var [id, list] of tMap.entries())
 	{
 		var data = [];
@@ -91,10 +108,7 @@ function initHighcharts()
 		series.push({
 			id: id,
 			name: aMap.get(id).name,
-			marker: {
-				enabled: true,
-
-			},
+			marker: { enabled: true },
 			data: data,
 			step: 'left'
 		});
