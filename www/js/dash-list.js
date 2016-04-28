@@ -85,7 +85,7 @@ function sortList(col)
 		sortedBy = col;
 
 		//for date & amount, default to desc
-		if (['transaction-date', 'trasaction-amount'].includes(col))
+		if (['transaction-date', 'trasaction-amount'].indexOf(col) >= 0)
 			sortOrder = 'desc';
 	}
 
