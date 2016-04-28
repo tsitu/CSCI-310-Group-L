@@ -232,70 +232,48 @@ function initGraphPickers()
 
 	graphBegPicker = new Pikaday({
 		field: graphBegField,
-		onSelect: graphPickerBegChanged
+		onSelect: setDataBeg
 	});
 
 	graphEndPicker = new Pikaday({
 		field: graphEndField,
-		onSelect: setGraphPickerEnd
+		onSelect: setDataEnd
 	});
 
-	setGraphPickerBeg(tmAgo);
-	setGraphPickerEnd(today);
 	graphEndPicker.setMaxDate(today);
-
-	graphBegPicker.setDate(tmAgo, true); //dont trigger callback
-	graphEndPicker.setDate(today, true); //dont trigger callback
 }
 
 /**
- * Callback for graph's beg picker date change
- */
-function graphPickerBegChanged(date)
-{
-	if ( !(date < dataBegTime) )
-	{
-		setGraphPickerBeg(date);
-		return;
-	}
-
-	//if older than whats available
-	fetch(date, dataBegTime, 
-	{
-		context: this,
-		success: function()
-		{
-			setGraphPickerBeg(date);
-		}
-	});
-}
-
-/**
- *
+ * Adjust range beg picker for graph to given date.
+ * Change graph's extremes to apply new range
  */
 function setGraphPickerBeg(date)
 {
-	setGraphMin(date.valueOf());
-
 	graphEndPicker.setMinDate(date);
 	graphBegPicker.setStartRange(date);
 	graphEndPicker.setStartRange(date);
+	graphBegPicker.setDate(date, true); //dont trigger callback
 
 	graphBegField.innerHTML = formatDate(date);
+
+	//change graph span
+	setGraphMin(date.valueOf());
 }
 
 /**
- *
+ * Adjust range beg picker for graph to given date.
+ * Change graph's extremes to apply new range
  */
 function setGraphPickerEnd(date)
 {
-	setGraphMax(date.valueOf());
-
 	graphBegPicker.setMaxDate(date);
 	graphBegPicker.setEndRange(date);
 	graphEndPicker.setEndRange(date);
+	graphEndPicker.setDate(date, true); //dont trigger callback
 
 	graphEndField.innerHTML = formatDate(date);
-	debug(graphEndField.innerHTML);
+
+	//change graph span
+	setGraphMax(date.valueOf());
 }
 

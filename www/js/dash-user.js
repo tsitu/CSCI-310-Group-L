@@ -7,6 +7,11 @@
 'use strict';
 
 
+/* Vars */
+var dataBegTime = null;
+var dataEndTime = null;
+
+
 /* Account List */
 /**
  * Sort account list by alphabetical name
@@ -176,10 +181,6 @@ function fetch(newBeg, oldBeg, callback)
         },
         success: function(data)
         {
-            updateList(data);
-            updateGraph(data);
-            dataBegTime = newBeg;
-
             if (callback && callback.success)
                 callback.success.call(callback.context || this, data);
         }
@@ -215,7 +216,7 @@ function updateBudget(category, amount, callback)
 /**
  *
  */
-function getBudget(month, year, callback)
+function getBudgetAndSpending(month, year, callback)
 {
     debug('[Log] get budgets across all categories for ' + year + '-' + month);
 
@@ -234,6 +235,53 @@ function getBudget(month, year, callback)
                 callback.success.call(callback.context || this, data);
         }
     });
+}
+
+
+/* Date Range */
+/**
+ * Set end of data range to given date
+ */
+function setDataBeg(date)
+{
+    if ( !dataBegTime || !(date < dataBegTime) )
+    {
+        dataBegTime = date;
+        setListPickerBeg(date);
+        setGraphPickerBeg(date);
+        return;
+    }
+
+    fetch(date, dataBegTime, 
+    {
+        context: this,
+        error: function()
+        {
+            //error handling
+            debug('[Error] failed to fetch older data');
+        },
+        success: function(data)
+        {
+            debug('[Log] successfully fetched older data');
+
+            updateList(data);
+            updateGraph(data);
+
+            dataBegTime = date;
+            setListPickerBeg(date);
+            setGraphPickerBeg(date);
+        }
+    });
+}
+
+/**
+ * Set end of data range to given date
+ */
+function setDataEnd(date)
+{
+    dataEndTime = date;
+    setListPickerEnd(date);
+    setGraphPickerEnd(date);
 }
 
 

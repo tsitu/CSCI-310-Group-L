@@ -132,4 +132,42 @@ class UserManager
 
 		return new User($row->id, $row->email, $row->password);
 	}
+
+
+	//totals
+	/**
+	 * Get spending for all categories by user during given month, year
+	 *
+	 * @return map of categories to spending
+	 */
+	public function getCategorySpendingsForTime($user_id, $month, $year)
+	{
+		$str = "
+		SELECT category, SUM(amount) as spent from Transactions 
+		WHERE (user_id, MONTH(t), YEAR(t)) = (:user_id, :month, :year)
+		GROUP BY category
+		";
+
+		$stmt = $this->connection->prepare($str);
+		$stmt->execute([
+			':user_id'	=> $user_id,
+			':month'   	=> $month,
+			':year' 	=> $year
+		]);
+
+		$rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+		if (!$rows)
+			return [];
+
+		$results = [];
+		foreach ($rows as $row)
+		{
+			$c = strtolower( trim(DBManager::decrypt($row->category)) );
+			$results[$c] = (double) $row->spent;
+		}
+
+		return $results;
+	}
+
+
 }
