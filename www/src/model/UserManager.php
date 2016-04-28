@@ -132,4 +132,9 @@ class UserManager
 
 		return new User($row->id, $row->email, $row->password);
 	}
+
+
+	//totals
+
+	
 }
