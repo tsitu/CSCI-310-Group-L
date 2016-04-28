@@ -106,10 +106,14 @@ body {
 .category-amount.valid { border-bottom: 2px solid #1faa6f; }
 .category-amount.invalid { border-bottom: 2px solid #f45170; }
 .category-amount:disabled { border-bottom: 2px solid transparent; }
-.category-food { color: #ffa75c; }
-.category-shopping { color: #f45170; }
-.category-travel { color: #61b6ff; }
+.category-spent     { color: #333333; }
+.category-spent.pos { color: #1faa6f; }
+.category-spent.neg { color: #f45170; }
+.category-food      { color: #ffa75c; }
+.category-shopping  { color: #f45170; }
+.category-travel    { color: #61b6ff; }
 .category-education { color: #1faa6f; }
+.category-label     { color: inherit; }
 
 
 .date-select {

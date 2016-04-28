@@ -216,7 +216,7 @@ function updateBudget(category, amount, callback)
 /**
  *
  */
-function getBudget(month, year, callback)
+function getBudgetAndSpending(month, year, callback)
 {
     debug('[Log] get budgets across all categories for ' + year + '-' + month);
 

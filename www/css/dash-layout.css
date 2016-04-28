@@ -227,20 +227,22 @@ main {
 .category-item {
     min-width: 50%; 
     max-width: 50%; 
-    height: 150px;
+    height: 180px;
 }
 .category-item > * { 
     font-size: 20px;
     text-align: center; 
 }
-.category-amount {
+.category-amount { margin-left: 12px; }
+.category-amount, .category-spent {
     width: 60%;
+    margin-top: 5px;
     padding: 5px 0px;
     font-size: 18px;
 }
 .category-label {
     width: 100%;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 
@@ -367,11 +369,14 @@ main {
     .category-item { 
         min-width: 25%; 
         max-width: 25%; 
-        height: 200px;
+        height: 220px;
     }
-    .category-item > * { font-size: 22px; }
-    .category-amount { width: 40%; }
-    .category-label { margin-top: 30px; }
+    .category-item > * { 
+        margin-top: 10px;
+        font-size: 22px; 
+    }
+    .category-amount { margin-left: 12px; }
+    .category-amount, .category-spent { width: 40%; }
 
     
     /* Graph */
