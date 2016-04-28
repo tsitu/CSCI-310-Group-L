@@ -52,9 +52,8 @@ foreach ($awb as $a)
     <link rel='stylesheet' href='css/libraries/pikaday.css'>
     
     <link rel='stylesheet' href='css/global.css'>
-    <link rel='stylesheet' href='css/dialog.css'>
-    <link rel='stylesheet' href='css/dash-layout (new).css'>
-    <link rel='stylesheet' href='css/dash-style (new).css'>
+    <link rel='stylesheet' href='css/dash-style.css'>
+    <link rel='stylesheet' href='css/dash-layout.css'>
 </head>
 <body>
     
@@ -114,7 +113,7 @@ foreach ($awb as $a)
     
     <main>
         <div class='top-bar'>
-            <button class='toggle-side fa fa-bars'></button>
+            <button class='toggle-side icon ion-navicon'></button>
             
             <h2 class='section-title'>Dashboard</h2>
             

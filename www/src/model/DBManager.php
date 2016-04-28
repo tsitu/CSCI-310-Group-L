@@ -112,4 +112,41 @@ class DBManager
 	{
 		return $datetime->format("Y-m-d H:i:s");
 	}
+
+	public static function getNumberOfRowsTransactions(){
+		$mysqli = $connection;
+	    //prepare
+		if( ($stmt = $mysqli->prepare("SELECT id FROM Transactions") )) {
+
+			//execute
+			if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+
+			return $stmt->fetch();
+		} else {
+			echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
+		}
+	}
+public static function getNumberOfRowsBudget(){
+	if(static::$instance === null){
+		DBManager::getConnection();
+	}
+
+	$mysqli = DBManager::getConnection();
+
+    //prepare
+	if( ($stmt = $mysqli->prepare("SELECT * FROM Budgets") )) {
+
+		//execute
+		if(! $stmt->execute() ) echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error . "<br />";
+
+		return $stmt->fetchAll();
+
+	} else {
+		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error . "<br />"; //remove after debug
+	}
+}
+
+
+
+
 }

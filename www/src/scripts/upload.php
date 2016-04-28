@@ -44,4 +44,6 @@ foreach ($response->accounts as $a)
 $response->beg = $beg;
 $response->end = $end;
 
+//success
+header('Content-Type: application/json');
 echo json_encode($response);
